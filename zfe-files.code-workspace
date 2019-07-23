@@ -1,0 +1,37 @@
+{
+   "folders": [
+      {
+         "name": "ZFE Files",
+         "path": "."
+      },
+      {
+         "name": "Test",
+         "path": "tests"
+      },
+      {
+         "name": "ZFE (php)",
+         "path": "tests/vendor/zfbase/zfe"
+      },
+      {
+         "name": "ZFE (npm)",
+         "path": "tests/node_modules/zfe"
+      },
+      {
+         "name": "Doctrine",
+         "path": "tests/vendor/zfbase/doctrine1"
+      },
+      {
+         "name": "Bootstrap for Zend",
+         "path": "tests/vendor/zfbase/zend1-bootstrap3"
+      },
+      {
+         "name": "Zend",
+         "path": "tests/vendor/shardj/zf1-future"
+      }
+   ],
+   "settings": {
+      "cSpell.words": [
+         "processings"
+      ]
+   }
+}

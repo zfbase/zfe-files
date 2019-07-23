@@ -1,0 +1,25 @@
+{
+  "name": "zfe-files",
+  "version": "1.0.0",
+  "description": "Единая точка загрузки и управления файлами для приложений на ZFE",
+  "authors": [
+    "Nikita Orlov <n.dezz.orlov@gmail.com>",
+    "Ilya Serdyuk <ilya@serdyuk.pro>",
+    "Dmitriy Demin <dma01x@gmail.com>"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "module": "src",
+  "files": [
+    "/src"
+  ],
+  "scripts": {
+    "lint": "eslint src"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0"
+  }
+}

@@ -1,0 +1,43 @@
+Files:
+  comment: Файлы
+  connection: dbh
+  actAs:
+    ZFE_Model_Template_BaseZfeFields:
+      status: false
+  columns:
+    id:
+      type: integer(4)
+      unsigned: true
+      primary: true
+      autoincrement: true
+      comment: Идентификатор
+    model_name:
+      type: string(255)
+      comment: Модель записи, к которой привязан файл
+    item_id:
+      type: integer(4)
+      unsigned: true
+      comment: ID записи, к которой привязан файл
+    type:
+      type: integer(1)
+      unsigned: true
+      comment: Тип связи с записью, к которой привязан файл (код в схеме)
+    title:
+      type: string(511)
+      notnull: true
+      comment: Название исходного файла
+    size:
+      type: integer(4)
+      unsigned: true
+      comment: Размер файла в байтах
+    hash:
+      type: string(45)
+      comment: Хэш сумма от файла
+    ext:
+      type: string(7)
+      notnull: true
+      comment: Расширение файла
+    path:
+      type: string(511)
+      notnull: true
+      comment: Путь до файла

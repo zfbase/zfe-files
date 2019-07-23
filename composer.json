@@ -1,0 +1,39 @@
+{
+    "name": "zfbase/zfe-files",
+    "description": "Единая точка загрузки и управления файлами для приложений на ZFE",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nikita Orlov",
+            "email": "n.dezz.orlov@gmail.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Ilya Serdyuk",
+            "email": "ilya@serdyuk.pro",
+            "role": "Developer"
+        },
+        {
+            "name": "Dmitriy Demin",
+            "email": "dma01x@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "ZfeFiles_": "library/"
+        }
+    },
+    "require": {
+        "php": ">=7.1",
+        "zfbase/zfe": "1.35.x-dev"
+    },
+    "scripts": {
+        "lint": "php-cs-fixer fix --diff --dry-run",
+        "fix": "php-cs-fixer fix"
+    },
+    "archive": {
+        "exclude": ["/assets", "/examples", "/tests"]
+    }
+}
