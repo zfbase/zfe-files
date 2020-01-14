@@ -1,0 +1,18 @@
+<?php
+
+/*
+ * Единая точка загрузки и управления файлами для приложений на ZFE.
+ */
+
+/**
+ * Интерфейс загрузчика файлов.
+ */
+interface ZfeFiles_Uploader_Interface
+{
+    public function __construct(string $fileModelName = null, ZfeFiles_Uploader_Handler_Interface $uploadHandler = null);
+
+    /**
+     * Загрузить файл.
+     */
+    public function upload(array $params = []): ?ZfeFiles_FileInterface;
+}

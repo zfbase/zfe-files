@@ -1,0 +1,87 @@
+.zfe-files-ajax-preview-simple {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0 -8px;
+
+  > li {
+    margin: 8px 0 0 8px;
+    position: relative;
+    vertical-align: middle;
+    display: inline-block;
+
+    > span,
+    > button,
+    > a {
+      position: relative;
+      display: inline-block;
+      padding: 4px 6px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      color: #333;
+      background-color: #fff;
+      background-image: none;
+      vertical-align: middle;
+      font-size: 12px;
+      line-height: 1.5;
+
+      &:first-child {
+        margin-left: 0;
+
+        &:not(:last-child) {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+      }
+
+      &:not(:first-child):not(:last-child) {
+        border-radius: 0;
+      }
+
+      &:last-child:not(:first-child) {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      + span,
+      + button,
+      + a {
+        margin-left: -1px;
+      }
+    }
+
+    > a:hover {
+      background-color: #eee;
+    }
+
+    > button {
+      box-shadow: none;
+      text-shadow: none;
+
+      &:focus {
+        background-color: #fff;
+        border-color: #ddd;
+        box-shadow: none;
+        outline: none;
+      }
+
+      &:hover,
+      &:hover:active,
+      &:active:focus {
+        background-color: #eee;
+        border-color: #ddd;
+        box-shadow: none;
+        outline: none;
+      }
+    }
+
+    &.deleted {
+      > span,
+      > a,
+      > button {
+        &:not(.undelete) {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}

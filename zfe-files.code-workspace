@@ -1,0 +1,33 @@
+{
+   "folders": [
+      {
+         "name": "ZFE Files",
+         "path": "."
+      },
+      {
+         "name": "ZFE (php)",
+         "path": "vendor/zfbase/zfe"
+      },
+      {
+         "name": "ZFE (npm)",
+         "path": "node_modules/zfe"
+      },
+      {
+         "name": "Doctrine",
+         "path": "vendor/zfbase/doctrine1"
+      },
+      {
+         "name": "Bootstrap for Zend",
+         "path": "vendor/zfbase/zend1-bootstrap3"
+      },
+      {
+         "name": "Zend",
+         "path": "vendor/shardj/zf1-future"
+      }
+   ],
+   "settings": {
+      "cSpell.words": [
+         "dropzone"
+      ]
+   }
+}
