@@ -25,6 +25,7 @@
             "ZfeFiles_": "library/"
         }
     },
+    "minimum-stability": "dev",
     "require": {
         "php": ">=7.1",
         "zfbase/zfe": "1.35.x-dev"
