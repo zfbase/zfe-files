@@ -32,6 +32,13 @@ class ZfeFiles_Uploader_Result
     protected $size;
 
     /**
+     * Хеш-сумма от файла.
+     *
+     * @var string
+     */
+    protected $hash;
+
+    /**
      * Установить оригинальное имя файла.
      */
     public function setName(string $name): self
@@ -80,6 +87,25 @@ class ZfeFiles_Uploader_Result
     public function getSize(): ?int
     {
         return $this->size;
+    }
+
+    /**
+     * Установить хеш-сумму от файла.
+     */
+    public function setHash(string $hash): self
+    {
+        $this->hash = $hash;
+        return $this;
+    }
+
+    /**
+     * Получить хеш-сумму от файла.
+     *
+     * @return string|null
+     */
+    public function getHash(): ?string
+    {
+        return $this->hash;
     }
 
     /**

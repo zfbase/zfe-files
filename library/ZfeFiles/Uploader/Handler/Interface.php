@@ -11,5 +11,5 @@ interface ZfeFiles_Uploader_Handler_Interface
      *
      * @throw ZfeFiles_Uploader_Exception
      */
-    public function upload(): ZfeFiles_Uploader_Result;
+    public function upload(string $field = 'file'): ZfeFiles_Uploader_Result;
 }

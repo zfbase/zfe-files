@@ -21,6 +21,7 @@ const getProps = node => {
 export default (root) => {
   const $root = $(root);
   const name = $root.data('name');
+  const maxUploadFileSize = 1024 ** 2;
 
   const files = $.makeArray($root.find(`input[name^=${name}]`).map((i, input) => {
     const $input = $(input);
@@ -30,5 +31,10 @@ export default (root) => {
     };
   }));
 
-  ReactDOM.render(<Element files={files} {...getProps(root)} />, root);
+  const props = {
+    files,
+    maxUploadFileSize,
+    ...getProps(root),
+  }
+  ReactDOM.render(<Element {...props} />, root);
 }

@@ -19,11 +19,15 @@ class ZfeFiles_Controller_DefaultAjax extends Controller_Abstract
     {
         try {
             $file = $this->getUploader()->upload($this->getAllParams());
-            $this->_json(
-                static::STATUS_SUCCESS,
-                ['file' => $file->getDataForUploader()],
-                "Файл {$file->title} успешно загружен."
-            );
+            if ($file === null) {
+                $this->_json(static::STATUS_SUCCESS);
+            } else {
+                $this->_json(
+                    static::STATUS_SUCCESS,
+                    ['file' => $file->getDataForUploader()],
+                    "Файл {$file->title} успешно загружен."
+                );
+            }
         } catch (Exception $e) {
             $this->_json(static::STATUS_FAIL, [], 'Не удалось загрузить файл: ' . $e->getMessage());
         }

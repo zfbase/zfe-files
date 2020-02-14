@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
+import createUploader from '../../utils/createUploader';
 import useCollection from '../../hooks/useCollection';
 import Storage from './Storage';
 import Preview from './Preview/index';
@@ -25,6 +26,7 @@ const Element = ({
   schemaCode,
   type,
   uploadUrl,
+  maxUploadFileSize,
 }) => {
   const [items, { addItem, updateItem, removeItem }] = useCollection(files);
 
@@ -37,20 +39,24 @@ const Element = ({
         reader.onload = () => { updateItem(item.key, { previewLocal: reader.result }); };
         reader.readAsDataURL(file);
 
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('model_name', modelName);
-        formData.append('schema_code', schemaCode)
-        fetch(uploadUrl, { method: 'POST', body: formData })
-          .then(response => response.json())
-          .then(response => {
-            if (response.status != '0') {
-              throw new Error(response.message);
-            }
-
-            updateItem(item.key, { loading: false, ...response.data.file });
+        const uploader = createUploader()
+          .setUrl(uploadUrl)
+          .setMaxFileSize(maxUploadFileSize)
+          .setFile(file)
+          .setParams({ modelName, schemaCode })
+          .onProgress(({ loaded, total }) => {
+            const percent = Math.round(loaded / total * 100 * 100) / 100;
+            updateItem(item.key, { uploadProgress: percent });
+            console.log(`${percent}%`);
           })
-          .catch(console.log);
+          .onComplete(file => updateItem(item.key, { loading: false, ...file }))
+          .onError(console.log)
+          .start();
+
+        updateItem(item.key, {
+          abortUpload: () => uploader.abort(),
+          continueUpload: () => uploader.continue(),
+        });
       });
     }, []),
     noClick: true,
@@ -102,6 +108,7 @@ Element.propTypes = {
   accept: PropTypes.string,
   disabled: PropTypes.bool,
   files: PropTypes.arrayOf(PropTypes.object),
+  maxUploadFileSize: PropTypes.number,
   modelName: PropTypes.string.isRequired,
   multiple: PropTypes.bool,
   name: PropTypes.string.isRequired,
@@ -115,6 +122,7 @@ Element.defaultProps = {
   accept: null,
   disabled: false,
   files: [],
+  maxUploadFileSize: 1024 ** 2,
   multiple: false,
   previewRender: null,
   type: null,
