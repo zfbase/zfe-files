@@ -9,7 +9,7 @@ import Button from './Button';
 const File = ({ item, onDelete, onUndelete }) => (
   <li className={item.deleted && 'deleted'}>
     <Icon />
-    <Title value={item.loading ? 'Загрузка…' : item.name} />
+    <Title value={item.loading ? `Загрузка… ${item.uploadProgress && `${Math.round(item.uploadProgress * 100) / 100}%`}` : item.name} />
     {item.downloadUrl && <DownloadLink downloadUrl={item.downloadUrl} />}
     {item.deleted
         ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} className="undelete" />

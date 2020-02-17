@@ -44,11 +44,7 @@ const Element = ({
           .setMaxFileSize(maxUploadFileSize)
           .setFile(file)
           .setParams({ modelName, schemaCode })
-          .onProgress(({ loaded, total }) => {
-            const percent = Math.round(loaded / total * 100 * 100) / 100;
-            updateItem(item.key, { uploadProgress: percent });
-            console.log(`${percent}%`);
-          })
+          .onProgress(({ loaded, total }) => updateItem(item.key, { uploadProgress: loaded / total * 100 }))
           .onComplete(file => updateItem(item.key, { loading: false, ...file }))
           .onError(console.log)
           .start();

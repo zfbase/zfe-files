@@ -1,8 +1,5 @@
-@import './components/ajax/index.scss';
-
-.zfe-files-loading-icon {
-  animation: rotate 1.5s linear infinite;
-}
+@import './components/FileAjax/index.scss';
+@import './components/ProgressCircle/index.scss';
 
 @keyframes rotate {
   to {
