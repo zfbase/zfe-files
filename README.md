@@ -103,7 +103,7 @@ webserver = 'nginx'
 ```
 
 
-### 6. Добавить поддержку помошников представления для элементов форм
+### 6. Добавить поддержку помощников представления для элементов форм
 
 `application/Bootstrap.php`
 ```php
@@ -202,7 +202,7 @@ class Articles extends BaseArticles implements ZfeFiles_Manageable
 }
 ```
 
-### Подключить элемент управляения файлами в форму
+### Подключить элемент управления файлами в форму
 `application/forms/Edit/Article.php`
 ```php
 class Application_Form_Edit_Article extends ZFE_Form_Edit_AutoGeneration
