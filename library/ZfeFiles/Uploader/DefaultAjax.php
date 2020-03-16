@@ -64,7 +64,6 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
         $schemaCode = $params['schemaCode'] ?? null;
         $itemId = $params['itemId'] ?? null;
         $fileName = $uploadResult->getName();
-        $fileExt = $uploadResult->getExtension();
 
         if ($chunksCount) {
             // Если грузим чанками, то через сессию контролируем загрузку.
@@ -117,7 +116,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
             'tempPath' => $tempPath,
             'fileName' => $fileName,
             'fileSize' => $fileSize,
-            'fileExt' => $fileExt,
+            'fileExt' => $this->getExtension($fileName),
             'modelName' => $modelName,
             'schemaCode' => $schemaCode,
             'itemId' => $itemId,
@@ -174,5 +173,15 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
         if ($schema) {
             $schema->getProcessor()->handleFile($file);
         }
+    }
+
+    /**
+     * Получить расширение файла по имени файла.
+     */
+    protected function getExtension(string $fileName): ?string
+    {
+        $parts = explode('.', $fileName);
+        $lastPart = end($parts);
+        return mb_strtolower($lastPart);
     }
 }

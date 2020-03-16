@@ -107,16 +107,4 @@ class ZfeFiles_Uploader_Result
     {
         return $this->hash;
     }
-
-    /**
-     * Получить расширение файла.
-     */
-    public function getExtension(): ?string
-    {
-        // В этом момент файл хранится по временному пути без расширения
-        $name = $this->name ?? '';
-        $parts = explode('.', $name);
-        $lastPart = end($parts);
-        return mb_strtolower($lastPart);
-    }
 }
