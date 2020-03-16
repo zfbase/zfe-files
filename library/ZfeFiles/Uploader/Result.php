@@ -110,9 +110,13 @@ class ZfeFiles_Uploader_Result
 
     /**
      * Получить расширение файла.
-     */ 
+     */
     public function getExtension(): ?string
     {
-        return mb_strtolower(pathinfo($this->path, PATHINFO_EXTENSION));
+        // В этом момент файл хранится по временному пути без расширения
+        $name = $this->name ?? '';
+        $parts = explode('.', $name);
+        $lastPart = end($parts);
+        return mb_strtolower($lastPart);
     }
 }
