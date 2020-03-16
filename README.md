@@ -56,7 +56,49 @@ class Files extends BaseFiles implements ZfeFiles_FileInterface
 ```
 
 
-### 2. Добавить контроллер для управления файлами
+### 2. Добавить в toArray и fromArray базовой модели поддержку файлов
+
+`application/models/AbstractRecord.php`
+```php
+abstract class AbstractRecord extends ZFE_Model_AbstractRecord
+{
+    public function toArray($deep = true, $prefixKey = false)
+    {
+        $array = parent::toArray($deep, $prefixKey);
+
+        if ($this instanceof ZfeFiles_Manageable) {
+            foreach (static::getFileSchemas() as $fileSchema) {
+                $code = $fileSchema->getCode();
+                $array[$code] = [];
+                $files = ZfeFiles_Dispatcher::loadFiles($this, $code);
+                foreach ($files as $file) {  /** @var ZfeFiles_FileInterface $file */
+                    $array[$code][] = $file->getDataForUploader();
+                }
+            }
+        }
+
+        return $array;
+    }
+
+    public function fromArray(array $array, $deep = true)
+    {
+        if ($this instanceof ZfeFiles_Manageable) {
+            foreach (static::getFileSchemas() as $fileSchema) {
+                $code = $fileSchema->getCode();
+                if (array_key_exists($code, $array)) {
+                    ZfeFiles_Dispatcher::updateFiles($this, $code, $array[$code]);
+                    unset($array[$code]);
+                }
+            }
+        }
+
+        parent::fromArray($array, $deep);
+    }
+}
+``` 
+
+
+### 3. Добавить контроллер для управления файлами
 
 Контроллер может быть любым. Их тоже может быть несколько.
 
@@ -69,7 +111,7 @@ class FilesController extends ZfeFiles_Controller_DefaultAjax
 ```
 
 
-### 3. Разрешить доступ к контроллеру для управления файлами
+### 4. Разрешить доступ к контроллеру для управления файлами
 
 `application/configs/acl.ini`
 ```ini
@@ -77,7 +119,7 @@ acl.resources.allow.files.all = user
 ```
 
 
-### 4. Рекомендуется указать настройки по умолчанию
+### 5. Рекомендуется указать настройки по умолчанию
 
 `application/configs/application.ini`
 ```ini
@@ -90,7 +132,7 @@ webserver = 'nginx'
 ```
 
 
-### 5. Подключить расширения форм
+### 6. Подключить расширения форм
 
 Заменить в `Application_Form_Helpers` трейт `ZFE_Form_Helpers` на `ZfeFiles_Form_Helpers`.
 
@@ -103,7 +145,7 @@ webserver = 'nginx'
 ```
 
 
-### 6. Добавить поддержку помощников представления для элементов форм
+### 7. Добавить поддержку помощников представления для элементов форм
 
 `application/Bootstrap.php`
 ```php
@@ -125,7 +167,7 @@ class Application_Bootstrap extends ZFE_Bootstrap
 }
 ```
 
-### 7. Подключить компонент в JavaScript
+### 8. Подключить компонент в JavaScript
 `assets/sources/app.js`
 ```js
 import { createFileAjax } from 'zfe-files';
@@ -140,7 +182,7 @@ App.init({
 });
 ```
 
-### 8. Подключить стили
+### 9. Подключить стили
 `assets/sources/app.scss`
 ```scss
 @import 'zfe-files/src/index.scss';
@@ -149,7 +191,7 @@ App.init({
 ## Использование
 На примере подключения к статьям.
 
-### Добавить в модель схему использования файлов.
+### Добавить в модель схему использования файлов
 Использующая файлы модель должна реализовывать интерфейс `ZfeFiles_Manageable`, позволяющий прикреплять файлы и управлять ими.
 
 `application/models/Articles.php`
@@ -169,35 +211,6 @@ class Articles extends BaseArticles implements ZfeFiles_Manageable
         }
 
         return static::$fileSchemas;
-    }
-
-    public function toArray($deep = true, $prefixKey = false)
-    {
-        $array = parent::toArray($deep, $prefixKey);
-
-        foreach (static::getFileSchemas() as $fileSchema) {
-            $code = $fileSchema->getCode();
-            $array[$code] = [];
-            $files = ZfeFiles_Dispatcher::loadFiles($this, $code);
-            foreach ($files as $file) {  /** @var ZfeFiles_FileInterface $file */
-                $array[$code][] = $file->getDataForUploader();
-            }
-        }
-
-        return $array;
-    }
-
-    public function fromArray(array $array, $deep = true)
-    {
-        foreach (static::getFileSchemas() as $fileSchema) {
-            $code = $fileSchema->getCode();
-            if (array_key_exists($code, $array)) {
-                ZfeFiles_Dispatcher::updateFiles($this, $code, $array[$code]);
-                unset($array[$code]);
-            }
-        }
-
-        parent::fromArray($array, $deep);
     }
 }
 ```
