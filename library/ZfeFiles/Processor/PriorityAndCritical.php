@@ -13,6 +13,27 @@ class ZfeFiles_Processor_PriorityAndCritical implements ZfeFiles_Processor_Inter
      */
     protected $map = [];
 
+    /** @inheritDoc */
+    public function setHandlers(array $handlers): ZfeFiles_Processor_Interface
+    {
+        $this->map = [];
+        foreach ($handlers as $handler) {
+            if (is_array($handler)) {
+                $handler = $handler['handler'] ?? null;
+                $options = $handler['options'] ?? [];
+            } else {
+                $options = [];
+            }
+
+            if (!($handler instanceof ZfeFiles_Processor_Handle_Abstract)) {
+                throw new ZfeFiles_Processor_Exception('Не поддерживаемый обработчик.');
+            }
+
+            $this->addHandler($handler, $options);
+        }
+        return $this;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -44,23 +65,25 @@ class ZfeFiles_Processor_PriorityAndCritical implements ZfeFiles_Processor_Inter
      */
     public function handleFile(ZfeFiles_FileInterface $file): void
     {
-        foreach ($this->map as $handles) {
+        foreach ($this->map as $tasks) {  /** @var array $tasks Обработчики с одинаковым приоритетом */
             $hasWaiting = false;
             $hasNotReady = false;
-            foreach ($handles as $handle) {
-                switch ($handle->handle->getStatus()) {
+            foreach ($tasks as $task) {  /** @var array $task Задача содержащая обработчик и признак критичности */
+                switch ($task->handler->getStatus()) {
                     case ZfeFiles_Processor_Handle_Abstract::STATUS_WAIT:
                         $hasWaiting = true;
                     break;
+                    case ZfeFiles_Processor_Handle_Abstract::STATUS_ERROR:
+                        if ($task->critical) {
+                            throw new ZfeFiles_Processor_Exception("Обработчик {$task->handler->getName()} завершился ошибкой.");
+                        }
+                    // break;
                     case ZfeFiles_Processor_Handle_Abstract::STATUS_WORKING:
                         $hasNotReady = true;
                     break;
-                    case ZfeFiles_Processor_Handle_Abstract::STATUS_ERROR:
-                        if ($handle->critical) {
-                            throw new ZfeFiles_Processor_Exception("Обработчик {$handle->handle->getName()} завершился ошибкой.");
-                        }
-                    break;
                 }
+
+                ZFE_Debug::console('Выполняется ' . $task->handler->getName());
             }
 
             if ($hasWaiting || $hasNotReady) {

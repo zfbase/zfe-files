@@ -11,6 +11,11 @@
 interface ZfeFiles_Processor_Interface
 {
     /**
+     * Установить обработчики.
+     */
+    public function setHandlers(array $handlers): ZfeFiles_Processor_Interface;
+
+    /**
      * Добавить обработчик.
      *
      * @param ZfeFiles_Processor_Handle_Abstract $handler обработчик

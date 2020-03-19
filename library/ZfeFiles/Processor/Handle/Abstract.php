@@ -40,6 +40,14 @@ abstract class ZfeFiles_Processor_Handle_Abstract
     }
 
     /**
+     * Получить название обработчика.
+     */
+    public function getName(): string
+    {
+        return static::class;
+    }
+
+    /**
      * Получить все процессы обработки.
      */
     abstract public function getAllProcesses(): array;

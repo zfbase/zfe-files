@@ -99,4 +99,20 @@ interface ZfeFiles_Schema_Interface
      * Получить процессор.
      */
     public function getProcessor(): ZfeFiles_Processor_Interface;
+
+    /**
+     * Установить обработчики.
+     */
+    
+    public function setHandlers(array $handlers): ZfeFiles_Schema_Interface;
+
+    /**
+     * Добавить обработчик.
+     */
+    public function addHandler(ZfeFiles_Processor_Handle_Abstract $handler): ZfeFiles_Schema_Interface;
+    
+    /**
+     * Получить обработчики.
+     */
+    public function getHandlers(): array;
 }

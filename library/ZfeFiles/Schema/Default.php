@@ -58,10 +58,17 @@ class ZfeFiles_Schema_Default implements ZfeFiles_Schema_Interface
      */
     protected $processor;
 
+    /**
+     * Обработчики.
+     * 
+     * @var array<ZfeFiles_Processor_Handle_Abstract>|ZfeFiles_Processor_Handle_Abstract[] 
+     */
+    protected $handlers;
+
     /** @inheritDoc */
     public function __construct(array $options)
     {
-        $keys = ['model', 'code', 'title', 'required', 'accept', 'multiple', 'processor'];
+        $keys = ['model', 'code', 'title', 'required', 'accept', 'multiple', 'processor', 'handlers'];
         foreach ($keys as $key) {
             if (array_key_exists($key, $options)) {
                 $this->{'set' . ucfirst($key)}($options[$key]);
@@ -183,5 +190,25 @@ class ZfeFiles_Schema_Default implements ZfeFiles_Schema_Interface
             $this->processor = new ZfeFiles_Processor_PriorityAndCritical();
         }
         return $this->processor;
+    }
+
+    /** @inheritDoc */
+    public function setHandlers(array $handlers): ZfeFiles_Schema_Interface
+    {
+        $this->handlers = $handlers;
+        return $this;
+    }
+
+    /** @inheritDoc */
+    public function addHandler(ZfeFiles_Processor_Handle_Abstract $handler): ZfeFiles_Schema_Interface
+    {
+        $this->handlers[] = $handler;
+        return $this;
+    }
+    
+    /** @inheritDoc */
+    public function getHandlers(): array
+    {
+        return $this->handlers;
     }
 }
