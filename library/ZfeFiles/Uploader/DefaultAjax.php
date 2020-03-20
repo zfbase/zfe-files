@@ -173,7 +173,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
         if ($schema) {
             $processor = $schema->getProcessor();
             $processor->setHandlers($schema->getHandlers());
-            $processor->handleFile($file);
+            $processor->planFile($file);
         }
     }
 

@@ -36,5 +36,8 @@
     },
     "archive": {
         "exclude": ["/assets", "/examples", "/tests"]
+    },
+    "suggest": {
+        "calcinai/php-imagick": "Используется для работы с изображениями."
     }
 }

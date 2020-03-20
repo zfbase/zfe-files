@@ -9,33 +9,53 @@
  */
 class ZfeFiles_PathHelper_Default extends ZfeFiles_PathHelper_Abstract
 {
+    /** {@inheritdoc} */
+    public function getFileName(): string
+    {
+        if (!$this->id) {
+            throw new ZfeFiles_Exception('Не возможно получить имя файла: не определен ID');
+        }
+
+        return $this->id;
+    }
+
+    /** {@inheritdoc} */
+    public function getDirectory($separator = DIRECTORY_SEPARATOR): string
+    {
+        return null;
+    }
+
     /**
-     * Корневая директория файлов.
+     * Корневая директория файлов на диске.
      *
      * @var string
      */
     protected $root;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(ZfeFiles_FileInterface $file)
+    /** {@inheritdoc} */
+    public function getRoot(): string
     {
-        parent::__construct($file);
+        if ($this->root === null) {
+            $this->root = rtrim(Zend_Registry::get('config')->files->root, DIRECTORY_SEPARATOR);
+        }
 
-        $config = Zend_Registry::get('config');
-        $this->root = $config->files->root;
+        return $this->root;
     }
 
     /**
-     * {@inheritdoc}
+     * Корневая директория файлов для веба.
+     *
+     * @var string
      */
-    public function getPath(): string
+    protected $webRoot;
+
+    /** {@inheritdoc} */
+    public function getWebRoot(): string
     {
-        if (!$this->file->exists()) {
-            throw new ZfeFiles_Exception('Для получения пути на диске необходимо сохранить запись файла.');
+        if ($this->webRoot === null) {
+            $this->webRoot = rtrim(Zend_Registry::get('config')->files->webRoot, '/');
         }
 
-        return $this->root . DIRECTORY_SEPARATOR . $this->file->id;
+        return $this->webRoot;
     }
 }

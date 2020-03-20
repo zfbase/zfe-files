@@ -10,10 +10,25 @@
  */
 abstract class ZfeFiles_Processor_Handle_Abstract
 {
-    const STATUS_WAIT = 0;  // Обработка еще не запущена.
-    const STATUS_WORKING = 1;  // Обработка выполняется.
-    const STATUS_COMPLETE = 2;  // Обработка успешно выполнена.
-    const STATUS_ERROR = 3;  // Обработка завершилась с ошибкой.
+    /**
+     * Запланировать обработку файла.
+     */
+    abstract public static function addToPlan(ZfeFiles_FileInterface $file, array $options): ZfeFiles_Processor_Process_Interface;
+    
+    /**
+     * Запланировать обработку файла.
+     */
+    abstract public function planFile(ZfeFiles_FileInterface $file): void;
+
+    /**
+     * Выполнить запланированные обработки.
+     */
+    abstract public static function progressPlan(): void;
+
+    /**
+     * Выполнить обработку.
+     */
+    abstract public function progress(): void;
 
     /**
      * Файл.
@@ -25,7 +40,7 @@ abstract class ZfeFiles_Processor_Handle_Abstract
     /**
      * Установить целевой файл.
      */
-    public function setFile(ZfeFiles_FileInterface $file): self
+    public function setFile(ZfeFiles_FileInterface $file): ZfeFiles_Processor_Handle_Abstract
     {
         $this->file = $file;
         return $this;
@@ -40,41 +55,43 @@ abstract class ZfeFiles_Processor_Handle_Abstract
     }
 
     /**
+     * Параметры обработки.
+     *
+     * @var array
+     */
+    protected $options;
+
+    /**
+     * Установить параметры обработки.
+     */
+    public function setOptions(array $options = []): ZfeFiles_Processor_Handle_Abstract
+    {
+        $this->options = $options;
+        return $this;
+    }
+
+    /**
+     * Установить параметр обработки.
+     */
+    public function setOption(string $name, $value): ZfeFiles_Processor_Handle_Abstract
+    {
+        $this->options[$name] = $value;
+        return $this;
+    }
+
+    /**
+     * Получить параметры обработки.
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    /**
      * Получить название обработчика.
      */
     public function getName(): string
     {
         return static::class;
-    }
-
-    /**
-     * Получить все процессы обработки.
-     */
-    abstract public function getAllProcesses(): array;
-
-    /**
-     * Получить процесс самой последней обработки.
-     */
-    abstract public function getLastProcess(): ?ZfeFiles_Processor_Process_Interface;
-
-    /**
-     * Получить статус обработки.
-     */
-    public function getStatus(): int
-    {
-        $lastProcess = $this->getLastProcess();
-        if (!$lastProcess) {
-            return static::STATUS_WAIT;
-        }
-
-        if ($lastProcess->isReady()) {
-            return static::STATUS_COMPLETE;
-        }
-
-        if ($lastProcess->hasError()) {
-            return static::STATUS_ERROR;
-        }
-
-        return static::STATUS_WORKING;
     }
 }

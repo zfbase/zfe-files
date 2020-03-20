@@ -16,6 +16,11 @@ interface ZfeFiles_Processor_Interface
     public function setHandlers(array $handlers): ZfeFiles_Processor_Interface;
 
     /**
+     * Удалить все обработчики.
+     */
+    public function clearHandlers(): ZfeFiles_Processor_Interface;
+
+    /**
      * Добавить обработчик.
      *
      * @param ZfeFiles_Processor_Handle_Abstract $handler обработчик
@@ -24,7 +29,7 @@ interface ZfeFiles_Processor_Interface
     public function addHandler(ZfeFiles_Processor_Handle_Abstract $handler, array $options = []): ZfeFiles_Processor_Interface;
 
     /**
-     * Отправить на выполнение все обработки по файлу.
+     * Запланировать все обработки по файлу.
      */
-    public function handleFile(ZfeFiles_FileInterface $file): void;
+    public function planFile(ZfeFiles_FileInterface $file): void;
 }

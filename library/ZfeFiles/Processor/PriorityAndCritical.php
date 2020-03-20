@@ -65,6 +65,7 @@ class ZfeFiles_Processor_PriorityAndCritical implements ZfeFiles_Processor_Inter
      */
     public function handleFile(ZfeFiles_FileInterface $file): void
     {
+        krsort($this->map);
         foreach ($this->map as $tasks) {  /** @var array $tasks Обработчики с одинаковым приоритетом */
             $hasWaiting = false;
             $hasNotReady = false;

@@ -187,7 +187,7 @@ class ZfeFiles_Schema_Default implements ZfeFiles_Schema_Interface
     public function getProcessor(): ZfeFiles_Processor_Interface
     {
         if (!$this->processor) {
-            $this->processor = new ZfeFiles_Processor_PriorityAndCritical();
+            $this->processor = new ZfeFiles_Processor_Simple();
         }
         return $this->processor;
     }
