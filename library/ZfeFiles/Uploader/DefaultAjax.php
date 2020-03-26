@@ -10,6 +10,13 @@
 class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
 {
     /**
+     * Конфигурация.
+     *
+     * @var Zend_Config
+     */
+    protected $config;
+
+    /**
      * Название модели файла.
      *
      * @var string
@@ -30,16 +37,19 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
      */
     protected $tempRoot;
 
+    /**
+     * Конструктор.
+     */
     public function __construct(string $fileModelName = null, ZfeFiles_Uploader_Handler_Interface $uploadHandler = null)
     {
-        $config = Zend_Registry::get('config');
+        $this->config = Zend_Registry::get('config');
 
-        $this->fileModelName = $fileModelName ?: $config->files->modelName ?: 'Files';
+        $this->fileModelName = $fileModelName ?: $this->config->files->modelName ?: 'Files';
 
-        $uploadHandlerClass = $config->files->uploadHandler ?: ZfeFiles_Uploader_Handler_Default::class;
+        $uploadHandlerClass = $this->config->files->uploadHandler ?: ZfeFiles_Uploader_Handler_Default::class;
         $this->uploadHandler = $uploadHandler ?: new $uploadHandlerClass();
 
-        $this->tempRoot = $config->files->tempPath ?? sys_get_temp_dir();
+        $this->tempRoot = $this->config->files->tempPath ?? sys_get_temp_dir();
     }
 
     /**
@@ -126,7 +136,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
         // До сохранения файла у нас нет его ID при этом важно всегда держать в $file->path актуальное расположения.
         $this->moveFile($file);
 
-        $this->handleFile($file);
+        $this->processFile($file);
 
         return $file;
     }
@@ -153,27 +163,28 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
     /**
      * Переместить файл на постоянное хранение.
      */
-    protected function moveFile(ZfeFiles_FileInterface $file)
+    protected function moveFile(ZfeFiles_FileInterface $file): void
     {
         $newPath = $file->getPathHelper()->getPath();
         if (rename($file->path, $newPath)) {
             $file->path = $newPath;
             $file->save();
         } else {
-            trigger_error('Не удалось переложить загруженный файл из временной директории', E_USER_ERROR);
+            throw new ZfeFiles_Uploader_Exception('Не удалось переложить загруженный файл из временной директории');
         }
     }
 
     /**
      * Выполнить все необходимые обработки файла.
      */
-    protected function handleFile(ZfeFiles_FileInterface $file)
+    protected function processFile(ZfeFiles_FileInterface $file): void
     {
         $schema = ZfeFiles_Dispatcher::getSchemaForFile($file);
         if ($schema) {
             $processor = $schema->getProcessor();
-            $processor->setHandlers($schema->getHandlers());
-            $processor->planFile($file);
+            if ($processor) {
+                $processor->process($file);
+            }
         }
     }
 

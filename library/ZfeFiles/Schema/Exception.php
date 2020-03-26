@@ -5,8 +5,8 @@
  */
 
 /**
- * Стандартный менеджер файлов.
+ * Исключение схемы привязки файлов к записи.
  */
-class ZfeFiles_Manager_Default extends ZfeFiles_Manager_Abstract
+class ZfeFiles_Schema_Exception extends ZfeFiles_Exception
 {
 }

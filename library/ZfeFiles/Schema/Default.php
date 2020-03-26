@@ -144,7 +144,7 @@ class ZfeFiles_Schema_Default implements ZfeFiles_Schema_Interface
         } elseif ($accept === null) {
             $this->accept = [];
         } else {
-            throw new ZfeFiles_Exception('Не допустимый формат фильтра по типам файлов.');
+            throw new ZfeFiles_Schema_Exception('Не допустимый формат фильтра по типам файлов.');
         }
         
         return $this;
@@ -177,17 +177,21 @@ class ZfeFiles_Schema_Default implements ZfeFiles_Schema_Interface
     }
 
     /** @inheritDoc */
-    public function setProcessor(ZfeFiles_Processor_Interface $processor): ZfeFiles_Schema_Interface
+    public function setProcessor($processor): ZfeFiles_Schema_Interface
     {
+        if (!is_a($processor, ZfeFiles_Processor_Interface::class, true)) {
+            throw new ZfeFiles_Schema_Exception('Процессор должен быть реализовывать интерфейс ZfeFiles_Schema_Interface');
+        }
+
         $this->processor = $processor;
         return $this;
     }
 
     /** @inheritDoc */
-    public function getProcessor(): ZfeFiles_Processor_Interface
+    public function getProcessor(): ?ZfeFiles_Processor_Interface
     {
-        if (!$this->processor) {
-            $this->processor = new ZfeFiles_Processor_Simple();
+        if (is_string($this->processor)) {
+            $this->processor = new $this->processor;
         }
         return $this->processor;
     }

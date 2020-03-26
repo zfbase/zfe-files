@@ -65,7 +65,7 @@ trait ZfeFiles_Form_Helpers
     }
 
     /**
-     * Добавить элемент загрузки видеофайлов по средством Ajax.
+     * Добавить элемент загрузки видео файлов по средством Ajax.
      */
     public function addVideoFileAjaxElement($id, array $customOptions = [], $elementName = null): self
     {

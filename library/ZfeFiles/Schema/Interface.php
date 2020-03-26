@@ -92,13 +92,15 @@ interface ZfeFiles_Schema_Interface
 
     /**
      * Установить процессор.
+     * 
+     * @param ZfeFiles_Processor_Interface|string экземпляр процессора или название его класса
      */
-    public function setProcessor(ZfeFiles_Processor_Interface $processor): ZfeFiles_Schema_Interface;
+    public function setProcessor($processor): ZfeFiles_Schema_Interface;
 
     /**
-     * Получить процессор.
+     * Получить процессор (если определен).
      */
-    public function getProcessor(): ZfeFiles_Processor_Interface;
+    public function getProcessor(): ?ZfeFiles_Processor_Interface;
 
     /**
      * Установить обработчики.

@@ -6,30 +6,29 @@
 
 /**
  * Интерфейс для процессоров обработки файлов.
- * Процессоры инкапсулируют управление обработкой файлов.
  */
 interface ZfeFiles_Processor_Interface
 {
     /**
-     * Установить обработчики.
+     * Обработать файл.
+     * 
+     * В методе может как осуществляться непосредственная обработка файла,
+     * так и планироваться отложенная обработка.
      */
-    public function setHandlers(array $handlers): ZfeFiles_Processor_Interface;
+    public function process(ZfeFiles_FileInterface $file): void;
 
     /**
-     * Удалить все обработчики.
+     * Обработка производилась?
      */
-    public function clearHandlers(): ZfeFiles_Processor_Interface;
+    public function isPerformed(ZfeFiles_FileInterface $file): bool;
 
     /**
-     * Добавить обработчик.
-     *
-     * @param ZfeFiles_Processor_Handle_Abstract $handler обработчик
-     * @param array                              $options опции исполнения обработчиков
+     * Обработка выполнена успешно?
      */
-    public function addHandler(ZfeFiles_Processor_Handle_Abstract $handler, array $options = []): ZfeFiles_Processor_Interface;
+    public function isCompleted(ZfeFiles_FileInterface $file): bool;
 
     /**
-     * Запланировать все обработки по файлу.
+     * Обработка окончилась с ошибкой?
      */
-    public function planFile(ZfeFiles_FileInterface $file): void;
+    public function isFailed(ZfeFiles_FileInterface $file): bool;
 }
