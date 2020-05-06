@@ -7,7 +7,9 @@
 class ZfeFiles_Uploader_Handler_Default implements ZfeFiles_Uploader_Handler_Interface
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
+     * @throws ZfeFiles_Uploader_Exception
+     * @throws Zend_Exception
      */
     public function upload(string $field = 'file'): ZfeFiles_Uploader_Result
     {
@@ -22,7 +24,7 @@ class ZfeFiles_Uploader_Handler_Default implements ZfeFiles_Uploader_Handler_Int
             case UPLOAD_ERR_PARTIAL:
                 throw new ZfeFiles_Uploader_Exception('Загрузка прервана.', $_FILES[$field]['error']);
             case UPLOAD_ERR_NO_FILE:
-                throw new ZfeFiles_Uploader_DefaultAjax('Файл не загружен.', $_FILES[$field]['error']);
+                throw new ZfeFiles_Uploader_Exception('Файл не загружен.', $_FILES[$field]['error']);
             case UPLOAD_ERR_NO_TMP_DIR:
             case UPLOAD_ERR_CANT_WRITE:
             case UPLOAD_ERR_EXTENSION:

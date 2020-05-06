@@ -11,58 +11,76 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
 {
     /**
      * Конфигурация.
-     *
-     * @var Zend_Config
      */
-    protected $config;
+    protected Zend_Config $config;
 
     /**
      * Название модели файла.
-     *
-     * @var string
      */
-    protected $fileModelName;
+    protected string $fileModelName;
 
     /**
      * Обработчик загрузки файла.
-     *
-     * @var ZfeFiles_Uploader_Handler_Interface
      */
-    protected $uploadHandler;
+    protected ZfeFiles_Uploader_Handler_Interface $uploadHandler;
 
     /**
      * Временная директория для загруженных файлов.
+     */
+    protected string $tempRoot;
+
+    public function __construct(
+        string $fileModelName = null,
+        ZfeFiles_Uploader_Handler_Interface $uploadHandler = null,
+        string $tempRoot = null
+    )
+    {
+        $this->fileModelName = $fileModelName;
+        $this->tempRoot = $tempRoot;
+
+        try {
+            $this->config = Zend_Registry::get('config');
+
+            if (!$this->fileModelName) {
+                $this->fileModelName = $this->config->files->modelName;
+            }
+
+            if (!$uploadHandler) {
+                $uploadHandlerClass = $this->config->files->uploadHandler;
+            }
+
+            if (!$this->tempRoot) {
+                $this->tempRoot = $this->config->files->tempPath;
+            }
+        } catch(Zend_Exception $e) {
+            $uploadHandlerClass = null;
+        }
+
+        if (!$this->fileModelName) {
+            $this->fileModelName = 'Files';
+        }
+
+        if ($uploadHandler) {
+            $this->uploadHandler = $uploadHandler;
+        } else {
+            if (!$uploadHandlerClass) {
+                $uploadHandlerClass = ZfeFiles_Uploader_Handler_Default::class;
+            }
+
+            $this->uploadHandler = new $uploadHandlerClass;
+        }
+
+        if (!$this->tempRoot) {
+            $this->tempRoot = sys_get_temp_dir();
+        }
+    }
+
+    /**
+     * @inheritDoc
      *
-     * @var string
-     */
-    protected $tempRoot;
-
-    /**
-     * Конструктор.
-     */
-    public function __construct(string $fileModelName = null, ZfeFiles_Uploader_Handler_Interface $uploadHandler = null)
-    {
-        $this->config = Zend_Registry::get('config');
-
-        $this->fileModelName = $fileModelName ?: $this->config->files->modelName ?: 'Files';
-
-        $uploadHandlerClass = $this->config->files->uploadHandler ?: ZfeFiles_Uploader_Handler_Default::class;
-        $this->uploadHandler = $uploadHandler ?: new $uploadHandlerClass();
-
-        $this->tempRoot = $this->config->files->tempPath ?? sys_get_temp_dir();
-    }
-
-    /**
-     * Переопределить временную директорию для загруженных файлов.
-     */
-    public function setTempRoot(string $dir): ZfeFiles_Uploader_Interface
-    {
-        $this->tempRoot = $dir;
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
+     * @throws Zend_Session_Exception
+     * @throws ZfeFiles_Uploader_Exception
+     * @throws Exception
      */
     public function upload(array $params = []): ?ZfeFiles_FileInterface
     {
@@ -92,7 +110,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
             }
 
             $session->completeChunks[$chunkNum] = $uploadResult->getPath();
-            
+
             if ($chunksCount === count($session->completeChunks)) {
                 $fileSize = $params['fileSize'] ?? null;
                 $fileName = $params['fileName'] ?? $uploadResult->getName();
@@ -121,7 +139,6 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
             $fileSize = $uploadResult->getSize();
         }
 
-        /** @var ZfeFiles_FileInterface $file */
         $file = $this->createFile([
             'tempPath' => $tempPath,
             'fileName' => $fileName,
@@ -143,10 +160,12 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
 
     /**
      * Зарегистрировать файл.
+     *
+     * @throws Exception
      */
     protected function createFile(array $data): ZfeFiles_FileInterface
     {
-        /** @var ZfeFiles_FileInterface $file */
+        /** @var ZfeFiles_FileInterface|Files $file */
         $file = new $this->fileModelName;
         $file->title = $data['fileName'];
         $file->path = $data['tempPath'];
@@ -162,6 +181,8 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
 
     /**
      * Переместить файл на постоянное хранение.
+     *
+     * @throws ZfeFiles_Uploader_Exception
      */
     protected function moveFile(ZfeFiles_FileInterface $file): void
     {

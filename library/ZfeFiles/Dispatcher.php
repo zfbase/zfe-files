@@ -12,7 +12,7 @@ class ZfeFiles_Dispatcher
     /**
      * Получить соответствующую файлу схему.
      */
-    public static function getSchemaForFile(ZfeFiles_FileInterface $file): ?ZfeFiles_Schema_Interface
+    public static function getSchemaForFile(ZfeFiles_FileInterface $file): ?ZfeFiles_Schema_Default
     {
         if ($file->model_name && $file->schema_code) {
             return ($file->model_name)::getFileSchemas()->getByCode($file->schema_code);
@@ -22,8 +22,11 @@ class ZfeFiles_Dispatcher
 
     /**
      * Получить файлы для записи.
-     * 
+     *
      * @return Doctrine_Collection<ZfeFiles_FileInterface>
+     * @throws Doctrine_Query_Exception
+     * @throws Zend_Exception
+     * @throws ZfeFiles_Exception
      */
     public static function loadFiles(ZfeFiles_Manageable $item, string $code): Doctrine_Collection
     {
@@ -40,6 +43,10 @@ class ZfeFiles_Dispatcher
 
     /**
      * Обновить список привязанных файлов.
+     *
+     * @throws Doctrine_Query_Exception
+     * @throws Zend_Exception
+     * @throws ZfeFiles_Exception
      */
     public static function updateFiles(ZfeFiles_Manageable $item, string $code, array $ids): void
     {

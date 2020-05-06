@@ -9,7 +9,11 @@
  */
 interface ZfeFiles_Uploader_Interface
 {
-    public function __construct(string $fileModelName = null, ZfeFiles_Uploader_Handler_Interface $uploadHandler = null);
+    public function __construct(
+        string $fileModelName = null,
+        ZfeFiles_Uploader_Handler_Interface $uploadHandler = null,
+        string $tempRoot = null
+    );
 
     /**
      * Загрузить файл.

@@ -6,12 +6,18 @@
 
 /**
  * Построитель элемента формы для загрузки файлов Ajax.
- * 
+ *
  * @property ZFE_View $view
  */
 class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
 {
-    public function formFileAjax($name, $value = null, $attribs = null)
+    /**
+     * Render.
+     *
+     * @param mixed $value
+     * @todo Придумать как на вход получать экземпляр ZfeFiles_FileInterface
+     */
+    public function formFileAjax(string $name, $value = null, array $attribs = null): string
     {
         $info = $this->_getInfo($name, $value, $attribs);
         extract($info);
@@ -48,6 +54,9 @@ class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
         return $this->view->tag('div', $attribs, $body);
     }
 
+    /**
+     * Модифицировать атрибуты.
+     */
     protected function modifyAttributes(array &$attribs): void
     {
         $map = [
@@ -73,7 +82,10 @@ class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
         }
     }
 
-    protected function input(string $name, array $file)
+    /**
+     * Собрать input-тег.
+     */
+    protected function input(string $name, array $file): string
     {
         $attrs = [
             'type' => 'hidden',
@@ -92,11 +104,11 @@ class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
     /**
      * Собрать превьюшку файла.
      */
-    protected function preview(array $file, $settings = null)
+    protected function preview(array $file, ?array $settings = null): string
     {
         return $this->view->tag(
             'a',
-            ['href' => $file['downloadUrl']],
+            ['href' => $file['downloadUrl']] + $settings,
             '<span class="glyphicon glyphicon-file"></span> ' . $file['name']
         );
     }

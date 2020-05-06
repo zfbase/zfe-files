@@ -12,36 +12,28 @@ class ZfeFiles_Uploader_Result
 {
     /**
      * Оригинальное имя файла.
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * Путь по которому сохранен файл.
-     *
-     * @var string
      */
-    protected $path;
+    protected string $path;
 
     /**
      * Размер файла в байтах.
-     *
-     * @var int
      */
-    protected $size;
+    protected int $size;
 
     /**
      * Хеш-сумма от файла.
-     *
-     * @var string
      */
-    protected $hash;
+    protected string $hash;
 
     /**
      * Установить оригинальное имя файла.
      */
-    public function setName(string $name): self
+    public function setName(string $name): ZfeFiles_Uploader_Result
     {
         $this->name = $name;
         return $this;
@@ -58,7 +50,7 @@ class ZfeFiles_Uploader_Result
     /**
      * Установить путь, по которому сохранен файл.
      */
-    public function setPath(string $path): self
+    public function setPath(string $path): ZfeFiles_Uploader_Result
     {
         $this->path = $path;
         return $this;
@@ -75,7 +67,7 @@ class ZfeFiles_Uploader_Result
     /**
      * Установить размер файла в байтах.
      */
-    public function setSize(int $size): self
+    public function setSize(int $size): ZfeFiles_Uploader_Result
     {
         $this->size = $size;
         return $this;
@@ -92,7 +84,7 @@ class ZfeFiles_Uploader_Result
     /**
      * Установить хеш-сумму от файла.
      */
-    public function setHash(string $hash): self
+    public function setHash(string $hash): ZfeFiles_Uploader_Result
     {
         $this->hash = $hash;
         return $this;
@@ -100,8 +92,6 @@ class ZfeFiles_Uploader_Result
 
     /**
      * Получить хеш-сумму от файла.
-     *
-     * @return string|null
      */
     public function getHash(): ?string
     {

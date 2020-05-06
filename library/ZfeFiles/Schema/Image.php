@@ -7,12 +7,16 @@
 /**
  * Схема привязка картинок к записи.
  */
-class ZfeFiles_Schema_Image extends ZfeFiles_Schema_Default implements ZfeFiles_Schema_Interface
+class ZfeFiles_Schema_Image extends ZfeFiles_Schema_Default
 {
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @throws ZfeFiles_Schema_Exception
+     */
     public function __construct(array $options)
     {
         $this->setAccept('image/*');
+
         parent::__construct($options);
     }
 }

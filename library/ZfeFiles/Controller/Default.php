@@ -10,6 +10,11 @@
 abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
 {
     /**
+     * @inheritDoc
+     */
+    protected static $_canCreate = false;
+
+    /**
      * Загрузить файл.
      */
     public function uploadAction(): void
@@ -35,17 +40,33 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
      */
     protected function getUploader(): ZfeFiles_Uploader_Interface
     {
-        $config = Zend_Registry::get('config');
-        $uploaderName = $config->files->uploader ?: ZfeFiles_Uploader_DefaultAjax::class;
+        try {
+            $uploaderName = Zend_Registry::get('config')->files->uploader;
+        } catch(Zend_Exception $ex) {
+            $uploaderName = null;
+        }
+
+        if (empty($uploaderName)) {
+            $uploaderName = ZfeFiles_Uploader_DefaultAjax::class;
+        }
+
         return new $uploaderName();
     }
 
     /**
      * Скачать файл.
+     *
+     * @throws Zend_Exception
+     * @throws ZfeFiles_Exception
      */
     public function downloadAction(): void
     {
+        /** @var ZfeFiles_FileInterface $file */
         $file = $this->_loadItemOrFall();
-        $this->_helper->download($file->path, '/download/' . $file->id, $file->title);
+        $this->_helper->download(
+            $file->getRealPathHelper()->getPath(true),
+            $file->getWebPathHelper()->getVirtualPath(),
+            $file->getExportFileName()
+        );
     }
 }

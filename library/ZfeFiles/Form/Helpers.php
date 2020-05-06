@@ -26,10 +26,13 @@ trait ZfeFiles_Form_Helpers
 
     /**
      * Добавить элемент загрузки файлов по средством Ajax.
+     *
+     * @return self
+     * @throws Zend_Exception
      */
-    public function addFileAjaxElement($id, array $customOptions = [], $elementName = null): self
+    public function addFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
     {
-        /** @var ZfeFiles_Schema_Interface $schema */
+        /** @var ZfeFiles_Schema_Default $schema */
         $schema = ($this->_modelName)::getFileSchemas()->getByCode($id);
         $schemaOptions = [
             'label' => $schema->getTitle(),
@@ -50,24 +53,33 @@ trait ZfeFiles_Form_Helpers
 
     /**
      * Добавить элемент загрузки картинок по средством Ajax.
+     *
+     * @return self
+     * @throws Zend_Exception
      */
-    public function addImageFileAjaxElement($id, array $customOptions = [], $elementName = null): self
+    public function addImageFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
     {
         return $this->addFileAjaxElement($id, ['type' => 'image'] + $customOptions, $elementName);
     }
 
     /**
      * Добавить элемент загрузки звуковых файлов по средством Ajax.
+     *
+     * @return self
+     * @throws Zend_Exception
      */
-    public function addAudioFileAjaxElement($id, array $customOptions = [], $elementName = null): self
+    public function addAudioFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
     {
         return $this->addFileAjaxElement($id, ['type' => 'audio'] + $customOptions, $elementName);
     }
 
     /**
      * Добавить элемент загрузки видео файлов по средством Ajax.
+     *
+     * @return self
+     * @throws Zend_Exception
      */
-    public function addVideoFileAjaxElement($id, array $customOptions = [], $elementName = null): self
+    public function addVideoFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
     {
         return $this->addFileAjaxElement($id, ['type' => 'video'] + $customOptions, $elementName);
     }

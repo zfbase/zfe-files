@@ -27,7 +27,7 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.4",
         "zfbase/zfe": "1.35.x-dev"
     },
     "scripts": {

@@ -11,7 +11,7 @@ interface ZfeFiles_Processor_Interface
 {
     /**
      * Обработать файл.
-     * 
+     *
      * В методе может как осуществляться непосредственная обработка файла,
      * так и планироваться отложенная обработка.
      */
@@ -23,9 +23,14 @@ interface ZfeFiles_Processor_Interface
     public function isPerformed(ZfeFiles_FileInterface $file): bool;
 
     /**
+     * Обработка выполнена?
+     */
+    public function isDone(ZfeFiles_FileInterface $file): bool;
+
+    /**
      * Обработка выполнена успешно?
      */
-    public function isCompleted(ZfeFiles_FileInterface $file): bool;
+    public function isSuccess(ZfeFiles_FileInterface $file): bool;
 
     /**
      * Обработка окончилась с ошибкой?

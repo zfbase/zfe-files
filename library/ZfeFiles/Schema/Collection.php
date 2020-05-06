@@ -9,12 +9,12 @@ class ZfeFiles_Schema_Collection implements IteratorAggregate
     /**
      * Карта схем коллекции.
      *
-     * @var ZfeFiles_Schema_Interface[]
+     * @var ZfeFiles_Schema_Default[]
      */
-    protected $map = [];
+    protected array $map = [];
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getIterator(): ArrayIterator
     {
@@ -23,11 +23,13 @@ class ZfeFiles_Schema_Collection implements IteratorAggregate
 
     /**
      * Добавить схему в коллекцию.
+     *
+     * @throws ZfeFiles_Exception
      */
-    public function add(ZfeFiles_Schema_Interface $schema): self
+    public function add(ZfeFiles_Schema_Default $schema): ZfeFiles_Schema_Collection
     {
         $code = $schema->getCode();
-        if ($this->hasCode($code)) {
+        if ($this->codeExists($code)) {
             throw new ZfeFiles_Exception("Схема файлов с кодом '{$code}' уже присутствует в коллекции.");
         }
 
@@ -37,10 +39,12 @@ class ZfeFiles_Schema_Collection implements IteratorAggregate
 
     /**
      * Получить схему из коллекции по коду.
+     *
+     * @throws ZfeFiles_Exception
      */
-    public function getByCode(string $code): ZfeFiles_Schema_Interface
+    public function getByCode(string $code): ZfeFiles_Schema_Default
     {
-        if ($this->hasCode($code)) {
+        if ($this->codeExists($code)) {
             return $this->map[$code];
         }
 
@@ -50,7 +54,7 @@ class ZfeFiles_Schema_Collection implements IteratorAggregate
     /**
      * Удалить схему по коду.
      */
-    public function removeByCode(string $code): self
+    public function removeByCode(string $code): ZfeFiles_Schema_Collection
     {
         unset($this->map[$code]);
         return $this;
@@ -59,7 +63,7 @@ class ZfeFiles_Schema_Collection implements IteratorAggregate
     /**
      * Проверить наличие схемы с кодом в коллекции.
      */
-    public function hasCode(string $code): bool
+    public function codeExists(string $code): bool
     {
         return array_key_exists($code, $this->map);
     }

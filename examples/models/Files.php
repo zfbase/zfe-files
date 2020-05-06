@@ -13,18 +13,42 @@ class Files extends BaseFiles implements ZfeFiles_FileInterface
     public static $namePlural = 'Файлы';
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getPathHelper(): ZfeFiles_PathHelper_Abstract
+    public function getDataForUploader(): array
+    {
+        return $this->toArray();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getUploadUrl(): string
+    {
+        return '/' . static::getControllerName() . '/upload';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRealPathHelper(): ZfeFiles_PathHelper_Default
     {
         return new ZfeFiles_PathHelper_Default($this);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getDataForUploader(): array
+    public function getWebPathHelper(): ZfeFiles_PathHelper_DefaultWeb
     {
-        return $this->toArray();
+        return new ZfeFiles_PathHelper_DefaultWeb($this);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getExportFileName(): string
+    {
+        return $this->title;
     }
 }

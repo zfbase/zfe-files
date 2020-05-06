@@ -7,68 +7,61 @@
 /**
  * Базовая схема привязка файлов к записи.
  */
-class ZfeFiles_Schema_Default implements ZfeFiles_Schema_Interface
+class ZfeFiles_Schema_Default
 {
     /**
      * Модель файлов.
-     *
-     * @var string
      */
-    protected $model;
+    protected string $model;
 
     /**
      * Код.
-     *
-     * @var string
      */
-    protected $code;
+    protected string $code;
 
     /**
      * Наименование.
-     *
-     * @var string
      */
-    protected $title;
+    protected string $title;
 
     /**
      * Необходимость прикрепления файла.
-     *
-     * @var bool
      */
-    protected $required = false;
+    protected bool $required = false;
 
     /**
      * Фильтр по типам файлов.
      *
-     * @var array<string>
+     * @var string[]
      */
-    protected $accept = [];
+    protected array $accept = [];
 
     /**
      * Возможность прикрепления нескольких файла.
-     *
-     * @var bool
      */
-    protected $multiple = false;
+    protected bool $multiple = false;
 
     /**
      * Процессор.
-     *
-     * @var ZfeFiles_Processor_Interface
      */
-    protected $processor;
+    protected ZfeFiles_Processor_Interface $processor;
 
     /**
-     * Обработчики.
-     * 
-     * @var array<ZfeFiles_Processor_Handle_Abstract>|ZfeFiles_Processor_Handle_Abstract[] 
+     * Конструктор.
+     *
+     * @param array $options {
+     *     @var string                       $model     модель файлов
+     *     @var string                       $code      код
+     *     @var string                       $title     наименование
+     *     @var bool                         $required  необходимость прикрепления файла
+     *     @var string[]|string              $accept    фильтр по типам файлов
+     *     @var bool                         $multiple  возможность прикрепления нескольких файла
+     *     @var ZfeFiles_Processor_Interface $processor процессор
+     * }
      */
-    protected $handlers;
-
-    /** @inheritDoc */
     public function __construct(array $options)
     {
-        $keys = ['model', 'code', 'title', 'required', 'accept', 'multiple', 'processor', 'handlers'];
+        $keys = ['model', 'code', 'title', 'required', 'accept', 'multiple', 'processor'];
         foreach ($keys as $key) {
             if (array_key_exists($key, $options)) {
                 $this->{'set' . ucfirst($key)}($options[$key]);
@@ -76,14 +69,20 @@ class ZfeFiles_Schema_Default implements ZfeFiles_Schema_Interface
         }
     }
 
-    /** @inheritDoc */
-    public function setModel(string $model): ZfeFiles_Schema_Interface
+    /**
+     * Установить модель файлов.
+     */
+    public function setModel(string $model): ZfeFiles_Schema_Default
     {
         $this->model = $model;
         return $this;
     }
 
-    /** @inheritDoc */
+    /**
+     * Получить модель файлов.
+     *
+     * @throws Zend_Exception
+     */
     public function getModel(): ?string
     {
         if (!$this->model) {
@@ -92,27 +91,35 @@ class ZfeFiles_Schema_Default implements ZfeFiles_Schema_Interface
         return $this->model;
     }
 
-    /** @inheritDoc */
-    public function setCode(string $code): ZfeFiles_Schema_Interface
+    /**
+     * Установить код.
+     */
+    public function setCode(string $code): ZfeFiles_Schema_Default
     {
         $this->code = $code;
         return $this;
     }
 
-    /** @inheritDoc */
+    /**
+     * Получить код.
+     */
     public function getCode(): ?string
     {
         return $this->code;
     }
 
-    /** @inheritDoc */
-    public function setTitle(string $title): ZfeFiles_Schema_Interface
+    /**
+     * Установить наименование.
+     */
+    public function setTitle(string $title): ZfeFiles_Schema_Default
     {
         $this->title = $title;
         return $this;
     }
 
-    /** @inheritDoc */
+    /**
+     * Получить наименование.
+     */
     public function getTitle(): string
     {
         if (!$this->title) {
@@ -121,98 +128,102 @@ class ZfeFiles_Schema_Default implements ZfeFiles_Schema_Interface
         return $this->title;
     }
 
-    /** @inheritDoc */
-    public function setRequired(bool $required): ZfeFiles_Schema_Interface
+    /**
+     * Установить необходимость прикрепления файла.
+     */
+    public function setRequired(bool $required): ZfeFiles_Schema_Default
     {
         $this->required = $required;
         return $this;
     }
 
-    /** @inheritDoc */
+    /**
+     * Получить необходимость прикрепления файла.
+     */
     public function getRequired(): bool
     {
         return $this->required;
     }
-    
-    /** @inheritDoc */
-    public function setAccept($accept): ZfeFiles_Schema_Interface
+
+    /**
+     * Установить фильтр по типам файлов.
+     *
+     * @param string[]|string|null $accept
+     * @throws ZfeFiles_Schema_Exception
+     */
+    public function setAccept($accept = []): ZfeFiles_Schema_Default
     {
         if (is_array($accept)) {
             $this->accept = $accept;
         } elseif (is_string($accept)) {
-            $this->accept = [$accept];
+            $this->accept = explode(' ', $accept);
         } elseif ($accept === null) {
             $this->accept = [];
         } else {
             throw new ZfeFiles_Schema_Exception('Не допустимый формат фильтра по типам файлов.');
         }
-        
+
         return $this;
     }
 
-    /** @inheritDoc */
-    public function addAccept(string $accept): ZfeFiles_Schema_Interface
+    /**
+     * Добавить фильтр по типам файлов.
+     */
+    public function addAccept(string $accept): ZfeFiles_Schema_Default
     {
         $this->accept[] = $accept;
         return $this;
     }
 
-    /** @inheritDoc */
+    /**
+     * Получить фильтр по типам фалов.
+     */
     public function getAccept(): ?string
     {
         return count($this->accept) ? implode(',', $this->accept) : null;
     }
 
-    /** @inheritDoc */
-    public function setMultiple(bool $multiple): ZfeFiles_Schema_Interface
+    /**
+     * Установить допустимость прикрепления нескольких файлов.
+     */
+    public function setMultiple(bool $multiple): ZfeFiles_Schema_Default
     {
         $this->multiple = $multiple;
         return $this;
     }
 
-    /** @inheritDoc */
+    /**
+     * Получить допустимость прикрепления нескольких файлов.
+     */
     public function getMultiple(): bool
     {
         return $this->multiple;
     }
 
-    /** @inheritDoc */
-    public function setProcessor($processor): ZfeFiles_Schema_Interface
+    /**
+     * Установить процессор.
+     *
+     * @param ZfeFiles_Processor_Interface|string экземпляр процессора или название его класса
+     * @throws ZfeFiles_Schema_Exception
+     */
+    public function setProcessor($processor): ZfeFiles_Schema_Default
     {
         if (!is_a($processor, ZfeFiles_Processor_Interface::class, true)) {
-            throw new ZfeFiles_Schema_Exception('Процессор должен быть реализовывать интерфейс ZfeFiles_Schema_Interface');
+            throw new ZfeFiles_Schema_Exception('Процессор должен реализовывать интерфейс ZfeFiles_Processor_Interface');
         }
 
         $this->processor = $processor;
         return $this;
     }
 
-    /** @inheritDoc */
+    /**
+     * Получить процессор.
+     */
     public function getProcessor(): ?ZfeFiles_Processor_Interface
     {
         if (is_string($this->processor)) {
             $this->processor = new $this->processor;
         }
         return $this->processor;
-    }
-
-    /** @inheritDoc */
-    public function setHandlers(array $handlers): ZfeFiles_Schema_Interface
-    {
-        $this->handlers = $handlers;
-        return $this;
-    }
-
-    /** @inheritDoc */
-    public function addHandler(ZfeFiles_Processor_Handle_Abstract $handler): ZfeFiles_Schema_Interface
-    {
-        $this->handlers[] = $handler;
-        return $this;
-    }
-    
-    /** @inheritDoc */
-    public function getHandlers(): array
-    {
-        return $this->handlers;
     }
 }
