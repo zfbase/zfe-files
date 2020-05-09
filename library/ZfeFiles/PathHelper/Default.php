@@ -17,7 +17,7 @@ class ZfeFiles_PathHelper_Default
     /**
      * Корневая директория файлов на диске.
      */
-    protected string $root;
+    protected ?string $root = null;
 
     /**
      * Конструкторы.

@@ -68,4 +68,18 @@ trait ZfeFiles_Form_Helpers
     {
         return $this->addFileAjaxElement($id, ['type' => 'video'] + $customOptions, $elementName);
     }
+
+    /**
+     * Инициализация префиксов.
+     */
+    protected function zfeFilesInitializePrefixes(): void
+    {
+        set_include_path(implode(PATH_SEPARATOR, array(realpath(__DIR__ . '/../../'), get_include_path())));
+
+        $this->addPrefixPath(
+            'ZfeFiles_Form_Element',
+            'ZfeFiles/Form/Element',
+            'element'
+        );
+    }
 }

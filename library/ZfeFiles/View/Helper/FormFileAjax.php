@@ -36,7 +36,7 @@ class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
                     continue;  // @temp
                 }
                 $inputs[$i] = $this->input("{$name}[{$i}]", $file);
-                $previews[$i] = $this->preview($file, $attribs['preview'] ?? null);
+                $previews[$i] = $this->preview($file);
             }
         }
 
@@ -104,11 +104,11 @@ class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
     /**
      * Собрать превьюшку файла.
      */
-    protected function preview(array $file, ?array $settings = null): string
+    protected function preview(array $file): string
     {
         return $this->view->tag(
             'a',
-            ['href' => $file['downloadUrl']] + $settings,
+            ['href' => $file['downloadUrl']],
             '<span class="glyphicon glyphicon-file"></span> ' . $file['name']
         );
     }

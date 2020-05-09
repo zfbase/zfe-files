@@ -2,7 +2,6 @@
 
 trait ZfeFiles_Model_ArrayConnector
 {
-
     protected function _filesToArray(array $array): array
     {
         if ($this instanceof ZfeFiles_Manageable) {

@@ -41,7 +41,7 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
     protected function getUploader(): ZfeFiles_Uploader_Interface
     {
         try {
-            $uploaderName = Zend_Registry::get('config')->files->uploader;
+            $uploaderName = Zend_Registry::get('config')->files->uploader ?? null;
         } catch(Zend_Exception $ex) {
             $uploaderName = null;
         }

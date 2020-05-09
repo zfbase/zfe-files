@@ -29,50 +29,45 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
      */
     protected string $tempRoot;
 
+    /**
+     * Алгоритм расчета хеш-суммы от файла.
+     */
+    protected string $hashAlgo = 'md5';
+
     public function __construct(
         string $fileModelName = null,
         ZfeFiles_Uploader_Handler_Interface $uploadHandler = null,
         string $tempRoot = null
     )
     {
-        $this->fileModelName = $fileModelName;
-        $this->tempRoot = $tempRoot;
-
         try {
             $this->config = Zend_Registry::get('config');
 
-            if (!$this->fileModelName) {
-                $this->fileModelName = $this->config->files->modelName;
+            if (!$fileModelName) {
+                $fileModelName = $this->config->files->modelName ?? null;
             }
 
             if (!$uploadHandler) {
-                $uploadHandlerClass = $this->config->files->uploadHandler;
+                $uploadHandlerClass = $this->config->files->uploadHandler ?? null;
+                if ($uploadHandlerClass) {
+                    $uploadHandler = new $uploadHandlerClass;
+                }
             }
 
-            if (!$this->tempRoot) {
-                $this->tempRoot = $this->config->files->tempPath;
+            if (!$tempRoot) {
+                $tempRoot = $this->config->files->tempPath ?? null;
+            }
+
+            $hashAlgo = $this->config->files->hashAlgo ?? null;
+            if ($hashAlgo) {
+                $this->hashAlgo = $hashAlgo;
             }
         } catch(Zend_Exception $e) {
-            $uploadHandlerClass = null;
         }
 
-        if (!$this->fileModelName) {
-            $this->fileModelName = 'Files';
-        }
-
-        if ($uploadHandler) {
-            $this->uploadHandler = $uploadHandler;
-        } else {
-            if (!$uploadHandlerClass) {
-                $uploadHandlerClass = ZfeFiles_Uploader_Handler_Default::class;
-            }
-
-            $this->uploadHandler = new $uploadHandlerClass;
-        }
-
-        if (!$this->tempRoot) {
-            $this->tempRoot = sys_get_temp_dir();
-        }
+        $this->fileModelName = $fileModelName ?: Files::class;
+        $this->uploadHandler = $uploadHandler ?: new ZfeFiles_Uploader_Handler_Default();
+        $this->tempRoot = $tempRoot ?: sys_get_temp_dir();
     }
 
     /**
@@ -143,15 +138,10 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
             'tempPath' => $tempPath,
             'fileName' => $fileName,
             'fileSize' => $fileSize,
-            'fileExt' => $this->getExtension($fileName),
             'modelName' => $modelName,
             'schemaCode' => $schemaCode,
             'itemId' => $itemId,
         ]);
-
-        // Перекладываем по пути постоянного хранения.
-        // До сохранения файла у нас нет его ID при этом важно всегда держать в $file->path актуальное расположения.
-        $this->moveFile($file);
 
         $this->processFile($file);
 
@@ -160,39 +150,59 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
 
     /**
      * Зарегистрировать файл.
+     * 
+     * @param array $data {
+     *     @var string      $tempPath
+     *     @var string      $fileName
+     *     @var int         $fileSize
+     *     @var string|null $modelName
+     *     @var string|null $schemaCode
+     *     @var int|null    $itemId
+     * }
      *
      * @throws Exception
+     * @throws ZfeFiles_Uploader_Exception
      */
     protected function createFile(array $data): ZfeFiles_FileInterface
     {
         /** @var ZfeFiles_FileInterface|Files $file */
         $file = new $this->fileModelName;
         $file->title = $data['fileName'];
-        $file->path = $data['tempPath'];
         $file->size = $data['fileSize'];
-        $file->ext = $data['fileExt'];
         $file->model_name = $data['modelName'];
         $file->schema_code = $data['schemaCode'];
         $file->item_id = $data['itemId'];
+
+        if ($file->contains('path')) {
+            $file->path = $data['tempPath'];
+        }
+
+        if ($file->contains('extension')) {
+            $file->extension = $this->getExtension($data['fileName']);
+        }
+
+        if ($file->contains('hash')) {
+            if ($file instanceof ZfeFiles_FileHashableInterface) {
+                $file->hash(false);
+            } else {
+                $file->hash = hash_file($this->hashAlgo, $data['tempPath']);
+            }
+        }
+
         $file->save();
 
-        return $file;
-    }
-
-    /**
-     * Переместить файл на постоянное хранение.
-     *
-     * @throws ZfeFiles_Uploader_Exception
-     */
-    protected function moveFile(ZfeFiles_FileInterface $file): void
-    {
-        $newPath = $file->getPathHelper()->getPath();
-        if (rename($file->path, $newPath)) {
-            $file->path = $newPath;
-            $file->save();
+        $newPath = $file->getRealPathHelper()->getPath(true);
+        $this->checkDirectory($newPath);
+        if (rename($data['tempPath'], $newPath)) {
+            if ($file->contains('path')) {
+                $file->path = $newPath;
+                $file->save();
+            }
         } else {
             throw new ZfeFiles_Uploader_Exception('Не удалось переложить загруженный файл из временной директории');
         }
+
+        return $file;
     }
 
     /**
@@ -217,5 +227,22 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
         $parts = explode('.', $fileName);
         $lastPart = end($parts);
         return mb_strtolower($lastPart);
+    }
+
+    /**
+     * Проверить директорию для перемещения в нее файла.
+     *
+     * @throws ZfeFiles_Uploader_Exception
+     */
+    protected function checkDirectory(string $path): void
+    {
+        $dir = dirname($path);
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        if (!is_dir($dir)) {
+            throw new ZfeFiles_Uploader_Exception('Не возможно переместить файл – конфликт имен.');
+        }
     }
 }

@@ -8,6 +8,7 @@ Files:
     id:
       type: integer(4)
       unsigned: true
+      notnull: true
       primary: true
       autoincrement: true
       comment: Идентификатор
@@ -20,7 +21,6 @@ Files:
       comment: ID записи, к которой привязан файл
     schema_code:
       type: string(31)
-      unsigned: true
       comment: Код связи с записью, к которой привязан файл (код в схеме)
     title:
       type: string(511)
@@ -31,11 +31,10 @@ Files:
       unsigned: true
       comment: Размер файла в байтах
     hash:
-      type: string(45)
+      type: string(32)
       comment: Хэш сумма от файла
-    ext:
+    extension:
       type: string(7)
-      notnull: true
       comment: Расширение файла
     path:
       type: string(511)

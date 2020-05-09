@@ -12,17 +12,17 @@ class ZfeFiles_Schema_Default
     /**
      * Модель файлов.
      */
-    protected string $model;
+    protected string $model = 'Files';
 
     /**
      * Код.
      */
-    protected string $code;
+    protected string $code = 'file';
 
     /**
      * Наименование.
      */
-    protected string $title;
+    protected string $title = 'Файл';
 
     /**
      * Необходимость прикрепления файла.
@@ -43,8 +43,10 @@ class ZfeFiles_Schema_Default
 
     /**
      * Процессор.
+     * 
+     * @var ZfeFiles_Processor_Interface|string
      */
-    protected ZfeFiles_Processor_Interface $processor;
+    protected $processor = ZfeFiles_Processor_Null::class;
 
     /**
      * Конструктор.
@@ -224,6 +226,7 @@ class ZfeFiles_Schema_Default
         if (is_string($this->processor)) {
             $this->processor = new $this->processor;
         }
+
         return $this->processor;
     }
 }

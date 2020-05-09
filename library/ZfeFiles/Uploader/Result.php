@@ -13,22 +13,22 @@ class ZfeFiles_Uploader_Result
     /**
      * Оригинальное имя файла.
      */
-    protected string $name;
+    protected ?string $name = null;
 
     /**
      * Путь по которому сохранен файл.
      */
-    protected string $path;
+    protected ?string $path = null;
 
     /**
      * Размер файла в байтах.
      */
-    protected int $size;
+    protected ?int $size = null;
 
     /**
      * Хеш-сумма от файла.
      */
-    protected string $hash;
+    protected ?string $hash = null;
 
     /**
      * Установить оригинальное имя файла.

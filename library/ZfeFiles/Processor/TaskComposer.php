@@ -19,7 +19,7 @@ class ZfeFiles_Processor_TaskComposer implements ZfeFiles_Processor_Interface
      *
      * @var string[]
      */
-    protected array $performerCodes = [];
+    protected array $performerCodes;
 
     /**
      * @param string[] $performerCodes коды исполнителей задач

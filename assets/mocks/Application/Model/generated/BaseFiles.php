@@ -14,7 +14,7 @@
  * @property string $title
  * @property integer $size
  * @property string $hash
- * @property string $ext
+ * @property string $extension
  * @property string $path
  * @property integer $version
  * @property integer $creator_id
