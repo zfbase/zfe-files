@@ -10,7 +10,7 @@
 interface ZfeFiles_Uploader_Interface
 {
     public function __construct(
-        string $fileModelName = null,
+        string $agentClassName = null,
         ZfeFiles_Uploader_Handler_Interface $uploadHandler = null,
         string $tempRoot = null
     );
@@ -18,5 +18,5 @@ interface ZfeFiles_Uploader_Interface
     /**
      * Загрузить файл.
      */
-    public function upload(array $params = []): ?ZfeFiles_FileInterface;
+    public function upload(array $params = []): ?ZfeFiles_Agent_Interface;
 }

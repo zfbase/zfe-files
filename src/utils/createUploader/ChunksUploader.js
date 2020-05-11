@@ -5,7 +5,7 @@ import createFormData from './createFormData';
 
 /**
  * @see https://medium.com/@pilovm/multithreaded-file-uploading-with-javascript-dafabce34ccd
- * @todo Добавить ограниченеи на общее ограничение потоков для всех экзепляров
+ * @todo Добавить ограничение на общее ограничение потоков для всех экземпляров
  */
 
 class ChunksUploader {
@@ -34,7 +34,7 @@ class ChunksUploader {
     this.sendNext();
   }
 
-  abort(loging = true) {
+  abort() {
     Object.keys(this.connections).forEach((chunkNum) => {
       this.connections[chunkNum].abort();
     });
@@ -51,7 +51,7 @@ class ChunksUploader {
     const countConnections = Object.keys(this.connections).length;
 
     if (countConnections >= this.maxThreads) {
-      // Уже запущено макимальное число потоков
+      // Уже запущено максимальное число потоков
       return;
     }
 
@@ -68,7 +68,7 @@ class ChunksUploader {
     this.sendChunk(chunk, chunkNum)
       .then((data) => {
         if (data.file) {
-          this.abort(false);
+          this.abort();
           this.onComplete(data.file);
         } else {
           this.sendNext();
@@ -79,13 +79,13 @@ class ChunksUploader {
 
         console.log(error);
 
-        this.countError++;
+        this.countError += 1;
         if (this.countError < this.maxErrors) {
-          // Если ошибок меньше допустимого числа, перзапустить отправку
+          // Если ошибок меньше допустимого числа, перезапустить отправку
           this.sendNext();
         } else if (countConnections === 0) {
-          // Если ошибок больше допустимого колличества и открытых соединений нет – останавливаемся и плачем
-          this.abort(false);
+          // Если ошибок больше допустимого количества и открытых соединений нет – останавливаемся и плачем
+          this.abort();
           this.onError(error);
         }
       });
@@ -102,7 +102,6 @@ class ChunksUploader {
         resolve(data);
       } catch (error) {
         reject(error);
-        return;
       }
     });
   }
@@ -117,11 +116,11 @@ class ChunksUploader {
       delete this.progressCache[chunkNum];
     }
 
-    const inProgress = Object.keys(this.progressCache).reduce((memo, id) => memo += this.progressCache[id], 0);
+    const inProgress = Object.keys(this.progressCache).reduce((memo, id) => memo + this.progressCache[id], 0);
     const sendedLength = Math.min(this.uploadedSize + inProgress, this.file.size);
 
     this.onProgress({
-      loaded: sendedLength,
+      loaded: sendedLength || 0,
       total: this.file.size,
     });
   }
@@ -138,7 +137,7 @@ class ChunksUploader {
 
       xhr.open('post', this.url);
 
-      xhr.onreadystatechange = (event) => {
+      xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
           resolve(JSON.parse(xhr.responseText));
           delete this.connections[chunkNum];
@@ -165,7 +164,7 @@ class ChunksUploader {
         chunkNum,
         uid: this.uploadId,
       }));
-    })
+    });
   }
 }
 

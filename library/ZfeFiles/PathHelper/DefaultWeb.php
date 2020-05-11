@@ -12,6 +12,11 @@ class ZfeFiles_PathHelper_DefaultWeb extends ZfeFiles_PathHelper_Default
     /**
      * @inheritDoc
      */
+    protected static string $separator = '/';
+
+    /**
+     * @inheritDoc
+     */
     public function getFileName(): string
     {
         if (!$this->file->id) {
@@ -24,21 +29,9 @@ class ZfeFiles_PathHelper_DefaultWeb extends ZfeFiles_PathHelper_Default
     /**
      * @inheritDoc
      */
-    public function getDirectory(string $separator = DIRECTORY_SEPARATOR): string
+    public function getDirectory(): ?string
     {
-        return '';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getRoot(): string
-    {
-        if ($this->root === null) {
-            $this->root = '/' . ($this->file)::getControllerName();
-        }
-
-        return $this->root;
+        return null;
     }
 
     /**

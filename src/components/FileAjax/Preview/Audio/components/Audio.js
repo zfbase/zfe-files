@@ -7,8 +7,19 @@ import Title from './Title';
 import Time from './Time';
 import { Button, DownloadLink } from '../../Simple';
 
-const Audio = ({ item, onDelete, onUndelete, Wrapper }) => {
-  const { Player, play, pause, state } = usePlayer(item.previewUrl);
+const Audio = ({
+  item,
+  onDelete,
+  onUndelete,
+  Wrapper,
+}) => {
+  const {
+    Player,
+    play,
+    pause,
+    state,
+  } = usePlayer(item.previewUrl);
+
   return (
     <Fragment>
       <Player />
@@ -30,16 +41,19 @@ const Audio = ({ item, onDelete, onUndelete, Wrapper }) => {
 Audio.propTypes = {
   item: PropTypes.shape({
     key: PropTypes.string,
+    name: PropTypes.string,
+    duration: PropTypes.number,
     downloadUrl: PropTypes.string,
     previewUrl: PropTypes.string,
     deleted: PropTypes.bool,
+    loading: PropTypes.bool,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
   onUndelete: PropTypes.func.isRequired,
   Wrapper: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.element,
-  ])
+  ]),
 };
 
 Audio.defaultProps = {

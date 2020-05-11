@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import AudioPreview from './Audio/index';
 import ImagePreview from './Image/index';
@@ -17,7 +18,18 @@ const Preview = ({ previewRender, type, ...props }) => {
       default: Helper = SimplePreview; break;
     }
   }
-  return <Helper {...props} />
+
+  return <Helper {...props} />;
+};
+
+Preview.propTypes = {
+  previewRender: PropTypes.element,
+  type: PropTypes.string,
+};
+
+Preview.defaultProps = {
+  previewRender: null,
+  type: null,
 };
 
 export default Preview;

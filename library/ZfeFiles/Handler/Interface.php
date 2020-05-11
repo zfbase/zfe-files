@@ -5,9 +5,9 @@
  */
 
 /**
- * Интерфейс для процессоров обработки файлов.
+ * Интерфейс обработчиков файлов.
  */
-interface ZfeFiles_Processor_Interface
+interface ZfeFiles_Handler_Interface
 {
     /**
      * Обработать файл.
@@ -15,25 +15,25 @@ interface ZfeFiles_Processor_Interface
      * В методе может как осуществляться непосредственная обработка файла,
      * так и планироваться отложенная обработка.
      */
-    public function process(ZfeFiles_FileInterface $file): void;
-
-    /**
-     * Обработка производилась?
-     */
-    public function isPerformed(ZfeFiles_FileInterface $file): bool;
+    public function process(ZfeFiles_Agent_Interface $agent, bool $force = false): void;
 
     /**
      * Обработка выполнена?
      */
-    public function isDone(ZfeFiles_FileInterface $file): bool;
+    public function isDone(ZfeFiles_Agent_Interface $agent): bool;
 
     /**
      * Обработка выполнена успешно?
      */
-    public function isSuccess(ZfeFiles_FileInterface $file): bool;
+    public function isSuccess(ZfeFiles_Agent_Interface $agent): bool;
 
     /**
      * Обработка окончилась с ошибкой?
      */
-    public function isFailed(ZfeFiles_FileInterface $file): bool;
+    public function isFailed(ZfeFiles_Agent_Interface $agent): bool;
+
+    /**
+     * Получить ошибки выполнения.
+     */
+    public function getError(ZfeFiles_Agent_Interface $agent): ?string;
 }

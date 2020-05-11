@@ -2,9 +2,8 @@ import SimpleUploader from './SimpleUploader';
 import ChunksUploader from './ChunksUploader';
 
 export default function (props = {}) {
-  let url = props.url;
+  let { url, file } = props;
   let maxFileSize = props.maxFileSize || 1024 * 1024;
-  let file = props.file;
   let params = props.params || {};
   let onProgress = props.onProgress || (() => {});
   let onComplete = props.onComplete || (() => {});
@@ -17,7 +16,7 @@ export default function (props = {}) {
     // Методы установки параметров загрузки
     //
 
-    setUrl: function (value) {
+    setUrl(value) {
       if (uploader) {
         throw new Error('Указать адрес для загрузки можно только до начала загрузки.');
       }
@@ -26,7 +25,7 @@ export default function (props = {}) {
       return this;
     },
 
-    setMaxFileSize: function (value) {
+    setMaxFileSize(value) {
       if (uploader) {
         throw new Error('Указать максимальный размер файла для одного запроса можно только до начала загрузки.');
       }
@@ -35,7 +34,7 @@ export default function (props = {}) {
       return this;
     },
 
-    setFile: function (value) {
+    setFile(value) {
       if (uploader) {
         throw new Error('Указать файл можно только до начала загрузки.');
       }
@@ -44,7 +43,7 @@ export default function (props = {}) {
       return this;
     },
 
-    setParams: function (value) {
+    setParams(value) {
       if (uploader) {
         throw new Error('Указать дополнительные параметры запроса загрузки можно только до начала загрузки.');
       }
@@ -58,7 +57,7 @@ export default function (props = {}) {
     // Обработчики событий
     //
 
-    onProgress: function (callback) {
+    onProgress(callback) {
       if (uploader) {
         throw new Error('Указать обработчик прогресса загрузки можно только до начала загрузки.');
       }
@@ -67,16 +66,16 @@ export default function (props = {}) {
       return this;
     },
 
-    onComplete: function (callback) {
+    onComplete(callback) {
       if (uploader) {
-        throw new Error('Указать обработчик успешного заверешния загрузки можно только до начала загрузки.');
+        throw new Error('Указать обработчик успешного завершения загрузки можно только до начала загрузки.');
       }
 
       onComplete = callback;
       return this;
     },
 
-    onError: function (callback) {
+    onError(callback) {
       if (uploader) {
         throw new Error('Указать обработчик ошибок можно только до начала загрузки.');
       }
@@ -90,7 +89,7 @@ export default function (props = {}) {
     // Управляющие методы
     //
 
-    start: function () {
+    start() {
       if (!url) {
         throw new Error('До начала загрузки необходимо указать путь для загрузки.');
       }
@@ -120,7 +119,7 @@ export default function (props = {}) {
       return this;
     },
 
-    abort: function () {
+    abort() {
       if (uploader) {
         uploader.abort();
       } else {
@@ -128,7 +127,7 @@ export default function (props = {}) {
       }
     },
 
-    continue: function () {
+    continue() {
       if (uploader) {
         uploader.abort();
       } else {

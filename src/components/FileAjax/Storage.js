@@ -6,7 +6,7 @@ const Storage = ({ name, items }) => {
   return (
     <Fragment>
       {filteredItems.map(item => <input type="hidden" name={`${name}[]`} value={item.id} key={item.id} />)}
-      {(filteredItems.length == 0) && <input type="hidden" name={`${name}[]`} key="0" />}
+      {(filteredItems.length === 0) && <input type="hidden" name={`${name}[]`} key="0" />}
     </Fragment>
   );
 };

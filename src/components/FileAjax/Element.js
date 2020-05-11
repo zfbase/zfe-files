@@ -7,13 +7,17 @@ import useCollection from '../../hooks/useCollection';
 import Storage from './Storage';
 import Preview from './Preview/index';
 
-const getAcceptForType = type => ['audio', 'video', 'image'].includes(type) ? `${type}/*` : null;
+const getAcceptForType = type => (['audio', 'video', 'image'].includes(type) ? `${type}/*` : null);
 
 const DropzoneLabel = ({ multiple }) => (
   <span className="zfe-files-ajax-dropzone-label">
     <span>Для загрузки перетащите {multiple ? 'файлы' : 'файл'} в эту область.</span>
   </span>
 );
+
+DropzoneLabel.propTypes = {
+  multiple: PropTypes.bool.isRequired,
+};
 
 const Element = ({
   accept,
@@ -30,8 +34,13 @@ const Element = ({
 }) => {
   const [items, { addItem, updateItem, removeItem }] = useCollection(files);
 
-  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
-    onDrop: useCallback(acceptedFiles => {
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+    open,
+  } = useDropzone({
+    onDrop: useCallback((acceptedFiles) => {
       acceptedFiles.forEach((file) => {
         const item = addItem({ loading: true });
 
@@ -45,7 +54,7 @@ const Element = ({
           .setFile(file)
           .setParams({ modelName, schemaCode })
           .onProgress(({ loaded, total }) => updateItem(item.key, { uploadProgress: loaded / total * 100 }))
-          .onComplete(file => updateItem(item.key, { loading: false, ...file }))
+          .onComplete(data => updateItem(item.key, { loading: false, ...data }))
           .onError(console.log)
           .start();
 
@@ -65,7 +74,7 @@ const Element = ({
     open(e);
 
     if (!multiple) {
-      items.map((item) => item.deleted && removeItem(item.key));
+      items.map(item => item.deleted && removeItem(item.key));
     }
   };
 

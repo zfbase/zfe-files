@@ -1,20 +1,22 @@
 import React, { useRef, useState, useEffect } from 'react';
 
 const usePlayer = (source, props) => {
-  const _player = useRef(null);
-  const Player = () => <audio ref={_player} src={source} {...props} />;
+  const player = useRef(null);
+  const Player = () => <audio ref={player} src={source} {...props} />;
 
   const [state, setState] = useState('stop');
   useEffect(() => {
-    if (_player) {
+    if (player) {
+      // eslint-disable-next-line default-case
       switch (state) {
         case 'play':
-          _player.current.play();
+          player.current.play();
           break;
         case 'stop':
-          _player.current.currentTime = 0;
+          player.current.currentTime = 0;
+        // eslint-disable-next-line no-fallthrough
         case 'pause':
-          _player.current.pause();
+          player.current.pause();
           break;
       }
     }

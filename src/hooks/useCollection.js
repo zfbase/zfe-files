@@ -9,7 +9,7 @@ const useCollection = (defaultValue) => {
 
   const setItems = items => _setItems(prepare(items));
 
-  const addItem = value => {
+  const addItem = (value) => {
     const item = { key: nanoid(), ...value };
     _setItems(items => [...items, item]);
     return item;
@@ -29,7 +29,7 @@ const useCollection = (defaultValue) => {
 
   const removeItem = key => _setItems(items => items.filter(item => item.key !== key));
 
-  const filterItems = filters => {
+  const filterItems = (filters) => {
     _setItems(items => items
       .filter(item => Object.keys(filters)
         .every(key => (Array.isArray(filters[key]) ? filters[key] : [filters[key]])

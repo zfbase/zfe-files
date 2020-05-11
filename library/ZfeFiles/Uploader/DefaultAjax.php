@@ -17,7 +17,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
     /**
      * Название модели файла.
      */
-    protected string $fileModelName;
+    protected string $agentClassName;
 
     /**
      * Обработчик загрузки файла.
@@ -29,45 +29,23 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
      */
     protected string $tempRoot;
 
-    /**
-     * Алгоритм расчета хеш-суммы от файла.
-     */
-    protected string $hashAlgo = 'md5';
-
     public function __construct(
-        string $fileModelName = null,
+        string $agentClassName = null,
         ZfeFiles_Uploader_Handler_Interface $uploadHandler = null,
         string $tempRoot = null
     )
     {
-        try {
-            $this->config = Zend_Registry::get('config');
+        $config = $this->fromConfig();
 
-            if (!$fileModelName) {
-                $fileModelName = $this->config->files->modelName ?? null;
-            }
-
-            if (!$uploadHandler) {
-                $uploadHandlerClass = $this->config->files->uploadHandler ?? null;
-                if ($uploadHandlerClass) {
-                    $uploadHandler = new $uploadHandlerClass;
-                }
-            }
-
-            if (!$tempRoot) {
-                $tempRoot = $this->config->files->tempPath ?? null;
-            }
-
-            $hashAlgo = $this->config->files->hashAlgo ?? null;
-            if ($hashAlgo) {
-                $this->hashAlgo = $hashAlgo;
-            }
-        } catch(Zend_Exception $e) {
-        }
-
-        $this->fileModelName = $fileModelName ?: Files::class;
-        $this->uploadHandler = $uploadHandler ?: new ZfeFiles_Uploader_Handler_Default();
-        $this->tempRoot = $tempRoot ?: sys_get_temp_dir();
+        $this->agentClassName = $agentClassName
+            ?: $config->agentClassName
+            ?? ZfeFiles_Agent_Mono::class;
+        $this->uploadHandler = $uploadHandler
+            ?: $config->uploadHandler
+            ?? new ZfeFiles_Uploader_Handler_Default();
+        $this->tempRoot = $tempRoot
+            ?: $config->tempRoot
+            ?? sys_get_temp_dir();
     }
 
     /**
@@ -77,7 +55,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
      * @throws ZfeFiles_Uploader_Exception
      * @throws Exception
      */
-    public function upload(array $params = []): ?ZfeFiles_FileInterface
+    public function upload(array $params = []): ?ZfeFiles_Agent_Interface
     {
         $uploadResult = $this->uploadHandler->upload($params['field'] ?? 'file');
 
@@ -86,7 +64,6 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
         $modelName = $params['modelName'] ?? null;
         $schemaCode = $params['schemaCode'] ?? null;
         $itemId = $params['itemId'] ?? null;
-        $fileName = $uploadResult->getName();
 
         if ($chunksCount) {
             // Если грузим чанками, то через сессию контролируем загрузку.
@@ -134,7 +111,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
             $fileSize = $uploadResult->getSize();
         }
 
-        $file = $this->createFile([
+        $agent = ($this->agentClassName)::factory([
             'tempPath' => $tempPath,
             'fileName' => $fileName,
             'fileSize' => $fileSize,
@@ -142,107 +119,32 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
             'schemaCode' => $schemaCode,
             'itemId' => $itemId,
         ]);
+        $agent->process();
 
-        $this->processFile($file);
-
-        return $file;
+        return $agent;
     }
 
     /**
-     * Зарегистрировать файл.
+     * Получить настройки из конфигурации.
      * 
-     * @param array $data {
-     *     @var string      $tempPath
-     *     @var string      $fileName
-     *     @var int         $fileSize
-     *     @var string|null $modelName
-     *     @var string|null $schemaCode
-     *     @var int|null    $itemId
+     * @return object {
+     *      @var ?string                              $agentClassName
+     *      @var ?ZfeFiles_Uploader_Handler_Interface $uploadHandler
+     *      @var ?string                              $tempRoot
      * }
-     *
-     * @throws Exception
-     * @throws ZfeFiles_Uploader_Exception
      */
-    protected function createFile(array $data): ZfeFiles_FileInterface
+    protected function fromConfig(): stdClass
     {
-        /** @var ZfeFiles_FileInterface|Files $file */
-        $file = new $this->fileModelName;
-        $file->title = $data['fileName'];
-        $file->size = $data['fileSize'];
-        $file->model_name = $data['modelName'];
-        $file->schema_code = $data['schemaCode'];
-        $file->item_id = $data['itemId'];
-
-        if ($file->contains('path')) {
-            $file->path = $data['tempPath'];
-        }
-
-        if ($file->contains('extension')) {
-            $file->extension = $this->getExtension($data['fileName']);
-        }
-
-        if ($file->contains('hash')) {
-            if ($file instanceof ZfeFiles_FileHashableInterface) {
-                $file->hash(false);
-            } else {
-                $file->hash = hash_file($this->hashAlgo, $data['tempPath']);
-            }
-        }
-
-        $file->save();
-
-        $newPath = $file->getRealPathHelper()->getPath(true);
-        $this->checkDirectory($newPath);
-        if (rename($data['tempPath'], $newPath)) {
-            if ($file->contains('path')) {
-                $file->path = $newPath;
-                $file->save();
-            }
-        } else {
-            throw new ZfeFiles_Uploader_Exception('Не удалось переложить загруженный файл из временной директории');
-        }
-
-        return $file;
-    }
-
-    /**
-     * Выполнить все необходимые обработки файла.
-     */
-    protected function processFile(ZfeFiles_FileInterface $file): void
-    {
-        $schema = ZfeFiles_Dispatcher::getSchemaForFile($file);
-        if ($schema) {
-            $processor = $schema->getProcessor();
-            if ($processor) {
-                $processor->process($file);
-            }
-        }
-    }
-
-    /**
-     * Получить расширение файла по имени файла.
-     */
-    protected function getExtension(string $fileName): ?string
-    {
-        $parts = explode('.', $fileName);
-        $lastPart = end($parts);
-        return mb_strtolower($lastPart);
-    }
-
-    /**
-     * Проверить директорию для перемещения в нее файла.
-     *
-     * @throws ZfeFiles_Uploader_Exception
-     */
-    protected function checkDirectory(string $path): void
-    {
-        $dir = dirname($path);
-        if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
-        }
-
-        if (!is_dir($dir)) {
-            throw new ZfeFiles_Uploader_Exception('Не возможно переместить файл – конфликт имен.');
+        try {
+            $this->config = Zend_Registry::get('config');
+            $uhc = $this->config->files->uploadHandler ?? null;
+            return (object) [
+                'agentClassName' => $this->config->files->agent ?? null,
+                'uploadHandler' => $uhc ? new $uhc() : null,
+                'tempRoot' => $this->config->files->tempPath ?? null,
+            ];
+        } catch(Zend_Exception $e) {
+            return new stdClass();
         }
     }
 }

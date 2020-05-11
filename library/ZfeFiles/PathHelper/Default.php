@@ -15,16 +15,19 @@ class ZfeFiles_PathHelper_Default
     protected ZfeFiles_FileInterface $file;
 
     /**
-     * Корневая директория файлов на диске.
+     * Разделитель директорий.
      */
-    protected ?string $root = null;
+    protected static string $separator = DIRECTORY_SEPARATOR;
 
     /**
-     * Конструкторы.
+     * Корневая директория файлов.
      */
-    public function __construct(ZfeFiles_FileInterface $file)
+    protected string $root;
+
+    public function __construct(ZfeFiles_FileInterface $file, string $root)
     {
         $this->file = $file;
+        $this->root = $root;
     }
 
     /**
@@ -38,7 +41,7 @@ class ZfeFiles_PathHelper_Default
             throw new ZfeFiles_Exception('Не возможно получить имя файла: не определена хеш-сумма');
         }
 
-        return $this->file->hash;
+        return $this->file->hash . ($this->file->extension ? ".{$this->file->extension}" : '');
     }
 
     /**
@@ -46,26 +49,21 @@ class ZfeFiles_PathHelper_Default
      *
      * @throws ZfeFiles_Exception
      */
-    public function getDirectory(string $separator = DIRECTORY_SEPARATOR): string
+    public function getDirectory(): ?string
     {
         if (!$this->file->id) {
             throw new ZfeFiles_Exception('Не возможно получить имя файла: не определен ID');
         }
 
-        return $this->file->id;
+        $subPathParts = str_split($this->file->id, ZfeFiles_Helpers::DIVIDE);
+        return implode('/', $subPathParts);
     }
 
     /**
      * Получить адрес корня хранилища.
-     *
-     * @throws Zend_Exception
      */
     public function getRoot(): string
     {
-        if ($this->root === null) {
-            $this->root = rtrim(Zend_Registry::get('config')->files->root, DIRECTORY_SEPARATOR);
-        }
-
         return $this->root;
     }
 
@@ -75,11 +73,11 @@ class ZfeFiles_PathHelper_Default
      * @throws Zend_Exception
      * @throws ZfeFiles_Exception
      */
-    public function getPath(bool $full = false, string $separator = DIRECTORY_SEPARATOR): string
+    public function getPath(): string
     {
-        return implode($separator, array_filter([
-            $full ? $this->getRoot() : null,
-            $this->getDirectory($separator) ?: null,
+        return implode(static::$separator, array_filter([
+            rtrim($this->getRoot(), static::$separator),
+            $this->getDirectory() ?: null,
             $this->getFileName(),
         ]));
     }

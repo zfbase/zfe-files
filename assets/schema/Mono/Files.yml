@@ -26,6 +26,9 @@ Files:
       type: string(511)
       notnull: true
       comment: Название исходного файла
+    extension:
+      type: string(7)
+      comment: Расширение файла
     size:
       type: integer(4)
       unsigned: true
@@ -33,9 +36,6 @@ Files:
     hash:
       type: string(32)
       comment: Хэш сумма от файла
-    extension:
-      type: string(7)
-      comment: Расширение файла
     path:
       type: string(511)
       notnull: true

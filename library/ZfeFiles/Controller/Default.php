@@ -12,7 +12,12 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
     /**
      * @inheritDoc
      */
-    protected static $_canCreate = false;
+    protected static $_editFormName = ZfeFiles_Form_Default_File::class;
+
+    /**
+     * Имя класса агента.
+     */
+    protected static string $_agentClassName = ZfeFiles_Agent_Mono::class;
 
     /**
      * Загрузить файл.
@@ -20,18 +25,20 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
     public function uploadAction(): void
     {
         try {
-            $file = $this->getUploader()->upload($this->getAllParams());
-            if ($file === null) {
+            $agent = $this->getUploader()->upload($this->getAllParams());
+            if ($agent === null) {
                 $this->_json(static::STATUS_SUCCESS);
             } else {
                 $this->_json(
                     static::STATUS_SUCCESS,
-                    ['file' => $file->getDataForUploader()],
-                    "Файл {$file->title} успешно загружен."
+                    ['file' => $agent->getDataForUploader()],
+                    "Файл {$agent->getFilename()} успешно загружен."
                 );
             }
-        } catch (Exception $e) {
-            $this->_json(static::STATUS_FAIL, [], 'Не удалось загрузить файл: ' . $e->getMessage());
+        } catch (Exception $ex) {
+            ZFE::popupException($ex);
+
+            $this->_json(static::STATUS_FAIL, [], 'Не удалось загрузить файл: ' . $ex->getMessage());
         }
     }
 
@@ -50,23 +57,40 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
             $uploaderName = ZfeFiles_Uploader_DefaultAjax::class;
         }
 
-        return new $uploaderName();
+        return new $uploaderName(static::$_agentClassName);
     }
 
     /**
      * Скачать файл.
      *
      * @throws Zend_Exception
-     * @throws ZfeFiles_Exception
      */
     public function downloadAction(): void
     {
-        /** @var ZfeFiles_FileInterface $file */
-        $file = $this->_loadItemOrFall();
+        $id = (int) $this->getParam('id');
+        if (!$id) {
+            $this->abort(400, 'Не указан обязательный параметр <code>id</code>');
+        }
+
+        $relId = (int) $this->getParam('rel-id');
+
+        /** @var ZfeFiles_Agent_Interface $agent */
+        $agent = $relId
+            ? (static::$_agentClassName)::loadByMediator($id, $relId)
+            : (static::$_agentClassName)::loadByFileId($id);
+        
+        if (!$agent) {
+            $this->abort(404, 'Файл не найден');
+        }
+
+        if (!$agent->isAllow('download')) {
+            $this->abort(403, 'Вы не можете скачать этот файл.');
+        }
+
         $this->_helper->download(
-            $file->getRealPathHelper()->getPath(true),
-            $file->getWebPathHelper()->getVirtualPath(),
-            $file->getExportFileName()
+            $agent->getFile()->getRealPathHelper()->getPath(),
+            $agent->getFile()->getWebPathHelper()->getVirtualPath(),
+            $agent->getFilename()
         );
     }
 }

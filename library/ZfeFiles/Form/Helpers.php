@@ -23,7 +23,7 @@ trait ZfeFiles_Form_Helpers
             'label' => $schema->getTitle(),
             'required' => $schema->getRequired(),
             'multiple' => $schema->getMultiple(),
-            'upload_url' => ($schema->getModel())::getUploadUrl(),
+            'upload_url' => ($schema->getAgent())::getUploadUrl(),
             'accept' => $schema->getAccept(),
         ];
 
@@ -74,11 +74,9 @@ trait ZfeFiles_Form_Helpers
      */
     protected function zfeFilesInitializePrefixes(): void
     {
-        set_include_path(implode(PATH_SEPARATOR, array(realpath(__DIR__ . '/../../'), get_include_path())));
-
         $this->addPrefixPath(
             'ZfeFiles_Form_Element',
-            'ZfeFiles/Form/Element',
+            __DIR__ . '/Element',
             'element'
         );
     }

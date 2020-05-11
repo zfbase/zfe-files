@@ -10,11 +10,6 @@
 class ZfeFiles_Schema_Default
 {
     /**
-     * Модель файлов.
-     */
-    protected string $model = 'Files';
-
-    /**
      * Код.
      */
     protected string $code = 'file';
@@ -23,6 +18,11 @@ class ZfeFiles_Schema_Default
      * Наименование.
      */
     protected string $title = 'Файл';
+
+    /**
+     * Название класса агента.
+     */
+    protected string $agent = ZfeFiles_Agent_Mono::class;
 
     /**
      * Необходимость прикрепления файла.
@@ -44,53 +44,31 @@ class ZfeFiles_Schema_Default
     /**
      * Процессор.
      * 
-     * @var ZfeFiles_Processor_Interface|string
+     * @var ZfeFiles_Handler_Interface|string|null
      */
-    protected $processor = ZfeFiles_Processor_Null::class;
+    protected $handler;
 
     /**
      * Конструктор.
      *
      * @param array $options {
-     *     @var string                       $model     модель файлов
      *     @var string                       $code      код
      *     @var string                       $title     наименование
+     *     @var string                       $agent     название класса агента
      *     @var bool                         $required  необходимость прикрепления файла
      *     @var string[]|string              $accept    фильтр по типам файлов
      *     @var bool                         $multiple  возможность прикрепления нескольких файла
-     *     @var ZfeFiles_Processor_Interface $processor процессор
+     *     @var ZfeFiles_Processor_Interface $handler   обработчик
      * }
      */
     public function __construct(array $options)
     {
-        $keys = ['model', 'code', 'title', 'required', 'accept', 'multiple', 'processor'];
+        $keys = ['code', 'title', 'agent', 'required', 'accept', 'multiple', 'handler'];
         foreach ($keys as $key) {
             if (array_key_exists($key, $options)) {
                 $this->{'set' . ucfirst($key)}($options[$key]);
             }
         }
-    }
-
-    /**
-     * Установить модель файлов.
-     */
-    public function setModel(string $model): ZfeFiles_Schema_Default
-    {
-        $this->model = $model;
-        return $this;
-    }
-
-    /**
-     * Получить модель файлов.
-     *
-     * @throws Zend_Exception
-     */
-    public function getModel(): ?string
-    {
-        if (!$this->model) {
-            $this->model = Zend_Registry::get('config')->files->modelName;
-        }
-        return $this->model;
     }
 
     /**
@@ -128,6 +106,29 @@ class ZfeFiles_Schema_Default
             return $this->multiple ? 'Файлы' : 'Файл';
         }
         return $this->title;
+    }
+
+    /**
+     * Установить название класса агента.
+     *
+     * @throws ZfeFiles_Schema_Exception
+     */
+    public function setAgent(string $agent): ZfeFiles_Schema_Default
+    {
+        if (!is_a($agent, ZfeFiles_Agent_Interface::class, true)) {
+            throw new ZfeFiles_Schema_Exception("Класс $agent не может быть классом агента файла – он не реализует ZfeFiles_Agent_Interface");
+        }
+
+        $this->agent = $agent;
+        return $this;
+    }
+
+    /**
+     * Получить название класса агента.
+     */
+    public function getAgent(): ?string
+    {
+        return $this->agent;
     }
 
     /**
@@ -205,28 +206,28 @@ class ZfeFiles_Schema_Default
     /**
      * Установить процессор.
      *
-     * @param ZfeFiles_Processor_Interface|string экземпляр процессора или название его класса
+     * @param ZfeFiles_Handler_Interface|string экземпляр процессора или название его класса
      * @throws ZfeFiles_Schema_Exception
      */
-    public function setProcessor($processor): ZfeFiles_Schema_Default
+    public function setHandler($handler): ZfeFiles_Schema_Default
     {
-        if (!is_a($processor, ZfeFiles_Processor_Interface::class, true)) {
-            throw new ZfeFiles_Schema_Exception('Процессор должен реализовывать интерфейс ZfeFiles_Processor_Interface');
+        if (!is_a($handler, ZfeFiles_Handler_Interface::class, true)) {
+            throw new ZfeFiles_Schema_Exception('Процессор должен реализовывать интерфейс ZfeFiles_Handler_Interface');
         }
 
-        $this->processor = $processor;
+        $this->handler = $handler;
         return $this;
     }
 
     /**
      * Получить процессор.
      */
-    public function getProcessor(): ?ZfeFiles_Processor_Interface
+    public function getHandler(): ?ZfeFiles_Handler_Interface
     {
-        if (is_string($this->processor)) {
-            $this->processor = new $this->processor;
+        if (is_string($this->handler)) {
+            $this->handler = new $this->handler;
         }
 
-        return $this->processor;
+        return $this->handler;
     }
 }

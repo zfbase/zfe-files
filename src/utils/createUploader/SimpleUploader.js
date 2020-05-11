@@ -20,7 +20,7 @@ class SimpleUploader {
 
   start() {
     const body = this.formData;
-    const signal = this.controller.signal;
+    const { signal } = this.controller;
     fetch(this.url, { method: 'POST', body, signal })
       .then(response => response.json())
       .then(({ status, data }) => {
