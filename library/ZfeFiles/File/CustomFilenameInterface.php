@@ -7,7 +7,7 @@
 /**
  * Интерфейс для файлов со специфическим хранением имени файла.
  */
-interface ZfeFiles_CustomFilenameInterface
+interface ZfeFiles_File_CustomFilenameInterface
 {
     /**
      * Имя файла (с расширением).

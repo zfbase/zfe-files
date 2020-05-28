@@ -10,7 +10,7 @@
 interface ZfeFiles_Uploader_Interface
 {
     public function __construct(
-        string $agentClassName = null,
+        ZfeFiles_Manager_Interface $manager,
         ZfeFiles_Uploader_Handler_Interface $uploadHandler = null,
         string $tempRoot = null
     );

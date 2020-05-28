@@ -7,10 +7,10 @@
 /**
  * Интерфейс записей с особенностями хеширования.
  */
-interface ZfeFiles_FileHashableInterface
+interface ZfeFiles_File_CustomHashable
 {
     /**
      * Рассчитать хеш-сумму файла.
      */
-    public function hash(bool $autoSave): void;
+    public static function hash(string $path): void;
 }

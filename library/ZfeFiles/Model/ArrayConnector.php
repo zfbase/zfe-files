@@ -8,8 +8,8 @@ trait ZfeFiles_Model_ArrayConnector
             foreach (static::getFileSchemas() as $fileSchema) {
                 $code = $fileSchema->getCode();
                 $array[$code] = [];
-                $agentClass = $fileSchema->getAgent();
-                $agents = $agentClass::loadBySchema($this, $code);
+                $manager = ($fileSchema->getModel())::getManager();
+                $agents = $manager->getAgentsBySchema($this, $code);
                 foreach ($agents as $agent) {  /** @var ZfeFiles_Agent_Interface $agent */
                     $array[$code][] = $agent->getDataForUploader();
                 }
@@ -25,8 +25,8 @@ trait ZfeFiles_Model_ArrayConnector
             foreach (static::getFileSchemas() as $fileSchema) {
                 $code = $fileSchema->getCode();
                 if (array_key_exists($code, $array)) {
-                    $agentClass = $fileSchema->getAgent();
-                    $agentClass::updateForSchema($this, $code, $array[$code]);
+                    $manager = ($fileSchema->getModel())::getManager();
+                    $manager->updateForSchema($this, $code, $array[$code]);
                     unset($array[$code]);
                 }
             }

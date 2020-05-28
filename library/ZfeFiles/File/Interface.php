@@ -7,7 +7,7 @@
 /**
  * Интерфейс записей, хранящих информацию о файлах.
  */
-interface ZfeFiles_FileInterface
+interface ZfeFiles_File_Interface
 {
     /**
      * Получить управляющего расположением файла на диске.

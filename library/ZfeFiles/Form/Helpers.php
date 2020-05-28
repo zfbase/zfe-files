@@ -23,7 +23,7 @@ trait ZfeFiles_Form_Helpers
             'label' => $schema->getTitle(),
             'required' => $schema->getRequired(),
             'multiple' => $schema->getMultiple(),
-            'upload_url' => ($schema->getAgent())::getUploadUrl(),
+            'upload_url' => ($schema->getModel())::getManager()->getUploadUrl(),
             'accept' => $schema->getAccept(),
         ];
 

@@ -12,7 +12,7 @@ class ZfeFiles_PathHelper_Default
     /**
      * Файл.
      */
-    protected ZfeFiles_FileInterface $file;
+    protected ZfeFiles_File_Interface $file;
 
     /**
      * Разделитель директорий.
@@ -24,7 +24,7 @@ class ZfeFiles_PathHelper_Default
      */
     protected string $root;
 
-    public function __construct(ZfeFiles_FileInterface $file, string $root)
+    public function __construct(ZfeFiles_File_Interface $file, string $root)
     {
         $this->file = $file;
         $this->root = $root;

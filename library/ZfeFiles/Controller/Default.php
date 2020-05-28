@@ -15,12 +15,9 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
     protected static $_editFormName = ZfeFiles_Form_Default_File::class;
 
     /**
-     * Имя класса агента.
-     */
-    protected static string $_agentClassName = ZfeFiles_Agent_Mono::class;
-
-    /**
      * Загрузить файл.
+     *
+     * @throws Exception
      */
     public function uploadAction(): void
     {
@@ -57,7 +54,7 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
             $uploaderName = ZfeFiles_Uploader_DefaultAjax::class;
         }
 
-        return new $uploaderName(static::$_agentClassName);
+        return new $uploaderName((static::$_modelName)::getManager());
     }
 
     /**
@@ -72,12 +69,15 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
             $this->abort(400, 'Не указан обязательный параметр <code>id</code>');
         }
 
+        $modelName = $this->getParam('model');
+        $schemaCode = $this->getParam('schema');
         $relId = (int) $this->getParam('rel-id');
 
-        /** @var ZfeFiles_Agent_Interface $agent */
+        /** @var ZfeFiles_Manager_Interface $manager */
+        $manager = (static::$_modelName)::getManager();
         $agent = $relId
-            ? (static::$_agentClassName)::loadByMediator($id, $relId)
-            : (static::$_agentClassName)::loadByFileId($id);
+            ? $manager->getAgentByRelation($id, $modelName, $schemaCode, $relId)
+            : $manager->getAgentByFileId($id);
         
         if (!$agent) {
             $this->abort(404, 'Файл не найден');

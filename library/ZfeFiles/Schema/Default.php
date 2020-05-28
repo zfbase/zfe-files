@@ -20,9 +20,9 @@ class ZfeFiles_Schema_Default
     protected string $title = 'Файл';
 
     /**
-     * Название класса агента.
+     * Название модели файлов.
      */
-    protected string $agent = ZfeFiles_Agent_Mono::class;
+    protected string $model = 'Files';
 
     /**
      * Необходимость прикрепления файла.
@@ -54,7 +54,7 @@ class ZfeFiles_Schema_Default
      * @param array $options {
      *     @var string                       $code      код
      *     @var string                       $title     наименование
-     *     @var string                       $agent     название класса агента
+     *     @var string                       $model     название модели файлов
      *     @var bool                         $required  необходимость прикрепления файла
      *     @var string[]|string              $accept    фильтр по типам файлов
      *     @var bool                         $multiple  возможность прикрепления нескольких файла
@@ -63,7 +63,7 @@ class ZfeFiles_Schema_Default
      */
     public function __construct(array $options)
     {
-        $keys = ['code', 'title', 'agent', 'required', 'accept', 'multiple', 'handler'];
+        $keys = ['code', 'title', 'model', 'required', 'accept', 'multiple', 'handler'];
         foreach ($keys as $key) {
             if (array_key_exists($key, $options)) {
                 $this->{'set' . ucfirst($key)}($options[$key]);
@@ -109,26 +109,28 @@ class ZfeFiles_Schema_Default
     }
 
     /**
-     * Установить название класса агента.
+     * Установить название модели файлов.
      *
      * @throws ZfeFiles_Schema_Exception
      */
-    public function setAgent(string $agent): ZfeFiles_Schema_Default
+    public function setModel(string $model): ZfeFiles_Schema_Default
     {
-        if (!is_a($agent, ZfeFiles_Agent_Interface::class, true)) {
-            throw new ZfeFiles_Schema_Exception("Класс $agent не может быть классом агента файла – он не реализует ZfeFiles_Agent_Interface");
+        if (!is_a($model, ZfeFiles_File_OriginInterface::class, true)) {
+            throw new ZfeFiles_Schema_Exception(
+                "Класс $model не может быть классом файла – он не реализует ZfeFiles_File_OriginInterface"
+            );
         }
 
-        $this->agent = $agent;
+        $this->model = $model;
         return $this;
     }
 
     /**
-     * Получить название класса агента.
+     * Получить название модели файлов.
      */
-    public function getAgent(): ?string
+    public function getModel(): ?string
     {
-        return $this->agent;
+        return $this->model;
     }
 
     /**

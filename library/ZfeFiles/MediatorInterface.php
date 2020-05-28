@@ -12,7 +12,7 @@ interface ZfeFiles_MediatorInterface
     /**
      * Получить привязанный файл
      */
-    public function getFile(): ZfeFiles_FileInterface;
+    public function getFile(): ZfeFiles_File_OriginInterface;
 
     /**
      * Получить управляющую запись.

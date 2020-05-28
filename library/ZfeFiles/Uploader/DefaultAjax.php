@@ -15,9 +15,9 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
     protected Zend_Config $config;
 
     /**
-     * Название модели файла.
+     * Менеджер файла.
      */
-    protected string $agentClassName;
+    protected ZfeFiles_Manager_Interface $manager;
 
     /**
      * Обработчик загрузки файла.
@@ -30,16 +30,14 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
     protected string $tempRoot;
 
     public function __construct(
-        string $agentClassName = null,
+        ZfeFiles_Manager_Interface $manager,
         ZfeFiles_Uploader_Handler_Interface $uploadHandler = null,
         string $tempRoot = null
     )
     {
         $config = $this->fromConfig();
 
-        $this->agentClassName = $agentClassName
-            ?: $config->agentClassName
-            ?? ZfeFiles_Agent_Mono::class;
+        $this->manager = $manager;
         $this->uploadHandler = $uploadHandler
             ?: $config->uploadHandler
             ?? new ZfeFiles_Uploader_Handler_Default();
@@ -111,7 +109,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
             $fileSize = $uploadResult->getSize();
         }
 
-        $agent = ($this->agentClassName)::factory([
+        $agent = $this->manager->factory([
             'tempPath' => $tempPath,
             'fileName' => $fileName,
             'fileSize' => $fileSize,
@@ -128,7 +126,6 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
      * Получить настройки из конфигурации.
      * 
      * @return object {
-     *      @var ?string                              $agentClassName
      *      @var ?ZfeFiles_Uploader_Handler_Interface $uploadHandler
      *      @var ?string                              $tempRoot
      * }
@@ -139,7 +136,6 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
             $this->config = Zend_Registry::get('config');
             $uhc = $this->config->files->uploadHandler ?? null;
             return (object) [
-                'agentClassName' => $this->config->files->agent ?? null,
                 'uploadHandler' => $uhc ? new $uhc() : null,
                 'tempRoot' => $this->config->files->tempPath ?? null,
             ];

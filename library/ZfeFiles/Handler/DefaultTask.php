@@ -21,7 +21,7 @@ class ZfeFiles_Handler_DefaultTask implements ZfeFiles_Handler_Interface
     /**
      * Получить объект для отложенной задачи.
      * 
-     * @return ZfeFiles_FileInterface|AbstractRecord
+     * @return ZfeFiles_File_OriginInterface|AbstractRecord
      */
     protected function getItem(ZfeFiles_Agent_Interface $agent): AbstractRecord
     {
@@ -30,6 +30,7 @@ class ZfeFiles_Handler_DefaultTask implements ZfeFiles_Handler_Interface
 
     /**
      * @inheritDoc
+     * @throws ZFE_Tasks_Exception
      */
     public function process(ZfeFiles_Agent_Interface $agent, bool $force = false): void
     {
