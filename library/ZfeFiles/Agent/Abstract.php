@@ -19,9 +19,9 @@ abstract class ZfeFiles_Agent_Abstract implements ZfeFiles_Agent_Interface
      */
     public function process(bool $force = false): void
     {
-        $mangerHandler = ($this->file)::getManager()->getHandler();
-        if ($mangerHandler) {
-            $mangerHandler->process($this, $force);
+        $managerHandler = ($this->file)::getManager()->getHandler();
+        if ($managerHandler) {
+            $managerHandler->process($this, $force);
         }
 
         $schema = $this->getSchema();

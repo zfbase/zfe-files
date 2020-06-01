@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import AudioPreview from './Audio/index';
 import ImagePreview from './Image/index';
 import SimplePreview from './Simple/index';
-import VideoPreview from './Video/index';
+// import VideoPreview from './Video/index';
 
 const Preview = ({ previewRender, type, ...props }) => {
   let Helper;

@@ -1,26 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from './Button';
 import ButtonLink from './ButtonLink';
+import CropperModal from './CropperModal';
 
-const Image = ({ item, onDelete, onUndelete }) => (
-  <div className="zfe-files-ajax-preview-image thumbnail">
-    <div className="btn-toolbar" role="toolbar">
-      {item.downloadUrl ? (
-        <ButtonLink
-          icon="download-alt"
-          title="Скачать оригинал"
-          url={item.downloadUrl}
-        />
-      ) : null}
-      {item.deleted
-        ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} />
-        : <Button icon="remove" title="Удалить" onClick={() => onDelete(item.key)} />}
+const Image = ({
+  item,
+  onDelete,
+  onUndelete,
+  setData,
+  width,
+  height,
+}) => {
+  const [preview, setPreview] = useState(null);
+  return (
+    <div className="zfe-files-ajax-preview-image thumbnail">
+      <div className="btn-toolbar" role="toolbar">
+        {width && height ? (
+          <CropperModal
+            src={item.downloadUrl || item.previewLocal}
+            width={width}
+            height={height}
+            data={item.data || {}}
+            setData={setData}
+            setPreview={setPreview}
+          />
+        ) : null}
+        {item.downloadUrl ? (
+          <ButtonLink
+            icon="download-alt"
+            title="Скачать оригинал"
+            url={item.downloadUrl}
+          />
+        ) : null}
+        {item.deleted
+          ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} size="xs" />
+          : <Button icon="remove" title="Удалить" onClick={() => onDelete(item.key)} size="xs" />}
+      </div>
+      <div
+        className="zfe-files-ajax-preview-image-canvas"
+        style={{
+          backgroundImage: `url(${preview || item.previewUrl || item.previewLocal})`,
+          opacity: item.deleted ? 0.5 : 1,
+          width: `${width || 200}px`,
+          height: `${height || 200}px`,
+        }}
+      />
     </div>
-    <img src={item.previewUrl || item.previewLocal} style={{ opacity: item.deleted ? 0.5 : 1 }} alt="" />
-  </div>
-);
+  );
+};
 
 Image.propTypes = {
   item: PropTypes.shape({
@@ -29,9 +58,24 @@ Image.propTypes = {
     previewUrl: PropTypes.string,
     previewLocal: PropTypes.string,
     deleted: PropTypes.bool,
+    data: PropTypes.object,
   }).isRequired,
   onDelete: PropTypes.func.isRequired,
   onUndelete: PropTypes.func.isRequired,
+  setData: PropTypes.func.isRequired,
+  width: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]),
+  height: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]),
+};
+
+Image.defaultProps = {
+  width: null,
+  height: null,
 };
 
 export default Image;

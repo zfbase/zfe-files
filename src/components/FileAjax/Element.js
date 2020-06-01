@@ -31,6 +31,7 @@ const Element = ({
   type,
   uploadUrl,
   maxUploadFileSize,
+  ...options,
 }) => {
   const [items, { addItem, updateItem, removeItem }] = useCollection(files);
 
@@ -102,6 +103,8 @@ const Element = ({
         onDelete={key => updateItem(key, { deleted: true })}
         onUndelete={key => updateItem(key, { deleted: null })}
         onCancelUpload={key => removeItem(key)}
+        setData={(key, data) => updateItem(key, { data })}
+        {...options}
       />
 
       <Storage items={items} name={name} />

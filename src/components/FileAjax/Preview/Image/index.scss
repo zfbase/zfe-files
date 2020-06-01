@@ -6,17 +6,11 @@
   margin: (ceil($form-group-margin-bottom / 2)) (ceil($form-group-margin-bottom / 2)) 0 0;
   min-width: 100px;
   min-height: 22px;
-  max-width: 200px;
-  max-height: 200px;
+  // max-width: 200px;
+  // max-height: 200px;
   box-sizing: content-box;
   position: relative;
   float: left;
-
-  img {
-    max-width: 200px;
-    max-height: 200px;
-    z-index: 1;
-  }
 
   > .btn-toolbar {
     position: absolute;
@@ -35,4 +29,16 @@
     left: 50%;
     margin: -25px;
   }
+}
+
+.zfe-files-ajax-preview-image-canvas {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.cropper-toolbar {
+  margin-top: 15px;
+  justify-content: center;
+  display: flex;
 }

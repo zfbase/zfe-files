@@ -56,11 +56,12 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
     public function updateForSchema(
         ZfeFiles_Manageable $item,
         string $schemaCode,
-        array $ids,
+        array $data,
         bool $process = true
     ): void
     {
         $modelName = get_class($item);
+        $ids = $this->extractIds($data);
 
         // Удаляем лишние
         $q = ZFE_Query::create()

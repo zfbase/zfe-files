@@ -125,6 +125,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
         string $modelName,
         string $schemaCode,
         ?int $itemId = null,
+        array $data = [],
         bool $autoSave = true
     ): ZfeFiles_MediatorInterface
     {
@@ -148,11 +149,13 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
     public function updateForSchema(
         ZfeFiles_Manageable $item,
         string $schemaCode,
-        array $ids,
+        array $rows,
         bool $process = true
     ): void
     {
         $modelName = get_class($item);
+        $ids = $this->extractIds($rows);
+        $data = $this->extractData($rows);
 
         // Удаляем медиаторы для устаревших связей
         $qDelete = ZFE_Query::create()
@@ -177,11 +180,12 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
                 $file,
                 $modelName,
                 $schemaCode,
-                $item->id
+                $item->id,
+                $data[$file->id]
             );
 
             if ($process) {
-                $this->createAgent($file, $mediator)->process();
+                $this->createAgent($mediator->getFile(), $mediator)->process();
             }
         }
     }

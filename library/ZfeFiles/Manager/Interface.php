@@ -40,7 +40,7 @@ interface ZfeFiles_Manager_Interface
     /**
      * Обновить список файлов для схемы.
      *
-     * @param int[]|string[] $ids
+     * @param int[]|string[] $ids ID файла или JSON-строка с расширенными данными
      */
     public function updateForSchema(
         ZfeFiles_Manageable $item,

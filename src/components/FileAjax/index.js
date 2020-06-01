@@ -15,7 +15,7 @@ const getProps = (node) => {
   }
   props.multiple = ['1', 'multiple'].includes(props.multiple);
   return props;
-}
+};
 
 /** @todo Переписать без jQuery */
 export default (root) => {

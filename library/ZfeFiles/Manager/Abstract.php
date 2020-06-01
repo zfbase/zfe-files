@@ -176,4 +176,39 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
             throw new ZfeFiles_Exception('Не удалось переложить файл из временного на постоянное место хранения', null, $ex);
         }
     }
+
+    /**
+     * Извлечь ID из массива чисел и JSON.
+     */
+    protected function extractIds(array $rows): array
+    {
+        $ids = [];
+        foreach ($rows as $row) {
+            if (is_numeric($row)) {
+                $ids[] = (int) $row;
+            } else {
+                $ids[] = (int) json_decode($row)->id;
+            }
+        }
+        return $ids;
+    }
+
+    /**
+     * Извлечь дополнительные данные из массива чисел и JSON.
+     */
+    protected function extractData(array $rows): array
+    {
+        $data = [];
+        foreach ($rows as $row) {
+            if (is_numeric($row)) {
+                $data[(int) $row] = [];
+            } else {
+                $json = (array) json_decode($row);
+                $id = (int) $json['id'];
+                unset($json['id']);
+                $data[$id] = $json;
+            }
+        }
+        return $data;
+    }
 }
