@@ -44,7 +44,24 @@ trait ZfeFiles_Form_Helpers
      */
     public function addImageFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
     {
-        return $this->addFileAjaxElement($id, ['type' => 'image'] + $customOptions, $elementName);
+        /** @var ZfeFiles_Schema_Image $schema */
+        $schema = ($this->_modelName)::getFileSchemas()->getByCode($id);
+        $schemaOptions = [];
+
+        $width = $schema->getWidth();
+        $height = $schema->getHeight();
+        if ($width && $height) {
+            $schemaOptions['data-width'] = $width;
+            $schemaOptions['data-height'] = $height;
+            $schemaOptions['description'] = "Размер (ш×в): {$width}×{$height}px";
+        }
+
+        $localOptions = [
+            'type' => 'image',
+        ];
+
+        $options = array_replace_recursive($schemaOptions, $localOptions, $customOptions);
+        return $this->addFileAjaxElement($id, $options, $elementName);
     }
 
     /**

@@ -48,6 +48,16 @@ class ZfeFiles_Schema_Default
      */
     protected $handler;
 
+    protected $optionKeys = [
+        'code',
+        'title',
+        'model',
+        'required',
+        'accept',
+        'multiple',
+        'handler',
+    ];
+
     /**
      * Конструктор.
      *
@@ -63,8 +73,7 @@ class ZfeFiles_Schema_Default
      */
     public function __construct(array $options)
     {
-        $keys = ['code', 'title', 'model', 'required', 'accept', 'multiple', 'handler'];
-        foreach ($keys as $key) {
+        foreach ($this->optionKeys as $key) {
             if (array_key_exists($key, $options)) {
                 $this->{'set' . ucfirst($key)}($options[$key]);
             }
