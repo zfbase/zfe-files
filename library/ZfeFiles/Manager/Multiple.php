@@ -164,7 +164,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
             ->where('model_name = ?', $modelName)
             ->andWhere('schema_code = ?', $schemaCode)
             ->andWhere('item_id = ?', $item->id)
-            ->andWhereNotIn($this->mediatorFileField, $ids)
+            // ->andWhereNotIn($this->mediatorFileField, $ids)
         ;
         $qDelete->execute();
 
