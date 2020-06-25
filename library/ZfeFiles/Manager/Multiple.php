@@ -91,25 +91,22 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
         }
 
         $modelName = $data['modelName'] ?? null;
-        $itemId = $data['itemId'] ?? null;
         $schemaCode = $data['schemaCode'] ?? null;
-        if ($modelName && ($itemId || $schemaCode)) {
+        $itemId = $data['itemId'] ?? null;
+        if ($modelName && $schemaCode) {
             if ($modelName && !is_a($modelName, ZfeFiles_Manageable::class, true)) {
                 throw new ZfeFiles_Exception('Указанная модель управляющей записи не реализует интерфейс ZfeFiles_Manageable');
             }
 
             try {
-                $mediator = $this->createMediator(
-                    $file,
-                    $data['modelName'],
-                    $data['schemaCode'],
-                    $data['itemId'] ?? null
-                );
+                $mediator = $this->createMediator($file, $modelName, $schemaCode, $itemId);
             } catch(Exception $ex) {
                 throw new ZfeFiles_Exception('Не удалось связать файл с записью: ' . $ex->getMessage(), null, $ex);
             }
 
-            return $this->createAgent($file, $mediator);
+            if ($mediator) {
+                return $this->createAgent($file, $mediator);
+            }
         }
 
         return $this->createAgent($file);
@@ -127,7 +124,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
         ?int $itemId = null,
         array $data = [],
         bool $autoSave = true
-    ): ZfeFiles_MediatorInterface
+    ): ?ZfeFiles_MediatorInterface
     {
         $mediator = new $this->mediatorModelName;
         $mediator->{$this->mediatorFileField} = $file->id;
