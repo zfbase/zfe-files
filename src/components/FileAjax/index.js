@@ -25,9 +25,18 @@ export default (root) => {
 
   const files = $.makeArray($root.find(`input[name^=${name}]`).map((i, input) => {
     const $input = $(input);
+    const data = $input.data();
+    const options = { data: {} };
+    Object.keys(data).map((key) => {
+      if (/^data/.test(key)) {
+        options.data[key.substr(4, 1)[0].toLowerCase() + key.substr(5)] = data[key];
+      } else {
+        options[key] = data[key];
+      }
+    });
     return {
       id: $input.val(),
-      ...$input.data(),
+      ...options,
     };
   }));
 
