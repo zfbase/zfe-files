@@ -33,7 +33,17 @@ trait ZfeFiles_Form_Helpers
         ];
 
         $options = array_replace_recursive($schemaOptions, $localOptions, $customOptions);
-        return $this->addElement('fileAjax', $elementName ?: $id, $options);
+
+        $map = [
+            'image' => 'fileAjaxImage',
+            'audio' => 'fileAjaxAudio',
+            'video' => 'fileAjaxVideo',
+        ];
+        $type = (isset($options['type']) && isset($map[$options['type']]))
+            ? $map[$options['type']]
+            : 'fileAjax';
+
+        return $this->addElement($type, $elementName ?: $id, $options);
     }
 
     /**

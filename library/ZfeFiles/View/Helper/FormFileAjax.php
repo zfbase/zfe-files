@@ -5,7 +5,7 @@
  */
 
 /**
- * Построитель элемента формы для загрузки файлов Ajax.
+ * Построитель элемента формы для Ajax-загрузки файлов.
  *
  * @property ZFE_View $view
  */
@@ -90,7 +90,7 @@ class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
         $attrs = [
             'type' => 'hidden',
             'name' => $name,
-            'value' => $file['id'],
+            'value' => $this->getInputValue($file),
         ];
         foreach ($file as $key => $value) {
             if ($key !== 'id') {
@@ -99,6 +99,11 @@ class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
             }
         }
         return $this->view->tag('input', $attrs);
+    }
+
+    protected function getInputValue(array $file): string
+    {
+        return $file['id'];
     }
 
     /**
