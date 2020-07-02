@@ -20,6 +20,11 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
         $this->mediator = $mediator;
     }
 
+    public function getMediator(): ?ZfeFiles_MediatorInterface
+    {
+        return $this->mediator;
+    }
+
     /**
      * @inheritDoc
      */
