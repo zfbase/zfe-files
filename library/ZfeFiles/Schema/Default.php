@@ -217,12 +217,12 @@ class ZfeFiles_Schema_Default
     /**
      * Установить процессор.
      *
-     * @param ZfeFiles_Handler_Interface|string экземпляр процессора или название его класса
+     * @param ZfeFiles_Handler_Interface|string|null экземпляр процессора или название его класса
      * @throws ZfeFiles_Schema_Exception
      */
     public function setHandler($handler): ZfeFiles_Schema_Default
     {
-        if (!is_a($handler, ZfeFiles_Handler_Interface::class, true)) {
+        if (!is_a($handler, ZfeFiles_Handler_Interface::class, true) && $handler !== null) {
             throw new ZfeFiles_Schema_Exception('Процессор должен реализовывать интерфейс ZfeFiles_Handler_Interface');
         }
 
