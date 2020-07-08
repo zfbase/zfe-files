@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import createUploader from '../../utils/createUploader';
@@ -23,17 +23,22 @@ const Element = ({
   accept,
   disabled,
   files,
+  maxUploadFileSize,
   modelName,
   multiple,
   name,
+  onLoaded,
   previewRender,
   schemaCode,
   type,
   uploadUrl,
-  maxUploadFileSize,
-  ...options,
+  ...options
 }) => {
   const [items, { addItem, updateItem, removeItem }] = useCollection(files);
+
+  React.useEffect(() => {
+    onLoaded();
+  }, []);
 
   const {
     getRootProps,
@@ -41,7 +46,7 @@ const Element = ({
     isDragActive,
     open,
   } = useDropzone({
-    onDrop: useCallback((acceptedFiles) => {
+    onDrop: React.useCallback((acceptedFiles) => {
       acceptedFiles.forEach((file) => {
         const item = addItem({ loading: true });
 
@@ -107,7 +112,7 @@ const Element = ({
         {...options}
       />
 
-      <Storage items={items} name={name} />
+      <Storage {...{ items, name }} />
     </div>
   );
 };
@@ -120,6 +125,7 @@ Element.propTypes = {
   modelName: PropTypes.string.isRequired,
   multiple: PropTypes.bool,
   name: PropTypes.string.isRequired,
+  onLoaded: PropTypes.func,
   previewRender: PropTypes.element,
   schemaCode: PropTypes.string.isRequired,
   type: PropTypes.string,
@@ -132,6 +138,7 @@ Element.defaultProps = {
   files: [],
   maxUploadFileSize: 1024 ** 2,
   multiple: false,
+  onLoaded: () => {},
   previewRender: null,
   type: null,
 };

@@ -17,7 +17,6 @@ const getProps = (node) => {
   return props;
 };
 
-/** @todo Переписать без jQuery */
 export default (root) => {
   const $root = $(root);
   const name = $root.data('name');
@@ -27,7 +26,7 @@ export default (root) => {
     const $input = $(input);
     const data = $input.data();
     const options = { data: {} };
-    Object.keys(data).map((key) => {
+    Object.keys(data).forEach((key) => {
       if (/^data/.test(key)) {
         options.data[key.substr(4, 1)[0].toLowerCase() + key.substr(5)] = data[key];
       } else {
@@ -40,9 +39,23 @@ export default (root) => {
     };
   }));
 
+  const getOnLoadedHandler = () => {
+    const $form = $root.closest('form');
+
+    if (!$form.data('plugin_checkUnsavedFormData')) {
+      return () => {};
+    }
+
+    return () => {
+      $form.checkUnsavedFormData('setFreeValue', `${name}[0]`, null);
+      $form.checkUnsavedFormData('setFreeValue', `${name}[]`);
+    };
+  };
+
   const props = {
     files,
     maxUploadFileSize,
+    onLoaded: getOnLoadedHandler(),
     ...getProps(root),
   };
 
