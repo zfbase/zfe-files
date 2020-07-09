@@ -93,7 +93,7 @@ class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
             'value' => $this->getInputValue($file),
         ];
         foreach ($file as $key => $value) {
-            if ($key !== 'id') {
+            if ($key !== 'id' && $value !== NULL) {
                 $dashedKey = strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $key));
                 $attrs['data-' . $dashedKey] = $value;
             }
