@@ -35,7 +35,7 @@ class ZfeFiles_Schema_Image extends ZfeFiles_Schema_Default
     /**
      * Установить ширину изображения
      */
-    public function setWidth($width): Utils_FilesImage_Schema
+    public function setWidth($width): ZfeFiles_Schema_Image
     {
         $this->width = $width;
         return $this;
@@ -52,7 +52,7 @@ class ZfeFiles_Schema_Image extends ZfeFiles_Schema_Default
     /**
      * Установить высоту изображения.
      */
-    public function setHeight($height): Utils_FilesImage_Schema
+    public function setHeight($height): ZfeFiles_Schema_Image
     {
         $this->height = $height;
         return $this;
