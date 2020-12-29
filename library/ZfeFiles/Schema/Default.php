@@ -71,7 +71,7 @@ class ZfeFiles_Schema_Default
      *     @var ZfeFiles_Processor_Interface $handler   обработчик
      * }
      */
-    public function __construct(array $options)
+    public function __construct(array $options = [])
     {
         foreach ($this->optionKeys as $key) {
             if (array_key_exists($key, $options)) {

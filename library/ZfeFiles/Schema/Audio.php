@@ -13,7 +13,7 @@ class ZfeFiles_Schema_Audio extends ZfeFiles_Schema_Default
      * @inheritDoc
      * @throws ZfeFiles_Schema_Exception
      */
-    public function __construct(array $options)
+    public function __construct(array $options = [])
     {
         $this->setAccept('audio/*');
 
