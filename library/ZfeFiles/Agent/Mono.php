@@ -26,10 +26,6 @@ class ZfeFiles_Agent_Mono extends ZfeFiles_Agent_Abstract
         if ($file->model_name && $file->schema_code) {
             $this->schema = ($file->model_name)::getFileSchemas()->getByCode($file->schema_code);
         }
-
-        if ($file->model_name && $file->item_id) {
-            $this->item = ($file->model_name)::find($file->item_id);
-        }
     }
 
     /**
@@ -37,6 +33,9 @@ class ZfeFiles_Agent_Mono extends ZfeFiles_Agent_Abstract
      */
     public function getManageableItem(): ?ZfeFiles_Manageable
     {
+        if (!$this->item && $this->file->model_name && $this->file->item_id) {
+            $this->item = ($this->file->model_name)::find($this->file->item_id);
+        }
         return $this->item;
     }
 

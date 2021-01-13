@@ -79,4 +79,31 @@ abstract class ZfeFiles_Agent_Abstract implements ZfeFiles_Agent_Interface
     {
         return true;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setData(array $data): void
+    {
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function toArray($deep = true): array
+    {
+        return [
+            'file' => $this->getFile()->toArray($deep),
+            'item' => $this->getManageableItem() ? $this->getManageableItem()->toArray($deep) : null,
+            'schema' => $this->getSchema() ? $this->getSchema()->getOptions() : null,
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function __debugInfo()
+    {
+        return $this->toArray();
+    }
 }

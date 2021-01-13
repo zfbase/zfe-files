@@ -20,7 +20,10 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
         $this->mediator = $mediator;
     }
 
-    public function getMediator(): ?ZfeFiles_MediatorInterface
+    /**
+     * @return ZfeFiles_MediatorInterface|ZFE_Model_AbstractRecord|null
+     */
+    public function getMediator()
     {
         return $this->mediator;
     }
@@ -28,7 +31,7 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
     /**
      * @inheritDoc
      */
-    public function getManageableItem(): ?ZfeFiles_Manageable
+    public function getManageableItem()
     {
         return $this->mediator ? $this->mediator->getItem() : null;
     }
@@ -39,5 +42,27 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
     public function getSchema(): ?ZfeFiles_Schema_Default
     {
         return $this->mediator ? $this->mediator->getSchema() : null;
+    }
+
+    /**
+     * Сравнить агенты.
+     *
+     * @param ZfeFiles_Agent_Multiple $other
+     * @return boolean
+     */
+    public function isEqual(ZfeFiles_Agent_Multiple $other): bool
+    {
+        return $this->getFile()->isEqual($other->getFile())
+            && $this->getMediator()->isEqual($other->getMediator());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function toArray($deep = true): array
+    {
+        return parent::toArray($deep) + [
+            'mediator' => $this->getMediator() ? $this->getMediator()->toArray($deep) : null,
+        ];
     }
 }

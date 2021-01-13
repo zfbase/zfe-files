@@ -184,7 +184,9 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     {
         $ids = [];
         foreach ($rows as $row) {
-            if (is_numeric($row)) {
+            if ($row === '') {
+                // relax
+            } elseif (is_numeric($row)) {
                 $ids[] = (int) $row;
             } else {
                 $ids[] = (int) json_decode($row)->id;
@@ -200,7 +202,9 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     {
         $data = [];
         foreach ($rows as $row) {
-            if (is_numeric($row)) {
+            if ($row === '') {
+                // relax
+            } elseif (is_numeric($row)) {
                 $data[(int) $row] = [];
             } else {
                 $json = (array) json_decode($row);

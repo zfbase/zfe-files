@@ -42,7 +42,7 @@ interface ZfeFiles_Agent_Interface
      *
      * @return ZfeFiles_Manageable|AbstractRecord|null
      */
-    public function getManageableItem(): ?ZfeFiles_Manageable;
+    public function getManageableItem();
 
     /**
      * Получить схему.
@@ -58,4 +58,14 @@ interface ZfeFiles_Agent_Interface
      * Проверить право текущего пользователя на конкретное действие над файлом.
      */
     public function isAllow(string $privilege): bool;
+
+    /**
+     * Установить дополнительные данные.
+     */
+    public function setData(array $data): void;
+
+    /**
+     * Привести к массиву.
+     */
+    public function toArray($deep = true): array;
 }

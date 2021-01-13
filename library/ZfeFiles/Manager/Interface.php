@@ -38,21 +38,43 @@ interface ZfeFiles_Manager_Interface
     public function getHandler(): ?ZfeFiles_Handler_Interface;
 
     /**
-     * Обновить список файлов для схемы.
+     * Обновить данные агентов в БД.
      *
-     * @param int[]|string[] $ids ID файла или JSON-строка с расширенными данными
+     * @param ZfeFiles_Agent_Interface[] $agents
      */
-    public function updateForSchema(
+    public function updateAgents(
         ZfeFiles_Manageable $item,
-        string $schemaCode,
-        array $ids,
-        bool $process = true
+        ZfeFiles_Schema_Default $schema,
+        array $agents
     ): void;
 
     /**
+     * Выполнить обработчики для прикрепленных файлов.
+     *
+     * @param bool $force Обновить вне зависимости от последнего времени изменения файла или связи.
+     */
+    public function process(
+        string $modelName,
+        int $itemId,
+        bool $force = false
+    ): void;
+
+    /**
+     * Создать агенты по данным файлов и связей.
+     *
+     * @param ZfeFiles_Manageable|ZFE_Model_AbstractRecord $item
+     * @return ZfeFiles_Agent_Interface[] 
+     */
+    public function createAgents(
+        array $data,
+        string $schemaCode,
+        ?ZfeFiles_Manageable $item
+    ): array;
+
+    /**
      * Получить агенты соответствующие схеме.
-     * 
-     * @return array<ZfeFiles_Agent_Interface>
+     *
+     * @return ZfeFiles_Agent_Interface[]
      * @todo Рассмотреть возможность перехода на генератор с yield
      */
     public function getAgentsBySchema(ZfeFiles_Manageable $item, string $schemaCode): array;

@@ -51,49 +51,79 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
 
     /**
      * @inheritDoc
-     * @throws Doctrine_Query_Exception
      */
-    public function updateForSchema(
+    public function createAgents(array $data, string $schemaCode, ?ZfeFiles_Manageable $item): array
+    {
+        $agents = [];
+        $q = ZFE_Query::create()
+            ->select('*')
+            ->from($this->fileModelName)
+            ->whereIn('id', $this->extractIds($data))
+        ;
+        $files = $q->execute();
+        foreach ($files as $file) {
+            $agents[] = $this->createAgent($file);
+        }
+        return $agents;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function updateAgents(
         ZfeFiles_Manageable $item,
-        string $schemaCode,
-        array $data,
-        bool $process = true
+        ZfeFiles_Schema_Default $schema,
+        array $agents
     ): void
     {
         $modelName = get_class($item);
-        $ids = $this->extractIds($data);
+        $schemaCode = $schema->getCode();
 
-        // Удаляем лишние
         $q = ZFE_Query::create()
-            ->delete()
-            ->from($this->fileModelName)
+            ->select('*')
+            ->from($this->fileModelName . ' INDEXBY id')
             ->where('model_name = ?', $modelName)
             ->andWhere('schema_code = ?', $schemaCode)
             ->andWhere('item_id = ?', $item->id)
-            ->andWhereNotIn('id', $ids)
         ;
-        $q->execute();
+        $oldFiles = $q->execute();
+        $oldIds = $oldFiles->getKeys();
+ 
+        $newIds = array_map(function ($agent) {
+            return $agent->getFile()->id;
+        }, $agents);
 
-        // Привязываем новые
-        $q = ZFE_Query::create()
-            ->update($this->fileModelName)
-            ->set('model_name', '?', $modelName)
-            ->set('schema_code', '?', $schemaCode)
-            ->set('item_id', '?', $item->id)
-            ->whereIn('id', $ids)
-        ;
-        $q->execute();
-
-        if ($process) {
-            $q = ZFE_Query::create()
-                ->select('*')
-                ->from($this->fileModelName)
-                ->whereIn('id', $ids)
-            ;
-            $files = $q->execute();
-            foreach ($files as $file) {
-                $this->createAgent($file)->process();
+        $toUnlinkIds = array_diff($oldIds, $newIds);
+        foreach ($oldFiles as $file) {
+            if (in_array($file->id, $toUnlinkIds)) {
+                $file->item_id = null;
+                $file->save();
             }
+        }
+
+        $toLinkIds = array_diff($newIds, $oldIds);
+        foreach ($agents as $agent) {
+            $file = $agent->getFile();
+            if (in_array($file->id, $toLinkIds)) {
+                $file->model_name = $modelName;
+                $file->schema_code = $schemaCode;
+                $file->item_id = $item->id;
+                $file->save();
+            }
+        }
+    }
+
+    public function process(string $modelName, int $itemId, bool $force = false): void
+    {
+        $q = ZFE_Query::create()
+            ->select('*')
+            ->from($this->fileModelName)
+            ->where('model_name = ?', $modelName)
+            ->andWhere('item_id = ?', $itemId)
+        ;
+        $files = $q->execute();
+        foreach ($files as $file) {
+            $this->createAgent($file)->process($force);
         }
     }
 

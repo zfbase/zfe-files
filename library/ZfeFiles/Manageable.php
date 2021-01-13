@@ -11,6 +11,8 @@ interface ZfeFiles_Manageable
 {
     /**
      * Получить коллекцию схем привязываемых файлов.
+     *
+     * @return ZfeFiles_Schema_Collection<ZfeFiles_Schema_Default>
      */
     public static function getFileSchemas(): ZfeFiles_Schema_Collection;
 }

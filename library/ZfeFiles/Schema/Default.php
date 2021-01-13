@@ -48,6 +48,9 @@ class ZfeFiles_Schema_Default
      */
     protected $handler;
 
+    /**
+     * Ключи опций.
+     */
     protected $optionKeys = [
         'code',
         'title',
@@ -240,5 +243,15 @@ class ZfeFiles_Schema_Default
         }
 
         return $this->handler;
+    }
+
+    /**
+     * Получить массив опций.
+     */
+    public function getOptions(): array
+    {
+        return array_map(function ($optionKey) {
+            return $this->{$optionKey};
+        }, $this->optionKeys);
     }
 }
