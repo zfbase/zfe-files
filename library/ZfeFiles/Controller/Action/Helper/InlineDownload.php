@@ -27,8 +27,8 @@ class ZfeFiles_Controller_Action_Helper_InlineDownload extends Zend_Controller_A
         }
 
         $helpersMap = [
-            'nginx' => 'DownloadNginx',
-            'php' => 'DownloadPhp',
+            'nginx' => 'InlineDownloadNginx',
+            'php' => 'InlineDownloadPhp',
         ];
         if (array_key_exists($config->webserver, $helpersMap)) {
             /** @var ZfeFiles_Controller_Action_Helper_InlineDownload $action */
