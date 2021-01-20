@@ -32,8 +32,6 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     protected $handler;
 
     /**
-     * Конструктор.
-     *
      * @param Zend_Config|array|string $config конфигурация или её имя в общей конфигурации
      * @throws ZfeFiles_Exception
      * @throws Zend_Exception
@@ -148,6 +146,9 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
         return $file ? $this->getAgentByFile($file) : null;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getAgentByFile(ZfeFiles_File_OriginInterface $file): ZfeFiles_Agent_Interface
     {
         return new $this->agentClassName($file);

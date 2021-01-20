@@ -113,6 +113,9 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     public function process(string $modelName, int $itemId, bool $force = false): void
     {
         $q = ZFE_Query::create()

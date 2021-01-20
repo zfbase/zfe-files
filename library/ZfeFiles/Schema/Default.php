@@ -62,8 +62,6 @@ class ZfeFiles_Schema_Default
     ];
 
     /**
-     * Конструктор.
-     *
      * @param array $options {
      *     @var string                       $code      код
      *     @var string                       $title     наименование
