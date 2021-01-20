@@ -5,9 +5,9 @@
  */
 
 /**
- * Помощник отправки файла средствами php-сервера для встраивания в страницу.
+ * Помощник отправки файла средствами веб-сервера nginx через авторизацию приложения.
  */
-class ZfeFiles_Controller_Action_Helper_InlineDownloadPhp
+class ZfeFiles_Controller_Action_Helper_InlineDownloadNginx
     extends ZfeFiles_Controller_Action_Helper_InlineDownload
 {
     /**
@@ -16,16 +16,9 @@ class ZfeFiles_Controller_Action_Helper_InlineDownloadPhp
     public function direct(string $path, string $url): void
     {
         if (file_exists($path)) {
-            // если этого не сделать файл будет читаться в память полностью!
-            if (ob_get_level()) {
-                ob_end_clean();
-            }
-
             $response = $this->factoryResponse($path);
+            $response->setHeader('X-Accel-Redirect', $url);
             $response->sendResponse();
-
-            // читаем файл и отправляем его пользователю
-            readfile($path);
             exit;
         }
 
