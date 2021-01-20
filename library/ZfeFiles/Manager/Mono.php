@@ -55,11 +55,16 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
      */
     public function createAgents(array $data, string $schemaCode, ?ZfeFiles_Manageable $item): array
     {
+        $ids = $this->extractIds($data);
+        if (!$ids) {
+            return [];
+        }
+
         $agents = [];
         $q = ZFE_Query::create()
             ->select('*')
             ->from($this->fileModelName)
-            ->whereIn('id', $this->extractIds($data))
+            ->whereIn('id', $ids)
         ;
         $files = $q->execute();
         foreach ($files as $file) {
@@ -76,41 +81,25 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
         ZfeFiles_Schema_Default $schema,
         array $agents
     ): void {
-        $modelName = get_class($item);
-        $schemaCode = $schema->getCode();
+        $fileIds = [];
 
-        $q = ZFE_Query::create()
-            ->select('*')
-            ->from($this->fileModelName . ' INDEXBY id')
-            ->where('model_name = ?', $modelName)
-            ->andWhere('schema_code = ?', $schemaCode)
-            ->andWhere('item_id = ?', $item->id)
-        ;
-        $oldFiles = $q->execute();
-        $oldIds = $oldFiles->getKeys();
-
-        $newIds = array_map(function ($agent) {
-            return $agent->getFile()->id;
-        }, $agents);
-
-        $toUnlinkIds = array_diff($oldIds, $newIds);
-        foreach ($oldFiles as $file) {
-            if (in_array($file->id, $toUnlinkIds)) {
-                $file->item_id = null;
-                $file->save();
-            }
-        }
-
-        $toLinkIds = array_diff($newIds, $oldIds);
         foreach ($agents as $agent) {
             $file = $agent->getFile();
-            if (in_array($file->id, $toLinkIds)) {
-                $file->model_name = $modelName;
-                $file->schema_code = $schemaCode;
-                $file->item_id = $item->id;
-                $file->save();
-            }
+            $file->model_name = get_class($item);
+            $file->schema_code = $schema->getCode();
+            $file->item_id = $item->id;
+            $file->save();
+            $fileIds[] = $file->id;
         }
+
+        // Удаляем ссылки для более не связанных файлов
+        $qDelete = ZFE_Query::create()
+            ->update($this->fileModelName)
+            ->set('item_id', 'NULL')
+            ->where('item_id = ?', $item->id)
+            ->whereNotIn('id', $fileIds)
+        ;
+        $qDelete->execute();
     }
 
     /**
