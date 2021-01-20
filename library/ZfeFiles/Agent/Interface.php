@@ -68,4 +68,9 @@ interface ZfeFiles_Agent_Interface
      * Привести к массиву.
      */
     public function toArray(bool $deep = true): array;
+
+    /**
+     * Сохранить все данные агента.
+     */
+    public function save(): void;
 }

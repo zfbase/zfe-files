@@ -46,4 +46,12 @@ class ZfeFiles_Agent_Mono extends ZfeFiles_Agent_Abstract
     {
         return $this->schema;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function save(): void
+    {
+        $this->getFile()->save();
+    }
 }

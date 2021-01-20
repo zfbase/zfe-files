@@ -213,10 +213,8 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
 
         /** @var ZfeFiles_Agent_Multiple[] $agents */
         foreach ($agents as $agent) {
-            $mediator = $agent->getMediator();
-            $mediatorIds[] = $mediator->id;
-            $mediator->save();
-            $agent->getFile()->save();
+            $agent->save();
+            $mediatorIds[] = $agent->getMediator()->id;
         }
 
         // Удаляем медиаторы для устаревших связей

@@ -64,4 +64,18 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
             'mediator' => $this->getMediator() ? $this->getMediator()->toArray($deep) : null,
         ];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function save(): void
+    {
+        if ($this->getFile()) {
+            $this->getFile()->save();
+        }
+
+        if ($this->getMediator()) {
+            $this->getMediator()->save();
+        }
+    }
 }

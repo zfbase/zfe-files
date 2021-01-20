@@ -56,7 +56,7 @@ abstract class ZfeFiles_Agent_Abstract implements ZfeFiles_Agent_Interface
     /**
      * {@inheritdoc}
      */
-    public function getFile(): ZfeFiles_File_OriginInterface
+    public function getFile()
     {
         return $this->file;
     }

@@ -68,7 +68,13 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
         ;
         $files = $q->execute();
         foreach ($files as $file) {
-            $agents[] = $this->createAgent($file);
+            $agent = $this->createAgent($file);
+            $agent->getFile()->setArray([
+                'model_name' => get_class($item),
+                'schema_code' => $schemaCode,
+                'item_id' => $item->id,
+            ]);
+            $agents[] = $agent;
         }
         return $agents;
     }
@@ -84,12 +90,8 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
         $fileIds = [];
 
         foreach ($agents as $agent) {
-            $file = $agent->getFile();
-            $file->model_name = get_class($item);
-            $file->schema_code = $schema->getCode();
-            $file->item_id = $item->id;
-            $file->save();
-            $fileIds[] = $file->id;
+            $agent->save();
+            $fileIds[] = $agent->getFile()->id;
         }
 
         // Удаляем ссылки для более не связанных файлов
