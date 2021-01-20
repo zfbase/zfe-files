@@ -10,14 +10,14 @@
 class ZfeFiles_Form_Default_File extends ZFE_Form_Edit_AutoGeneration
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected $_fieldMethods = [
         'title' => 'addTextElement',
     ];
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected $_ignoreFields = [
         'model_name',
@@ -30,7 +30,7 @@ class ZfeFiles_Form_Default_File extends ZFE_Form_Edit_AutoGeneration
     ];
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function populate(array $values)
     {

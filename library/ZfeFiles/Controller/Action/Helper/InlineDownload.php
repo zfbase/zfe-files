@@ -7,8 +7,7 @@
 /**
  * Помощник отправки файла средствами веб-сервера для встраивания в страницу.
  */
-class ZfeFiles_Controller_Action_Helper_InlineDownload
-    extends Zend_Controller_Action_Helper_Abstract
+class ZfeFiles_Controller_Action_Helper_InlineDownload extends Zend_Controller_Action_Helper_Abstract
 {
     /**
      * Отправить файл средствами сервера через авторизацию приложения.

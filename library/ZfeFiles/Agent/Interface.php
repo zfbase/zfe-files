@@ -6,7 +6,7 @@
 
 /**
  * Интерфейс агентов файлов.
- * 
+ *
  * Инициализированный агент знает все о файле
  * и может знать конкретную его привязку к управляющей модели.
  */
@@ -35,7 +35,7 @@ interface ZfeFiles_Agent_Interface
      *
      * @return ZfeFiles_File_OriginInterface|AbstractRecord
      */
-    public function getFile(): ZfeFiles_File_OriginInterface;
+    public function getFile();
 
     /**
      * Получить управляющую запись (к которой привязан файл).
@@ -67,5 +67,5 @@ interface ZfeFiles_Agent_Interface
     /**
      * Привести к массиву.
      */
-    public function toArray($deep = true): array;
+    public function toArray(bool $deep = true): array;
 }

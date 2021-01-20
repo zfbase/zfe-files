@@ -10,7 +10,7 @@
 class ZfeFiles_Helpers
 {
     /**
-     * @var Число разрядов для разбиения идентификатора.
+     * @var Число разрядов для разбиения идентификатора
      */
     const DIVIDE = 3;
 
@@ -23,16 +23,16 @@ class ZfeFiles_Helpers
     {
         if (!file_exists($path)) {
             if (!mkdir($path, $mode, true)) {
-                throw new ZfeFiles_Exception("Не удалось создать директорию $path");
+                throw new ZfeFiles_Exception("Не удалось создать директорию ${path}");
             }
         }
 
         if (!is_dir($path)) {
-            throw new ZfeFiles_Exception("$path не является директорией");
+            throw new ZfeFiles_Exception("${path} не является директорией");
         }
 
-        if ($mode !== octdec(substr(decoct(fileperms($path)), -4)) && !chmod($path, $mode)) {
-            throw new ZfeFiles_Exception("Не удалось изменить права доступа к директории $path");
+        if ($mode !== octdec(mb_substr(decoct(fileperms($path)), -4)) && !chmod($path, $mode)) {
+            throw new ZfeFiles_Exception("Не удалось изменить права доступа к директории ${path}");
         }
     }
 
@@ -44,7 +44,7 @@ class ZfeFiles_Helpers
         $pathParts = explode('/', $name);
         $filename = end($pathParts);
 
-        if (strpos($filename, '.') === false) {
+        if (mb_strpos($filename, '.') === false) {
             return null;
         }
 
@@ -57,13 +57,13 @@ class ZfeFiles_Helpers
      */
     public static function cutExtension(string $fileName): ?string
     {
-        $startPosition = (int) strrpos($fileName, DIRECTORY_SEPARATOR);
-        $dotPosition = strrpos($fileName, '.', $startPosition);
+        $startPosition = (int) mb_strrpos($fileName, DIRECTORY_SEPARATOR);
+        $dotPosition = mb_strrpos($fileName, '.', $startPosition);
         if ($dotPosition === false) {
             return $fileName;
         }
 
-        return substr($fileName, 0, $dotPosition);
+        return mb_substr($fileName, 0, $dotPosition);
     }
 
     /**

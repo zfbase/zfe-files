@@ -55,7 +55,7 @@ class ZfeFiles_PathHelper_Default
             throw new ZfeFiles_Exception('Не возможно получить имя файла: не определен ID');
         }
 
-        $subPathParts = str_split($this->file->id, ZfeFiles_Helpers::DIVIDE);
+        $subPathParts = mb_str_split($this->file->id, ZfeFiles_Helpers::DIVIDE);
         return implode('/', $subPathParts);
     }
 

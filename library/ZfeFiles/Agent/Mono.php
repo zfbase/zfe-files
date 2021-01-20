@@ -29,7 +29,7 @@ class ZfeFiles_Agent_Mono extends ZfeFiles_Agent_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getManageableItem(): ?ZfeFiles_Manageable
     {
@@ -40,7 +40,7 @@ class ZfeFiles_Agent_Mono extends ZfeFiles_Agent_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getSchema(): ?ZfeFiles_Schema_Default
     {

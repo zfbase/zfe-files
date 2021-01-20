@@ -7,11 +7,10 @@
 /**
  * Помощник отправки файла средствами веб-сервера nginx через авторизацию приложения.
  */
-class ZfeFiles_Controller_Action_Helper_InlineDownloadNginx
-    extends ZfeFiles_Controller_Action_Helper_InlineDownload
+class ZfeFiles_Controller_Action_Helper_InlineDownloadNginx extends ZfeFiles_Controller_Action_Helper_InlineDownload
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function direct(string $path, string $url): void
     {

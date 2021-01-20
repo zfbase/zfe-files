@@ -7,21 +7,21 @@
 /**
  * Базовый класс пользователей, автоматически генерируемый Doctrine ORM Framework.
  *
- * @property integer $id
- * @property string $model_name
- * @property integer $item_id
- * @property string $schema_code
- * @property string $title
- * @property integer $size
- * @property string $hash
- * @property string $extension
- * @property string $path
- * @property integer $version
- * @property integer $creator_id
- * @property integer $editor_id
+ * @property int       $id
+ * @property string    $model_name
+ * @property int       $item_id
+ * @property string    $schema_code
+ * @property string    $title
+ * @property int       $size
+ * @property string    $hash
+ * @property string    $extension
+ * @property string    $path
+ * @property int       $version
+ * @property int       $creator_id
+ * @property int       $editor_id
  * @property timestamp $datetime_created
  * @property timestamp $datetime_edited
- * @property integer $deleted
+ * @property int       $deleted
  */
 class BaseFiles extends AbstractRecord
 {

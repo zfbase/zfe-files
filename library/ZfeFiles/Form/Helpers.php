@@ -12,8 +12,9 @@ trait ZfeFiles_Form_Helpers
     /**
      * Добавить элемент загрузки файлов по средством Ajax.
      *
-     * @return self
      * @throws Zend_Exception
+     *
+     * @return self
      */
     public function addFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
     {
@@ -39,7 +40,7 @@ trait ZfeFiles_Form_Helpers
             'audio' => 'fileAjaxAudio',
             'video' => 'fileAjaxVideo',
         ];
-        $type = (isset($options['type']) && isset($map[$options['type']]))
+        $type = isset($options['type'], $map[$options['type']])
             ? $map[$options['type']]
             : 'fileAjax';
 
@@ -49,8 +50,9 @@ trait ZfeFiles_Form_Helpers
     /**
      * Добавить элемент загрузки картинок по средством Ajax.
      *
-     * @return self
      * @throws Zend_Exception
+     *
+     * @return self
      */
     public function addImageFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
     {
@@ -77,8 +79,9 @@ trait ZfeFiles_Form_Helpers
     /**
      * Добавить элемент загрузки звуковых файлов по средством Ajax.
      *
-     * @return self
      * @throws Zend_Exception
+     *
+     * @return self
      */
     public function addAudioFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
     {
@@ -88,8 +91,9 @@ trait ZfeFiles_Form_Helpers
     /**
      * Добавить элемент загрузки видео файлов по средством Ajax.
      *
-     * @return self
      * @throws Zend_Exception
+     *
+     * @return self
      */
     public function addVideoFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
     {

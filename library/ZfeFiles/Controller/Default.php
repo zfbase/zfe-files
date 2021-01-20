@@ -10,7 +10,7 @@
 abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected static $_editFormName = ZfeFiles_Form_Default_File::class;
 
@@ -46,7 +46,7 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
     {
         try {
             $uploaderName = Zend_Registry::get('config')->files->uploader ?? null;
-        } catch(Zend_Exception $ex) {
+        } catch (Zend_Exception $ex) {
             $uploaderName = null;
         }
 
@@ -78,7 +78,7 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
         $agent = $relId
             ? $manager->getAgentByRelation($id, $modelName, $schemaCode, $relId)
             : $manager->getAgentByFileId($id);
-        
+
         if (!$agent) {
             $this->abort(404, 'Файл не найден');
         }

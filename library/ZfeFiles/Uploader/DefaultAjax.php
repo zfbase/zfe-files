@@ -33,8 +33,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
         ZfeFiles_Manager_Interface $manager,
         ZfeFiles_Uploader_Handler_Interface $uploadHandler = null,
         string $tempRoot = null
-    )
-    {
+    ) {
         $config = $this->fromConfig();
 
         $this->manager = $manager;
@@ -47,7 +46,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      *
      * @throws Zend_Session_Exception
      * @throws ZfeFiles_Uploader_Exception
@@ -124,7 +123,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
 
     /**
      * Получить настройки из конфигурации.
-     * 
+     *
      * @return object {
      *      @var ?ZfeFiles_Uploader_Handler_Interface $uploadHandler
      *      @var ?string                              $tempRoot
@@ -139,7 +138,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
                 'uploadHandler' => $uhc ? new $uhc() : null,
                 'tempRoot' => $this->config->files->tempPath ?? null,
             ];
-        } catch(Zend_Exception $e) {
+        } catch (Zend_Exception $e) {
             return new stdClass();
         }
     }

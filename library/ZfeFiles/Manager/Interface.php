@@ -18,6 +18,7 @@ interface ZfeFiles_Manager_Interface
      * Зарегистрировать новый файл по метаданным.
      *
      * @param array $data {
+     *
      *     @var string|null $modelName  модель управляющей записи
      *     @var int|null    $itemId     ID управляющей записи
      *     @var string|null $schemaCode код схемы
@@ -26,7 +27,8 @@ interface ZfeFiles_Manager_Interface
      *     @var int|null    $fileSize   размер файла в байтах
      *     @var string      $tempPath   временный путь до файла
      * }
-     * @return ZfeFiles_Agent_Interface Агент зарегистрированного файла.
+     *
+     * @return ZfeFiles_Agent_Interface агент зарегистрированного файла
      */
     public function factory(array $data): ZfeFiles_Agent_Interface;
 
@@ -51,7 +53,7 @@ interface ZfeFiles_Manager_Interface
     /**
      * Выполнить обработчики для прикрепленных файлов.
      *
-     * @param bool $force Обновить вне зависимости от последнего времени изменения файла или связи.
+     * @param bool $force обновить вне зависимости от последнего времени изменения файла или связи
      */
     public function process(
         string $modelName,
@@ -63,7 +65,8 @@ interface ZfeFiles_Manager_Interface
      * Создать агенты по данным файлов и связей.
      *
      * @param ZfeFiles_Manageable|ZFE_Model_AbstractRecord $item
-     * @return ZfeFiles_Agent_Interface[] 
+     *
+     * @return ZfeFiles_Agent_Interface[]
      */
     public function createAgents(
         array $data,
@@ -75,6 +78,7 @@ interface ZfeFiles_Manager_Interface
      * Получить агенты соответствующие схеме.
      *
      * @return ZfeFiles_Agent_Interface[]
+     *
      * @todo Рассмотреть возможность перехода на генератор с yield
      */
     public function getAgentsBySchema(ZfeFiles_Manageable $item, string $schemaCode): array;

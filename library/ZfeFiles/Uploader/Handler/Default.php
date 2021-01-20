@@ -7,7 +7,8 @@
 class ZfeFiles_Uploader_Handler_Default implements ZfeFiles_Uploader_Handler_Interface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @throws ZfeFiles_Uploader_Exception
      * @throws Zend_Exception
      */

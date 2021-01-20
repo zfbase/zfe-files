@@ -29,7 +29,7 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getManageableItem()
     {
@@ -37,7 +37,7 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getSchema(): ?ZfeFiles_Schema_Default
     {
@@ -48,18 +48,17 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
      * Сравнить агенты.
      *
      * @param ZfeFiles_Agent_Multiple $other
-     * @return boolean
      */
-    public function isEqual(ZfeFiles_Agent_Multiple $other): bool
+    public function isEqual($other): bool
     {
         return $this->getFile()->isEqual($other->getFile())
             && $this->getMediator()->isEqual($other->getMediator());
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    public function toArray($deep = true): array
+    public function toArray(bool $deep = true): array
     {
         return parent::toArray($deep) + [
             'mediator' => $this->getMediator() ? $this->getMediator()->toArray($deep) : null,

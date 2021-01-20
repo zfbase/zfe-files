@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Единая точка загрузки и управления файлами для приложений на ZFE.
+ */
+
+/**
+ * Задача обработки файлов.
+ */
 class ZfeFiles_Handler_DefaultTask implements ZfeFiles_Handler_Interface
 {
     /**
@@ -20,16 +27,17 @@ class ZfeFiles_Handler_DefaultTask implements ZfeFiles_Handler_Interface
 
     /**
      * Получить объект для отложенной задачи.
-     * 
+     *
      * @return ZfeFiles_File_OriginInterface|AbstractRecord
      */
-    protected function getItem(ZfeFiles_Agent_Interface $agent): AbstractRecord
+    protected function getItem(ZfeFiles_Agent_Interface $agent)
     {
         return $agent->getFile();
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @throws ZFE_Tasks_Exception
      */
     public function process(ZfeFiles_Agent_Interface $agent, bool $force = false): void
@@ -38,34 +46,34 @@ class ZfeFiles_Handler_DefaultTask implements ZfeFiles_Handler_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isDone(ZfeFiles_Agent_Interface $agent): bool
     {
         $task = $this->taskManager->getLastTask($this->taskCode, $this->getItem($agent)->id);
-        return $task ? $task->isDone(): false;
+        return $task ? $task->isDone() : false;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isSuccess(ZfeFiles_Agent_Interface $agent): bool
     {
         $task = $this->taskManager->getLastTask($this->taskCode, $this->getItem($agent)->id);
-        return $task ? $task->isSuccess(): false;
+        return $task ? $task->isSuccess() : false;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isFailed(ZfeFiles_Agent_Interface $agent): bool
     {
         $task = $this->taskManager->getLastTask($this->taskCode, $this->getItem($agent)->id);
-        return $task ? $task->isFailed(): false;
+        return $task ? $task->isFailed() : false;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getError(ZfeFiles_Agent_Interface $agent): ?string
     {

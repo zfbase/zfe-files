@@ -10,7 +10,8 @@
 class ZfeFiles_Schema_Audio extends ZfeFiles_Schema_Default
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @throws ZfeFiles_Schema_Exception
      */
     public function __construct(array $options = [])

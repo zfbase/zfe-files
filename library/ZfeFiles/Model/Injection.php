@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Единая точка загрузки и управления файлами для приложений на ZFE.
+ */
+
+/**
+ * Трейт для внедрения в AbstractRecord, добавляющий функционал ZfeFiles.
+ */
 trait ZfeFiles_Model_Injection
 {
     /**
@@ -33,7 +40,8 @@ trait ZfeFiles_Model_Injection
     public function getAgentsFromDb(ZfeFiles_Schema_Default $schema): array
     {
         return ($schema->getModel())::getManager()
-            ->getAgentsBySchema($this, $schema->getCode());
+            ->getAgentsBySchema($this, $schema->getCode())
+        ;
     }
 
     /**
@@ -69,7 +77,6 @@ trait ZfeFiles_Model_Injection
         $manager = ($schema->getModel())::getManager();
         $manager->updateAgents($this, $schema, $this->getAgents($schema));
     }
-
 
     //
     // Расширения базовых функций Doctrine для поддержки ZFE Files.
@@ -123,7 +130,7 @@ trait ZfeFiles_Model_Injection
                 /** @var ZfeFiles_Manager_Interface $manager */
                 $manager = ($schema->getModel())::getManager();
                 $manager->updateAgents($this, $schema, $this->getAgents($schema));
-                $manager->process(get_called_class(), $this->id);
+                $manager->process(static::class, $this->id);
             }
         }
     }

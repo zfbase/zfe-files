@@ -43,7 +43,7 @@ class ZfeFiles_Schema_Default
 
     /**
      * Процессор.
-     * 
+     *
      * @var ZfeFiles_Handler_Interface|string|null
      */
     protected $handler;
@@ -84,7 +84,7 @@ class ZfeFiles_Schema_Default
     /**
      * Установить код.
      */
-    public function setCode(string $code): ZfeFiles_Schema_Default
+    public function setCode(string $code): self
     {
         $this->code = $code;
         return $this;
@@ -101,7 +101,7 @@ class ZfeFiles_Schema_Default
     /**
      * Установить наименование.
      */
-    public function setTitle(string $title): ZfeFiles_Schema_Default
+    public function setTitle(string $title): self
     {
         $this->title = $title;
         return $this;
@@ -123,11 +123,11 @@ class ZfeFiles_Schema_Default
      *
      * @throws ZfeFiles_Schema_Exception
      */
-    public function setModel(string $model): ZfeFiles_Schema_Default
+    public function setModel(string $model): self
     {
         if (!is_a($model, ZfeFiles_File_OriginInterface::class, true)) {
             throw new ZfeFiles_Schema_Exception(
-                "Класс $model не может быть классом файла – он не реализует ZfeFiles_File_OriginInterface"
+                "Класс ${model} не может быть классом файла – он не реализует ZfeFiles_File_OriginInterface"
             );
         }
 
@@ -146,7 +146,7 @@ class ZfeFiles_Schema_Default
     /**
      * Установить необходимость прикрепления файла.
      */
-    public function setRequired(bool $required): ZfeFiles_Schema_Default
+    public function setRequired(bool $required): self
     {
         $this->required = $required;
         return $this;
@@ -164,9 +164,10 @@ class ZfeFiles_Schema_Default
      * Установить фильтр по типам файлов.
      *
      * @param string[]|string|null $accept
+     *
      * @throws ZfeFiles_Schema_Exception
      */
-    public function setAccept($accept = []): ZfeFiles_Schema_Default
+    public function setAccept($accept = []): self
     {
         if (is_array($accept)) {
             $this->accept = $accept;
@@ -184,7 +185,7 @@ class ZfeFiles_Schema_Default
     /**
      * Добавить фильтр по типам файлов.
      */
-    public function addAccept(string $accept): ZfeFiles_Schema_Default
+    public function addAccept(string $accept): self
     {
         $this->accept[] = $accept;
         return $this;
@@ -201,7 +202,7 @@ class ZfeFiles_Schema_Default
     /**
      * Установить допустимость прикрепления нескольких файлов.
      */
-    public function setMultiple(bool $multiple): ZfeFiles_Schema_Default
+    public function setMultiple(bool $multiple): self
     {
         $this->multiple = $multiple;
         return $this;
@@ -218,10 +219,11 @@ class ZfeFiles_Schema_Default
     /**
      * Установить процессор.
      *
-     * @param ZfeFiles_Handler_Interface|string|null экземпляр процессора или название его класса
+     * @param ZfeFiles_Handler_Interface|string|null $handler экземпляр процессора или название его класса
+     *
      * @throws ZfeFiles_Schema_Exception
      */
-    public function setHandler($handler): ZfeFiles_Schema_Default
+    public function setHandler($handler): self
     {
         if (!is_a($handler, ZfeFiles_Handler_Interface::class, true) && $handler !== null) {
             throw new ZfeFiles_Schema_Exception('Процессор должен реализовывать интерфейс ZfeFiles_Handler_Interface');

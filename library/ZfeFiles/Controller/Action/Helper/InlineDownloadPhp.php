@@ -7,11 +7,10 @@
 /**
  * Помощник отправки файла средствами php-сервера для встраивания в страницу.
  */
-class ZfeFiles_Controller_Action_Helper_InlineDownloadPhp
-    extends ZfeFiles_Controller_Action_Helper_InlineDownload
+class ZfeFiles_Controller_Action_Helper_InlineDownloadPhp extends ZfeFiles_Controller_Action_Helper_InlineDownload
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function direct(string $path, string $url): void
     {

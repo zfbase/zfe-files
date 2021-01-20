@@ -30,12 +30,12 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
     protected string $fileMediatorRelation = 'FilesMediator';
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected string $agentClassName = ZfeFiles_Agent_Multiple::class;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected function setOptions(array $options): void
     {
@@ -57,8 +57,10 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
             $this->fileMediatorRelation = $options['fileMediatorRelation'];
         }
     }
+
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @throws ZfeFiles_Exception
      * @throws Zend_Exception
      */
@@ -100,7 +102,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
 
             try {
                 $mediator = $this->createMediator($file, $modelName, $schemaCode, $itemId);
-            } catch(Exception $ex) {
+            } catch (Exception $ex) {
                 throw new ZfeFiles_Exception('Не удалось связать файл с записью: ' . $ex->getMessage(), null, $ex);
             }
 
@@ -116,7 +118,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
      * Создать медиатор.
      *
      * @param ZfeFiles_File_OriginInterface|AbstractRecord $file
-     * @param array $data Параметры связки; например, сведения о кадрировании изображения
+     * @param array                                        $data Параметры связки; например, сведения о кадрировании изображения
      */
     protected function createMediator(
         ZfeFiles_File_OriginInterface $file,
@@ -125,8 +127,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
         ?int $itemId = null,
         array $data = [],
         bool $autoSave = true
-    ): ?ZfeFiles_MediatorInterface
-    {
+    ): ?ZfeFiles_MediatorInterface {
         $mediator = new $this->mediatorModelName;
         $mediator->{$this->mediatorFileField} = $file->id;
         $mediator->model_name = $modelName;
@@ -141,7 +142,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function createAgents(array $data, string $schemaCode, ?ZfeFiles_Manageable $item): array
     {
@@ -173,7 +174,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
             $agent->setData($data[$file->id]);
             $agents[] = $agent;
         }
- 
+
         $newFileIds = array_diff($fileIds, $mediators->getKeys());
         if (count($newFileIds)) {
             $q = ZFE_Query::create()
@@ -201,14 +202,13 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function updateAgents(
         ZfeFiles_Manageable $item,
         ZfeFiles_Schema_Default $schema,
         array $agents
-    ): void
-    {
+    ): void {
         $mediatorIds = [];
 
         /** @var ZfeFiles_Agent_Multiple[] $agents */
@@ -232,7 +232,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function process(string $modelName, int $itemId, bool $force = false): void
     {
@@ -250,7 +250,8 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @throws Doctrine_Query_Exception
      */
     public function getAgentsBySchema(ZfeFiles_Manageable $item, string $schemaCode): array
@@ -272,15 +273,14 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getAgentByRelation(
         int $fileId,
         string $modelName,
         string $schemaCode,
         int $itemId
-    ): ?ZfeFiles_Agent_Interface
-    {
+    ): ?ZfeFiles_Agent_Interface {
         $q = ZFE_Query::create()
             ->select('*')
             ->from($this->mediatorModelName . ' x')
@@ -309,8 +309,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
     public function createAgent(
         ?ZfeFiles_File_OriginInterface $file = null,
         ?ZfeFiles_MediatorInterface $mediator = null
-    ): ?ZfeFiles_Agent_Interface
-    {
+    ): ?ZfeFiles_Agent_Interface {
         return $file
             ? new $this->agentClassName($file, $mediator)
             : null;

@@ -15,7 +15,7 @@ abstract class ZfeFiles_Agent_Abstract implements ZfeFiles_Agent_Interface
     protected ZfeFiles_File_OriginInterface $file;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function process(bool $force = false): void
     {
@@ -34,7 +34,8 @@ abstract class ZfeFiles_Agent_Abstract implements ZfeFiles_Agent_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @throws Zend_Exception
      * @throws ZfeFiles_Exception
      */
@@ -53,7 +54,7 @@ abstract class ZfeFiles_Agent_Abstract implements ZfeFiles_Agent_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getFile(): ZfeFiles_File_OriginInterface
     {
@@ -61,7 +62,7 @@ abstract class ZfeFiles_Agent_Abstract implements ZfeFiles_Agent_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getFilename(): string
     {
@@ -73,7 +74,7 @@ abstract class ZfeFiles_Agent_Abstract implements ZfeFiles_Agent_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isAllow(string $privilege): bool
     {
@@ -81,16 +82,16 @@ abstract class ZfeFiles_Agent_Abstract implements ZfeFiles_Agent_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setData(array $data): void
     {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    public function toArray($deep = true): array
+    public function toArray(bool $deep = true): array
     {
         return [
             'file' => $this->getFile()->toArray($deep),
@@ -100,7 +101,7 @@ abstract class ZfeFiles_Agent_Abstract implements ZfeFiles_Agent_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __debugInfo()
     {

@@ -33,6 +33,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
 
     /**
      * @param Zend_Config|array|string $config конфигурация или её имя в общей конфигурации
+     *
      * @throws ZfeFiles_Exception
      * @throws Zend_Exception
      */
@@ -66,7 +67,8 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
         if (!empty($options['fileModelName'])) {
             if (!is_string($options['fileModelName'])) {
                 throw new ZfeFiles_Exception('"fileModelName" должен быть строкой с именем класса');
-            } elseif (is_a($options['fileModelName'], ZfeFiles_File_OriginInterface::class, true)) {
+            }
+            if (is_a($options['fileModelName'], ZfeFiles_File_OriginInterface::class, true)) {
                 $this->fileModelName = $options['fileModelName'];
             } else {
                 throw new ZfeFiles_Exception('Модель файла должна реализовывать интерфейс ZfeFiles_File_OriginInterface');
@@ -79,7 +81,8 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
         if (!empty($options['agentClassName'])) {
             if (!is_string($options['agentClassName'])) {
                 throw new ZfeFiles_Exception('');
-            } elseif (is_a($options['agentClassName'], ZfeFiles_Agent_Interface::class, true)) {
+            }
+            if (is_a($options['agentClassName'], ZfeFiles_Agent_Interface::class, true)) {
                 $this->agentClassName = $options['agentClassName'];
             } else {
                 throw new ZfeFiles_Exception('Класс агента должен реализовывать интерфейс ZfeFiles_Agent_Interface');
@@ -96,7 +99,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getUploadUrl(): string
     {
@@ -127,7 +130,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getHandler(): ?ZfeFiles_Handler_Interface
     {
@@ -137,7 +140,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getAgentByFileId(int $id): ?ZfeFiles_Agent_Interface
     {
@@ -147,7 +150,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getAgentByFile(ZfeFiles_File_OriginInterface $file): ZfeFiles_Agent_Interface
     {
@@ -158,6 +161,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
      * Переместить файл из временного расположения в постоянное.
      *
      * @param ZfeFiles_File_Interface|Files $file
+     *
      * @throws ZfeFiles_Exception
      */
     protected function move(ZfeFiles_File_Interface $file, string $tempPath = null): void

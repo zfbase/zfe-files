@@ -10,12 +10,13 @@
 class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected string $agentClassName = ZfeFiles_Agent_Mono::class;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @throws ZfeFiles_Exception
      * @throws Zend_Exception
      */
@@ -50,7 +51,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function createAgents(array $data, string $schemaCode, ?ZfeFiles_Manageable $item): array
     {
@@ -68,14 +69,13 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function updateAgents(
         ZfeFiles_Manageable $item,
         ZfeFiles_Schema_Default $schema,
         array $agents
-    ): void
-    {
+    ): void {
         $modelName = get_class($item);
         $schemaCode = $schema->getCode();
 
@@ -88,7 +88,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
         ;
         $oldFiles = $q->execute();
         $oldIds = $oldFiles->getKeys();
- 
+
         $newIds = array_map(function ($agent) {
             return $agent->getFile()->id;
         }, $agents);
@@ -114,7 +114,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function process(string $modelName, int $itemId, bool $force = false): void
     {
@@ -131,9 +131,11 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
     }
 
     /**
-     * @inheritDoc
-     * @return array<ZfeFiles_Agent_Interface>
+     * {@inheritdoc}
+     *
      * @throws Doctrine_Query_Exception
+     *
+     * @return array<ZfeFiles_Agent_Interface>
      */
     public function getAgentsBySchema(ZfeFiles_Manageable $item, string $schemaCode): array
     {
@@ -153,15 +155,14 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getAgentByRelation(
         int $fileId,
         string $modelName,
         string $schemaCode,
         int $itemId
-    ): ?ZfeFiles_Agent_Interface
-    {
+    ): ?ZfeFiles_Agent_Interface {
         $q = ZFE_Query::create()
             ->select('*')
             ->from($this->fileModelName)

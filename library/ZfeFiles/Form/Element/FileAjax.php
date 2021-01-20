@@ -10,7 +10,7 @@
 class ZfeFiles_Form_Element_FileAjax extends Zend_Form_Element_Xhtml
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public $helper = 'formFileAjax';
 }

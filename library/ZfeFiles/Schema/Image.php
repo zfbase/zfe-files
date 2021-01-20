@@ -10,17 +10,18 @@
 class ZfeFiles_Schema_Image extends ZfeFiles_Schema_Default
 {
     /**
-     * Ширина изображения. 
+     * Ширина изображения.
      */
     protected ?int $width = null;
 
     /**
-     * Высота изображения
+     * Высота изображения.
      */
     protected ?int $height = null;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @throws ZfeFiles_Schema_Exception
      */
     public function __construct(array $options = [])
@@ -33,9 +34,9 @@ class ZfeFiles_Schema_Image extends ZfeFiles_Schema_Default
     }
 
     /**
-     * Установить ширину изображения
+     * Установить ширину изображения.
      */
-    public function setWidth($width): ZfeFiles_Schema_Image
+    public function setWidth(int $width): self
     {
         $this->width = $width;
         return $this;
@@ -52,7 +53,7 @@ class ZfeFiles_Schema_Image extends ZfeFiles_Schema_Default
     /**
      * Установить высоту изображения.
      */
-    public function setHeight($height): ZfeFiles_Schema_Image
+    public function setHeight(int $height): self
     {
         $this->height = $height;
         return $this;

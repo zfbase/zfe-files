@@ -1,11 +1,19 @@
 <?php
 
+/*
+ * Единая точка загрузки и управления файлами для приложений на ZFE.
+ */
+
+/**
+ * Пример управлящей записи (к которой привязываются файлы и через которую ими управляют).
+ */
 class Items extends AbstractRecord implements ZfeFiles_Manageable
 {
     private static ZfeFiles_Schema_Collection $fileSchemas;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
+     *
      * @throws ZfeFiles_Exception
      */
     public static function getFileSchemas(): ZfeFiles_Schema_Collection

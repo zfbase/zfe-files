@@ -10,12 +10,12 @@
 class ZfeFiles_PathHelper_DefaultWeb extends ZfeFiles_PathHelper_Default
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     protected static string $separator = '/';
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getFileName(): string
     {
@@ -27,7 +27,7 @@ class ZfeFiles_PathHelper_DefaultWeb extends ZfeFiles_PathHelper_Default
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getDirectory(): ?string
     {

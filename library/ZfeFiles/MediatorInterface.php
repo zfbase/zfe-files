@@ -10,7 +10,7 @@
 interface ZfeFiles_MediatorInterface
 {
     /**
-     * Получить привязанный файл
+     * Получить привязанный файл.
      */
     public function getFile(): ZfeFiles_File_OriginInterface;
 

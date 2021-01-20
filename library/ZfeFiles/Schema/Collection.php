@@ -14,7 +14,7 @@ class ZfeFiles_Schema_Collection implements IteratorAggregate
     protected array $map = [];
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getIterator(): ArrayIterator
     {
@@ -26,7 +26,7 @@ class ZfeFiles_Schema_Collection implements IteratorAggregate
      *
      * @throws ZfeFiles_Exception
      */
-    public function add(ZfeFiles_Schema_Default $schema): ZfeFiles_Schema_Collection
+    public function add(ZfeFiles_Schema_Default $schema): self
     {
         $code = $schema->getCode();
         if ($this->codeExists($code)) {
@@ -54,7 +54,7 @@ class ZfeFiles_Schema_Collection implements IteratorAggregate
     /**
      * Удалить схему по коду.
      */
-    public function removeByCode(string $code): ZfeFiles_Schema_Collection
+    public function removeByCode(string $code): self
     {
         unset($this->map[$code]);
         return $this;

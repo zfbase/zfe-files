@@ -1,6 +1,12 @@
 <?php
 
+/*
+ * Единая точка загрузки и управления файлами для приложений на ZFE.
+ */
 
+/**
+ * Пример модели для хранения связи между файлом и управлящей записью при связи много-ко-многим.
+ */
 class FilesMediator extends BaseFilesMediator implements ZfeFiles_MediatorInterface
 {
     private ?ZfeFiles_FileInterface $file = null;
@@ -8,7 +14,7 @@ class FilesMediator extends BaseFilesMediator implements ZfeFiles_MediatorInterf
     private ?ZfeFiles_Schema_Default $schema = null;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getFile(): ZfeFiles_MediatorInterface
     {
@@ -16,7 +22,7 @@ class FilesMediator extends BaseFilesMediator implements ZfeFiles_MediatorInterf
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getItem(): ?ZfeFiles_Manageable
     {
@@ -32,7 +38,7 @@ class FilesMediator extends BaseFilesMediator implements ZfeFiles_MediatorInterf
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getSchema(): ?ZfeFiles_Schema_Default
     {
