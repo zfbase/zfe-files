@@ -61,7 +61,8 @@ const Element = ({
           .setParams({ modelName, schemaCode })
           .onProgress(({ loaded, total }) => updateItem(item.key, { uploadProgress: loaded / total * 100 }))
           .onComplete(data => updateItem(item.key, { loading: false, ...data }))
-          .onError(console.log)
+          // eslint-disable-next-line no-console
+          .onError(console.error)
           .start();
 
         updateItem(item.key, {
