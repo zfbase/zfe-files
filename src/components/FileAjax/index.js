@@ -56,6 +56,7 @@ export default (root) => {
     files,
     maxUploadFileSize,
     onLoaded: getOnLoadedHandler(),
+    form: $root.closest('form')[0],
     ...getProps(root),
   };
 

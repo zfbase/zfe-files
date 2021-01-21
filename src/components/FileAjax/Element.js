@@ -3,6 +3,7 @@ import React from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import createUploader from '../../utils/createUploader';
+import pageUnload from '../../utils/pageUnload';
 import useCollection from '../../hooks/useCollection';
 import Storage from './Storage';
 import Preview from './Preview/index';
@@ -32,6 +33,7 @@ const Element = ({
   schemaCode,
   type,
   uploadUrl,
+  form,
   ...options
 }) => {
   const [items, { addItem, updateItem, removeItem }] = useCollection(files);
@@ -59,8 +61,12 @@ const Element = ({
           .setMaxFileSize(maxUploadFileSize)
           .setFile(file)
           .setParams({ modelName, schemaCode })
+          .onStart(() => pageUnload.disable(form))
           .onProgress(({ loaded, total }) => updateItem(item.key, { uploadProgress: loaded / total * 100 }))
-          .onComplete(data => updateItem(item.key, { loading: false, ...data }))
+          .onComplete((data) => {
+            updateItem(item.key, { loading: false, ...data });
+            pageUnload.enable(form);
+          })
           // eslint-disable-next-line no-console
           .onError(console.error)
           .start();
@@ -131,6 +137,7 @@ Element.propTypes = {
   schemaCode: PropTypes.string.isRequired,
   type: PropTypes.string,
   uploadUrl: PropTypes.string.isRequired,
+  form: PropTypes.any.isRequired,
 };
 
 Element.defaultProps = {
