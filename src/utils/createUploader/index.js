@@ -16,6 +16,10 @@ export default function (props = {}) {
     // Методы установки параметров загрузки
     //
 
+    /**
+     * Установить адрес для загрузки
+     * @param string value
+     */
     setUrl(value) {
       if (uploader) {
         throw new Error('Указать адрес для загрузки можно только до начала загрузки.');
@@ -25,6 +29,10 @@ export default function (props = {}) {
       return this;
     },
 
+    /**
+     * Установить максимальный размер загружаемого файла
+     * @param string value
+     */
     setMaxFileSize(value) {
       if (uploader) {
         throw new Error('Указать максимальный размер файла для одного запроса можно только до начала загрузки.');
@@ -34,6 +42,10 @@ export default function (props = {}) {
       return this;
     },
 
+    /**
+     * Установить загружаемый файл
+     * @param string value
+     */
     setFile(value) {
       if (uploader) {
         throw new Error('Указать файл можно только до начала загрузки.');
@@ -43,6 +55,10 @@ export default function (props = {}) {
       return this;
     },
 
+    /**
+     * Установить дополнительные параметры загрузки
+     * @param string value
+     */
     setParams(value) {
       if (uploader) {
         throw new Error('Указать дополнительные параметры запроса загрузки можно только до начала загрузки.');
@@ -57,6 +73,10 @@ export default function (props = {}) {
     // Обработчики событий
     //
 
+    /**
+     * Установить обработчик на событие начала загрузки файла
+     * @param func callback
+     */
     onStart(callback) {
       if (uploader) {
         throw new Error('Указать обработчик прогресса начала загрузки можно только до начала загрузки.');
@@ -66,6 +86,10 @@ export default function (props = {}) {
       return this;
     },
 
+    /**
+     * Установить обработчик на событие шага процесса загрузки (перед каждым шагом)
+     * @param func callback
+     */
     onProgress(callback) {
       if (uploader) {
         throw new Error('Указать обработчик прогресса загрузки можно только до начала загрузки.');
@@ -75,6 +99,10 @@ export default function (props = {}) {
       return this;
     },
 
+    /**
+     * Установить обработчик на событие успешного завершения загрузки
+     * @param func callback
+     */
     onComplete(callback) {
       if (uploader) {
         throw new Error('Указать обработчик успешного завершения загрузки можно только до начала загрузки.');
@@ -84,6 +112,10 @@ export default function (props = {}) {
       return this;
     },
 
+    /**
+     * Установить событие на событие завершение загрузки с ошибкой
+     * @param func callback
+     */
     onError(callback) {
       if (uploader) {
         throw new Error('Указать обработчик ошибок можно только до начала загрузки.');
@@ -98,6 +130,9 @@ export default function (props = {}) {
     // Управляющие методы
     //
 
+    /**
+     * Начать загрузку
+     */
     start() {
       if (!url) {
         throw new Error('До начала загрузки необходимо указать путь для загрузки.');
@@ -128,6 +163,9 @@ export default function (props = {}) {
       return this;
     },
 
+    /**
+     * Остановить загрузку
+     */
     abort() {
       if (uploader) {
         uploader.abort();
@@ -136,6 +174,9 @@ export default function (props = {}) {
       }
     },
 
+    /**
+     * Продолжить загрузку
+     */
     continue() {
       if (uploader) {
         uploader.continue();
