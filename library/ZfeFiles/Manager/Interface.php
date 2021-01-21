@@ -18,7 +18,6 @@ interface ZfeFiles_Manager_Interface
      * Зарегистрировать новый файл по метаданным.
      *
      * @param array $data {
-     *
      *     @var string|null $modelName  модель управляющей записи
      *     @var int|null    $itemId     ID управляющей записи
      *     @var string|null $schemaCode код схемы
@@ -34,54 +33,43 @@ interface ZfeFiles_Manager_Interface
 
     /**
      * Получить общий обработчик для всех файлов менеджера.
-     *
-     * @return ZfeFiles_Processor_Interface|null
      */
     public function getHandler(): ?ZfeFiles_Handler_Interface;
 
     /**
      * Обновить данные агентов в БД.
      *
-     * @param ZfeFiles_Agent_Interface[] $agents
+     * @param ZfeFiles_Manageable|AbstractRecord $item
+     * @param ZfeFiles_Agent_Interface[]         $agents
      */
-    public function updateAgents(
-        ZfeFiles_Manageable $item,
-        ZfeFiles_Schema_Default $schema,
-        array $agents
-    ): void;
+    public function updateAgents($item, ZfeFiles_Schema_Default $schema, array $agents): void;
 
     /**
      * Выполнить обработчики для прикрепленных файлов.
      *
      * @param bool $force обновить вне зависимости от последнего времени изменения файла или связи
      */
-    public function process(
-        string $modelName,
-        int $itemId,
-        bool $force = false
-    ): void;
+    public function process(string $modelName, int $itemId, bool $force = false): void;
 
     /**
      * Создать агенты по данным файлов и связей.
      *
-     * @param ZfeFiles_Manageable|ZFE_Model_AbstractRecord $item
+     * @param ZfeFiles_Manageable|AbstractRecord $item
      *
      * @return ZfeFiles_Agent_Interface[]
      */
-    public function createAgents(
-        array $data,
-        string $schemaCode,
-        ?ZfeFiles_Manageable $item
-    ): array;
+    public function createAgents(array $data, string $schemaCode, $item): array;
 
     /**
      * Получить агенты соответствующие схеме.
+     *
+     * @param ZfeFiles_Manageable|AbstractRecord $item
      *
      * @return ZfeFiles_Agent_Interface[]
      *
      * @todo Рассмотреть возможность перехода на генератор с yield
      */
-    public function getAgentsBySchema(ZfeFiles_Manageable $item, string $schemaCode): array;
+    public function getAgentsBySchema($item, string $schemaCode): array;
 
     /**
      * Получить агент по связи файла с управляющей записью.
@@ -100,6 +88,8 @@ interface ZfeFiles_Manager_Interface
 
     /**
      * Получить агент по файлу.
+     *
+     * @param ZfeFiles_File_OriginInterface|AbstractRecord $file
      */
-    public function getAgentByFile(ZfeFiles_File_OriginInterface $file): ZfeFiles_Agent_Interface;
+    public function getAgentByFile($file): ZfeFiles_Agent_Interface;
 }

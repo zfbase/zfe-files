@@ -144,7 +144,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
      */
     public function getAgentByFileId(int $id): ?ZfeFiles_Agent_Interface
     {
-        /** @var ZfeFiles_File_OriginInterface $file */
+        /** @var ZfeFiles_File_OriginInterface|AbstractRecord $file */
         $file = ($this->fileModelName)::find($id);
         return $file ? $this->getAgentByFile($file) : null;
     }
@@ -152,7 +152,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     /**
      * {@inheritdoc}
      */
-    public function getAgentByFile(ZfeFiles_File_OriginInterface $file): ZfeFiles_Agent_Interface
+    public function getAgentByFile($file): ZfeFiles_Agent_Interface
     {
         return new $this->agentClassName($file);
     }
@@ -160,11 +160,11 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     /**
      * Переместить файл из временного расположения в постоянное.
      *
-     * @param ZfeFiles_File_Interface|Files $file
+     * @param ZfeFiles_File_Interface|AbstractRecord $file
      *
      * @throws ZfeFiles_Exception
      */
-    protected function move(ZfeFiles_File_Interface $file, string $tempPath = null): void
+    protected function move($file, string $tempPath = null): void
     {
         try {
             $newPath = $file->getRealPathHelper()->getPath();
@@ -184,6 +184,8 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
 
     /**
      * Извлечь ID из массива чисел и JSON.
+     *
+     * @return number[]
      */
     protected function extractIds(array $rows): array
     {

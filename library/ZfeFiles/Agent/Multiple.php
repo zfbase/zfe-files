@@ -5,7 +5,7 @@
  */
 
 /**
- * Интерфейс агентов файлов, связывающихся с управляющими записями по связи типа много-ко-многим.
+ * Агент файлов, связывающихся с управляющими записями по связи типа много-ко-многим.
  */
 class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
 {
@@ -14,14 +14,20 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
      */
     protected ?ZfeFiles_MediatorInterface $mediator = null;
 
-    public function __construct(ZfeFiles_File_OriginInterface $file, ?ZfeFiles_MediatorInterface $mediator = null)
+    /**
+     * @param ZfeFiles_File_OriginInterface|AbstractRecord   $file
+     * @param ZfeFiles_MediatorInterface|AbstractRecord|null $mediator
+     */
+    public function __construct($file, $mediator = null)
     {
         $this->file = $file;
         $this->mediator = $mediator;
     }
 
     /**
-     * @return ZfeFiles_MediatorInterface|ZFE_Model_AbstractRecord|null
+     * Получить медиатор
+     *
+     * @return ZfeFiles_MediatorInterface|AbstractRecord|null
      */
     public function getMediator()
     {

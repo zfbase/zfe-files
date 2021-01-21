@@ -11,6 +11,8 @@ trait ZfeFiles_Model_Injection
 {
     /**
      * Агенты файлов.
+     *
+     * @var array<ZfeFiles_Agent_Interface[]>
      */
     private $_agents = [];
 

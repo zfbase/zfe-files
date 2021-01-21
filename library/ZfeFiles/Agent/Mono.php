@@ -5,7 +5,7 @@
  */
 
 /**
- * Интерфейс агентов файлов, соответствующих ровно одной управляющей записи.
+ * Агент файлов, соответствующих ровно одной управляющей записи.
  */
 class ZfeFiles_Agent_Mono extends ZfeFiles_Agent_Abstract
 {
@@ -19,7 +19,10 @@ class ZfeFiles_Agent_Mono extends ZfeFiles_Agent_Abstract
      */
     protected ?ZfeFiles_Schema_Default $schema = null;
 
-    public function __construct(ZfeFiles_File_OriginInterface $file)
+    /**
+     * @param ZfeFiles_File_OriginInterface|AbstractRecord $file
+     */
+    public function __construct($file)
     {
         $this->file = $file;
 
@@ -31,7 +34,7 @@ class ZfeFiles_Agent_Mono extends ZfeFiles_Agent_Abstract
     /**
      * {@inheritdoc}
      */
-    public function getManageableItem(): ?ZfeFiles_Manageable
+    public function getManageableItem()
     {
         if (!$this->item && $this->file->model_name && $this->file->item_id) {
             $this->item = ($this->file->model_name)::find($this->file->item_id);

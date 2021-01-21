@@ -50,7 +50,7 @@ interface ZfeFiles_Agent_Interface
     public function getSchema(): ?ZfeFiles_Schema_Default;
 
     /**
-     * Имя файла (с расширением).
+     * Получить имя файла с расширением.
      */
     public function getFilename(): string;
 

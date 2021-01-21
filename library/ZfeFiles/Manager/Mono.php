@@ -19,6 +19,8 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
      *
      * @throws ZfeFiles_Exception
      * @throws Zend_Exception
+     *
+     * @return ZfeFiles_Agent_Mono
      */
     public function factory(array $data): ZfeFiles_Agent_Interface
     {
@@ -52,6 +54,8 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
 
     /**
      * {@inheritdoc}
+     *
+     * @return ZfeFiles_Agent_Mono[]
      */
     public function createAgents(array $data, string $schemaCode, ?ZfeFiles_Manageable $item): array
     {
@@ -81,6 +85,8 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
 
     /**
      * {@inheritdoc}
+     *
+     * @param ZfeFiles_Agent_Mono[] $agents
      */
     public function updateAgents(
         ZfeFiles_Manageable $item,
@@ -126,7 +132,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
      *
      * @throws Doctrine_Query_Exception
      *
-     * @return array<ZfeFiles_Agent_Interface>
+     * @return ZfeFiles_Agent_Mono[]
      */
     public function getAgentsBySchema(ZfeFiles_Manageable $item, string $schemaCode): array
     {
@@ -147,6 +153,8 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
 
     /**
      * {@inheritdoc}
+     *
+     * @return ZfeFiles_Agent_Mono|null
      */
     public function getAgentByRelation(
         int $fileId,
@@ -162,11 +170,14 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
             ->andWhere('schema_code = ?', $schemaCode)
             ->andWhere('item_id = ?', $itemId)
         ;
-        return $this->createAgent($q->fetchOne());
+        $file = $q->fetchOne();
+        return $file ? $this->createAgent($file) : null;
     }
 
     /**
      * Создать агент для файла.
+     *
+     * @return ZfeFiles_Agent_Mono|null
      */
     public function createAgent(?ZfeFiles_File_OriginInterface $file = null): ?ZfeFiles_Agent_Interface
     {
