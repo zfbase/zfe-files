@@ -5,6 +5,7 @@ export default function (props = {}) {
   let { url, file } = props;
   let maxFileSize = props.maxFileSize || 1024 * 1024;
   let params = props.params || {};
+  let onStart = props.onStart || (() => {});
   let onProgress = props.onProgress || (() => {});
   let onComplete = props.onComplete || (() => {});
   let onError = props.onError || (() => {});
@@ -82,7 +83,7 @@ export default function (props = {}) {
         throw new Error('Указать обработчик прогресса начала загрузки можно только до начала загрузки.');
       }
 
-      onProgress = callback;
+      onStart = callback;
       return this;
     },
 
@@ -145,6 +146,7 @@ export default function (props = {}) {
         url,
         file,
         params,
+        onStart,
         onProgress,
         onComplete,
         onError,
