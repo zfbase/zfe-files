@@ -57,6 +57,15 @@ export default function (props = {}) {
     // Обработчики событий
     //
 
+    onStart(callback) {
+      if (uploader) {
+        throw new Error('Указать обработчик прогресса начала загрузки можно только до начала загрузки.');
+      }
+
+      onProgress = callback;
+      return this;
+    },
+
     onProgress(callback) {
       if (uploader) {
         throw new Error('Указать обработчик прогресса загрузки можно только до начала загрузки.');

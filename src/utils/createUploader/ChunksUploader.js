@@ -15,6 +15,7 @@ class ChunksUploader {
     this.maxThreads = props.maxThreads || 2;
     this.file = props.file;
     this.params = props.params || {};
+    this.onStart = props.onStart || (() => {});
     this.onProgress = props.onProgress || (() => {});
     this.onComplete = props.onComplete || (() => {});
     this.onError = props.onError || (() => {});
@@ -31,6 +32,7 @@ class ChunksUploader {
   }
 
   start() {
+    this.onStart();
     this.sendNext();
   }
 
@@ -174,6 +176,7 @@ ChunksUploader.propTypes = {
   maxThreads: PropTypes.number,
   file: PropTypes.instanceOf(File).isRequired,
   params: PropTypes.object,
+  onStart: PropTypes.func,
   onProgress: PropTypes.func,
   onComplete: PropTypes.func,
   onError: PropTypes.func,
@@ -183,6 +186,7 @@ ChunksUploader.defaultProps = {
   chunkSize: 1024 * 1024,
   maxThreads: 2,
   params: {},
+  onStart: () => {},
   onProgress: () => {},
   onComplete: () => {},
   onError: () => {},

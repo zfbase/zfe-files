@@ -7,6 +7,7 @@ class SimpleUploader {
     this.url = props.url;
     this.file = props.file;
     this.params = props.params || {};
+    this.onStart = props.onStart || (() => {});
     this.onProgress = props.onProgress || (() => {});
     this.onComplete = props.onComplete || (() => {});
     this.onError = props.onError || (() => {});
@@ -21,6 +22,7 @@ class SimpleUploader {
   start() {
     const body = this.formData;
     const { signal } = this.controller;
+    this.onStart();
     fetch(this.url, { method: 'POST', body, signal })
       .then(response => response.json())
       .then(({ status, data }) => {
@@ -46,6 +48,7 @@ SimpleUploader.propTypes = {
   url: PropTypes.string.isRequired,
   file: PropTypes.instanceOf(File).isRequired,
   params: PropTypes.object,
+  onStart: PropTypes.func,
   onProgress: PropTypes.func,
   onComplete: PropTypes.func,
   onError: PropTypes.func,
@@ -53,6 +56,7 @@ SimpleUploader.propTypes = {
 
 SimpleUploader.defaultProps = {
   params: {},
+  onStart: () => {},
   onProgress: () => {},
   onComplete: () => {},
   onError: () => {},
