@@ -138,7 +138,7 @@ export default function (props = {}) {
 
     continue() {
       if (uploader) {
-        uploader.abort();
+        uploader.continue();
       } else {
         console.warn('Невозможно перезапустить загрузку до ее начала.');
       }
