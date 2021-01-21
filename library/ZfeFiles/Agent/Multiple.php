@@ -45,17 +45,6 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
     }
 
     /**
-     * Сравнить агенты.
-     *
-     * @param ZfeFiles_Agent_Multiple $other
-     */
-    public function isEqual($other): bool
-    {
-        return $this->getFile()->isEqual($other->getFile())
-            && $this->getMediator()->isEqual($other->getMediator());
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function toArray(bool $deep = true): array
