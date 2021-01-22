@@ -35,6 +35,24 @@ trait ZfeFiles_Model_Injection
     }
 
     /**
+     * Получить агенты файлов для схемы.
+     *
+     * @return ZfeFiles_Agent_Interface[]
+     */
+    public function getAgentsByCode(string $code, bool $load = true): array
+    {
+        if (!isset($this->_agents[$code])) {
+            if ($load) {
+                $schema = static::getFileSchemas()->getByCode($code);
+                $this->_agents[$code] = $this->getAgentsFromDb($schema);
+            } else {
+                $this->_agents[$code] = [];
+            }
+        }
+        return $this->_agents[$code];
+    }
+
+    /**
      * Получить агенты файлов для схемы по данным из базы.
      *
      * @return ZfeFiles_Agent_Interface[]
