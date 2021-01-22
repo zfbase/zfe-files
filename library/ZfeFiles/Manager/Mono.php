@@ -57,7 +57,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
      *
      * @return ZfeFiles_Agent_Mono[]
      */
-    public function createAgents(array $data, string $schemaCode, ?ZfeFiles_Manageable $item): array
+    public function createAgents(array $data, string $schemaCode, $item): array
     {
         $ids = $this->extractIds($data);
         if (!$ids) {
@@ -88,11 +88,8 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
      *
      * @param ZfeFiles_Agent_Mono[] $agents
      */
-    public function updateAgents(
-        ZfeFiles_Manageable $item,
-        ZfeFiles_Schema_Default $schema,
-        array $agents
-    ): void {
+    public function updateAgents($item, ZfeFiles_Schema_Default $schema, array $agents): void
+    {
         $fileIds = [];
 
         foreach ($agents as $agent) {
@@ -134,7 +131,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
      *
      * @return ZfeFiles_Agent_Mono[]
      */
-    public function getAgentsBySchema(ZfeFiles_Manageable $item, string $schemaCode): array
+    public function getAgentsBySchema($item, string $schemaCode): array
     {
         $q = ZFE_Query::create()
             ->select('*')
