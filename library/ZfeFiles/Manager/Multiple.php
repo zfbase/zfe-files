@@ -96,7 +96,9 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
 
         $modelName = $data['modelName'] ?? null;
         $schemaCode = $data['schemaCode'] ?? null;
-        $itemId = $data['itemId'] ?? null;
+        $itemId = empty($data['itemId'])
+            ? null
+            : (((int) $data['itemId']) ?: null);
         if ($modelName && $schemaCode) {
             if ($modelName && !is_a($modelName, ZfeFiles_Manageable::class, true)) {
                 throw new ZfeFiles_Exception('Указанная модель управляющей записи не реализует интерфейс ZfeFiles_Manageable');
