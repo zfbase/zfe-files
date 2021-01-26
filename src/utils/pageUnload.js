@@ -13,21 +13,31 @@ export default {
 
   /**
    * Заблокировать покидание страницы.
-   * @param node form
+   * @param node|null form
    */
   disable: (form) => {
     window.addEventListener('beforeunload', beforeunload);
-    form.addEventListener('submit', submit);
-    form.querySelector('[type="submit"]').setAttribute('disabled', 'disabled');
+    if (form) {
+      form.addEventListener('submit', submit);
+      const btn = form.querySelector('[type="submit"]');
+      if (btn) {
+        btn.setAttribute('disabled', 'disabled');
+      }
+    }
   },
 
   /**
    * Разблокировать покидание страницы
-   * @param node form
+   * @param node|null form
    */
   enable: (form) => {
-    form.querySelector('[type="submit"]').removeAttribute('disabled');
-    form.removeEventListener('submit', submit);
+    if (form) {
+      const btn = form.querySelector('[type="submit"]');
+      if (btn) {
+        btn.removeAttribute('disabled');
+      }
+      form.removeEventListener('submit', submit);
+    }
     window.removeEventListener('beforeunload', beforeunload);
   },
 
