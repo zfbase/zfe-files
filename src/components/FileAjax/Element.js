@@ -137,7 +137,7 @@ Element.propTypes = {
   schemaCode: PropTypes.string.isRequired,
   type: PropTypes.string,
   uploadUrl: PropTypes.string.isRequired,
-  form: PropTypes.any.isRequired,
+  form: PropTypes.any,
 };
 
 Element.defaultProps = {
@@ -149,6 +149,7 @@ Element.defaultProps = {
   onLoaded: () => {},
   previewRender: null,
   type: null,
+  form: null,
 };
 
 export default Element;
