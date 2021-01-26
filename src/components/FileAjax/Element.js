@@ -31,6 +31,7 @@ const Element = ({
   onLoaded,
   previewRender,
   schemaCode,
+  itemId,
   type,
   uploadUrl,
   form,
@@ -60,7 +61,7 @@ const Element = ({
           .setUrl(uploadUrl)
           .setMaxFileSize(maxUploadFileSize)
           .setFile(file)
-          .setParams({ modelName, schemaCode })
+          .setParams({ modelName, schemaCode, itemId })
           .onStart(() => pageUnload.disable(form))
           .onProgress(({ loaded, total }) => updateItem(item.key, { uploadProgress: loaded / total * 100 }))
           .onComplete((data) => {
@@ -135,6 +136,7 @@ Element.propTypes = {
   onLoaded: PropTypes.func,
   previewRender: PropTypes.element,
   schemaCode: PropTypes.string.isRequired,
+  itemId: PropTypes.number,
   type: PropTypes.string,
   uploadUrl: PropTypes.string.isRequired,
   form: PropTypes.any,
@@ -148,6 +150,7 @@ Element.defaultProps = {
   multiple: false,
   onLoaded: () => {},
   previewRender: null,
+  itemId: null,
   type: null,
   form: null,
 };

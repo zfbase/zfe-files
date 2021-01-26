@@ -66,6 +66,7 @@ class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
             'multiple',
             'required',
             'schema_code',
+            'itemId',
             'type',
             'upload_url',
         ];
