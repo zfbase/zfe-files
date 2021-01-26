@@ -124,7 +124,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
      *
      * @return ZfeFiles_MediatorInterface|AbstractRecord
      */
-    protected function createMediator(
+    public function createMediator(
         $file,
         string $modelName,
         string $schemaCode,
