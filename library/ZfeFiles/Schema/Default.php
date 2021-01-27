@@ -42,6 +42,11 @@ class ZfeFiles_Schema_Default
     protected bool $multiple = false;
 
     /**
+     * Рекомендованный помощник элемента формы.
+     */
+    protected string $formHelper = 'addFileAjaxElement';
+
+    /**
      * Процессор.
      *
      * @var ZfeFiles_Handler_Interface|string|null
@@ -58,20 +63,10 @@ class ZfeFiles_Schema_Default
         'required',
         'accept',
         'multiple',
+        'formHelper',
         'handler',
     ];
 
-    /**
-     * @param array $options {
-     *     @var string                       $code      код
-     *     @var string                       $title     наименование
-     *     @var string                       $model     название модели файлов
-     *     @var bool                         $required  необходимость прикрепления файла
-     *     @var string[]|string              $accept    фильтр по типам файлов
-     *     @var bool                         $multiple  возможность прикрепления нескольких файла
-     *     @var ZfeFiles_Processor_Interface $handler   обработчик
-     * }
-     */
     public function __construct(array $options = [])
     {
         foreach ($this->optionKeys as $key) {
@@ -214,6 +209,23 @@ class ZfeFiles_Schema_Default
     public function getMultiple(): bool
     {
         return $this->multiple;
+    }
+
+    /**
+     * Установить помощник элемента формы.
+     */
+    public function setFormHelper(string $formHelper): self
+    {
+        $this->formHelper = $formHelper;
+        return $this;
+    }
+
+    /**
+     * Получить помощник элемента формы.
+     */
+    public function getFormHelper(): string
+    {
+        return $this->formHelper;
     }
 
     /**

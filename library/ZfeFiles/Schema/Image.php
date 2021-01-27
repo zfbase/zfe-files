@@ -10,6 +10,11 @@
 class ZfeFiles_Schema_Image extends ZfeFiles_Schema_Default
 {
     /**
+     * {@inheritdoc}
+     */
+    protected string $formHelper = 'addImageFileAjaxElement';
+
+    /**
      * Ширина изображения.
      */
     protected ?int $width = null;

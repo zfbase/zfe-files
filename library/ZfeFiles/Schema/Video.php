@@ -11,6 +11,11 @@ class ZfeFiles_Schema_Video extends ZfeFiles_Schema_Default
 {
     /**
      * {@inheritdoc}
+     */
+    protected string $formHelper = 'addVideoFileAjaxElement';
+
+    /**
+     * {@inheritdoc}
      *
      * @throws ZfeFiles_Schema_Exception
      */
