@@ -7,6 +7,7 @@ import pageUnload from '../../utils/pageUnload';
 import useCollection from '../../hooks/useCollection';
 import Storage from './Storage';
 import Preview from './Preview/index';
+import validImageMinSize from '../../validators/ImageMinSize';
 
 const getAcceptForType = type => (['audio', 'video', 'image'].includes(type) ? `${type}/*` : null);
 
@@ -39,6 +40,15 @@ const Element = ({
 }) => {
   const [items, { addItem, updateItem, removeItem }] = useCollection(files);
 
+  // Надо использовать валидаторы, указанные в элементе формы
+  const valid = (file, settings, success, fail) => {
+    if (type === 'image') {
+      validImageMinSize(file, settings, success, fail);
+    } else {
+      success();
+    }
+  };
+
   React.useEffect(() => {
     onLoaded();
   }, []);
@@ -57,25 +67,32 @@ const Element = ({
         reader.onload = () => { updateItem(item.key, { previewLocal: reader.result }); };
         reader.readAsDataURL(file);
 
-        const uploader = createUploader()
-          .setUrl(uploadUrl)
-          .setMaxFileSize(maxUploadFileSize)
-          .setFile(file)
-          .setParams({ modelName, schemaCode, itemId })
-          .onStart(() => pageUnload.disable(form))
-          .onProgress(({ loaded, total }) => updateItem(item.key, { uploadProgress: loaded / total * 100 }))
-          .onComplete((data) => {
-            updateItem(item.key, { loading: false, ...data });
-            pageUnload.enable(form);
-          })
-          // eslint-disable-next-line no-console
-          .onError(console.error)
-          .start();
+        valid(file, options,
+          () => {
+            const uploader = createUploader()
+              .setUrl(uploadUrl)
+              .setMaxFileSize(maxUploadFileSize)
+              .setFile(file)
+              .setParams({ modelName, schemaCode, itemId })
+              .onStart(() => pageUnload.disable(form))
+              .onProgress(({ loaded, total }) => updateItem(item.key, { uploadProgress: loaded / total * 100 }))
+              .onComplete((data) => {
+                updateItem(item.key, { loading: false, ...data });
+                pageUnload.enable(form);
+              })
+              // eslint-disable-next-line no-console
+              .onError(console.error)
+              .start();
 
-        updateItem(item.key, {
-          abortUpload: () => uploader.abort(),
-          continueUpload: () => uploader.continue(),
-        });
+            updateItem(item.key, {
+              abortUpload: () => uploader.abort(),
+              continueUpload: () => uploader.continue(),
+            });
+          },
+          (message) => {
+            alert(message);
+            removeItem(item.key);
+          });
       });
     }, []),
     noClick: true,
