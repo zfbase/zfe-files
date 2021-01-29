@@ -60,7 +60,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
         $chunkNum = isset($params['chunkNum']) ? intval($params['chunkNum']) : null;
         $modelName = $params['modelName'] ?? null;
         $schemaCode = $params['schemaCode'] ?? null;
-        $itemId = $params['itemId'] ?? null;
+        $itemId = (!empty($params['itemId']) && $params['itemId'] !== 'null') ? ((int) $params['itemId']) : null;
 
         if ($chunksCount) {
             // Если грузим чанками, то через сессию контролируем загрузку.
