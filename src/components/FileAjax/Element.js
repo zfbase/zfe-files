@@ -7,7 +7,7 @@ import pageUnload from '../../utils/pageUnload';
 import useCollection from '../../hooks/useCollection';
 import Storage from './Storage';
 import Preview from './Preview/index';
-import validImageMinSize from '../../validators/ImageMinSize';
+import validImageMinSize from '../../validators/images/MinSize';
 
 const getAcceptForType = type => (['audio', 'video', 'image'].includes(type) ? `${type}/*` : null);
 
