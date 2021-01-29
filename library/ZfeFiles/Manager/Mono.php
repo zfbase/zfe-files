@@ -44,7 +44,11 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
             $file->hash = $this->hash($data['tempPath']);
             $file->save();
         } catch (Exception $ex) {
-            throw new ZfeFiles_Exception('Не удалось сохранить файл', null, $ex);
+            $msg = 'Не удалось сохранить файл';
+            if (Zend_Registry::get('user')->noticeDetails) {
+                $msg .= ': ' . $ex->getMessage();
+            }
+            throw new ZfeFiles_Exception($msg, null, $ex);
         }
 
         $this->move($file, $data['tempPath']);
