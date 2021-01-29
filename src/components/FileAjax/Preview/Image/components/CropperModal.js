@@ -79,7 +79,10 @@ const CropperModal = ({
   const rotateRight = () => cropper.current.rotate(90);
   const flipHorizontal = () => cropper.current.scaleX(-cropper.current.getData().scaleX);
   const flipVertical = () => cropper.current.scaleY(-cropper.current.getData().scaleY);
-  const reset = () => cropper.current.reset().setData(data);
+  const reset = () => {
+    cropper.current.reset().setData(data);
+    closeModal();
+  };
 
   const saveCrop = () => {
     setData(filterData(cropper.current.getData()));
