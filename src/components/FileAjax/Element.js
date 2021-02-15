@@ -61,6 +61,15 @@ const Element = ({
   } = useDropzone({
     onDrop: React.useCallback((acceptedFiles) => {
       acceptedFiles.forEach((file) => {
+        if (!multiple) {
+          if (items.filter(i => !i.deleted).length) {
+            if (!window.confirm('Заменить прикрепленный файл новым?')) {
+              return;
+            }
+          }
+          items.forEach(({ key }) => removeItem(key));
+        }
+
         const item = addItem({ loading: true });
 
         const reader = new FileReader();
@@ -94,7 +103,7 @@ const Element = ({
             removeItem(item.key);
           });
       });
-    }, []),
+    }, [items]),
     noClick: true,
     multiple,
     disabled,
