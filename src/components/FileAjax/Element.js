@@ -11,6 +11,25 @@ import validImageMinSize from '../../validators/images/MinSize';
 
 const getAcceptForType = type => (['audio', 'video', 'image'].includes(type) ? `${type}/*` : null);
 
+// Расчет области для кадрирования
+const getImageBox = ({
+  proxyHeight,
+  proxyWidth,
+  imageHeight,
+  imageWidth,
+}) => {
+  const xk = imageWidth / proxyWidth;
+  const yk = imageHeight / proxyHeight;
+  const width = xk <= yk ? imageWidth : Math.round(proxyWidth * yk);
+  const height = yk <= xk ? imageHeight : Math.round(proxyHeight * xk);
+  return {
+    x: Math.floor((imageWidth - width) / 2),
+    y: Math.floor((imageHeight - height) / 2),
+    width,
+    height,
+  };
+};
+
 const DropzoneLabel = ({ multiple }) => (
   <span className="zfe-files-ajax-dropzone-label">
     <span>Для загрузки перетащите {multiple ? 'файлы' : 'файл'} в эту область.</span>
@@ -72,9 +91,48 @@ const Element = ({
 
         const item = addItem({ loading: true });
 
-        const reader = new FileReader();
-        reader.onload = () => { updateItem(item.key, { previewLocal: reader.result }); };
-        reader.readAsDataURL(file);
+        if (type === 'image') {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const {
+              height: proxyHeight = null,
+              width: proxyWidth = null,
+            } = options;
+
+            const image = new Image();
+            image.onload = () => {
+              const {
+                width: imageWidth,
+                height: imageHeight,
+              } = image;
+
+              const data = getImageBox({
+                proxyHeight,
+                proxyWidth,
+                imageHeight,
+                imageWidth,
+              });
+
+              const canvas = document.createElement('canvas');
+              canvas.width = proxyWidth * 2;
+              canvas.height = proxyHeight * 2;
+              const context = canvas.getContext('2d');
+              context.drawImage(image, data.x, data.y, data.width, data.height, 0, 0, canvas.width, canvas.height);
+              context.save();
+
+              updateItem(item.key, {
+                data,
+                previewLocal: canvas.toDataURL('image/jpg'),
+              });
+            };
+            image.src = reader.result;
+
+            updateItem(item.key, {
+              previewLocal: reader.result,
+            });
+          };
+          reader.readAsDataURL(file);
+        }
 
         valid(file, options,
           () => {
