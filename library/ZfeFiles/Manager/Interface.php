@@ -29,7 +29,7 @@ interface ZfeFiles_Manager_Interface
      *
      * @return ZfeFiles_Agent_Interface агент зарегистрированного файла
      */
-    public function factory(array $data): ZfeFiles_Agent_Interface;
+    public function factory(array $data, bool $updateFile = false): ZfeFiles_Agent_Interface;
 
     /**
      * Получить общий обработчик для всех файлов менеджера.

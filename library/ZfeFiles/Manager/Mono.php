@@ -22,7 +22,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
      *
      * @return ZfeFiles_Agent_Mono
      */
-    public function factory(array $data): ZfeFiles_Agent_Interface
+    public function factory(array $data, bool $updateFile = false): ZfeFiles_Agent_Interface
     {
         if (empty($data['tempPath'])) {
             throw new ZfeFiles_Exception('Для регистрации файла необходимо указать путь до него');

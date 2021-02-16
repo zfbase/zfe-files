@@ -58,6 +58,64 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
     }
 
     /**
+     * Запросить скачивание файла.
+     */
+    public function orderAction(): void
+    {
+        try {
+            $fileId = $this->getDownloader()->order($this->getAllParams());
+            $this->_json(static::STATUS_SUCCESS, ['id' => $fileId]);
+        } catch (Exception $ex) {
+            ZFE_Utilities::popupException($ex);
+
+            $this->_json(static::STATUS_FAIL, [], 'Не удалось загрузить файл: ' . $ex->getMessage());
+        }
+    }
+
+    /**
+     * Получить загрузчик файлов с URL.
+     */
+    protected function getDownloader(): ZfeFiles_Downloader_Interface
+    {
+        try {
+            $downloaderName = Zend_Registry::get('config')->files->downloader ?? null;
+        } catch (Zend_Exception $ex) {
+            $downloaderName = null;
+        }
+
+        if (empty($downloaderName)) {
+            $downloaderName = ZfeFiles_Downloader_Default::class;
+        }
+
+        return new $downloaderName(static::$_modelName);
+    }
+
+    /**
+     * Проверить статус загрузки файла.
+     */
+    public function checkAction(): void
+    {
+        $id = (int) $this->getParam('id');
+        if (!$id) {
+            $this->abort(400, 'Не указан обязательный параметр <code>id</code>');
+        }
+
+        /** @var AbstractRecord|ZfeFiles_File_Interface */
+        $file = (static::$_modelName)::hardFind($id);
+        if (!$file) {
+            $this->_json(static::STATUS_FAIL, [], 'Файл не найден');
+        }
+
+        if ($file->deleted) {
+            $this->_json(static::STATUS_WARNING, [], 'Файл удален');
+        }
+
+        $this->_json(static::STATUS_SUCCESS, [
+            'status' => !!$file->hash,
+        ]);
+    }
+
+    /**
      * Скачать файл.
      *
      * @throws Zend_Exception

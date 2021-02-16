@@ -112,7 +112,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
      * @throws ZfeFiles_Exception
      * @throws Zend_Exception
      */
-    protected function hash(string $path): string
+    public function hash(string $path): string
     {
         if (!file_exists($path) || !is_file($path)) {
             throw new ZfeFiles_Exception('Невозможно рассчитать хеш-сумму от файла – Файл не найден');

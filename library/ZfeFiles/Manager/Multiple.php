@@ -66,22 +66,21 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
      *
      * @return ZfeFiles_Agent_Multiple
      */
-    public function factory(array $data): ZfeFiles_Agent_Interface
+    public function factory(array $data, bool $updateFile = false): ZfeFiles_Agent_Interface
     {
         if (empty($data['tempPath'])) {
             throw new ZfeFiles_Exception('Для регистрации файла необходимо указать путь до него');
         }
-        if (empty($data['fileName'])) {
-            throw new ZfeFiles_Exception('Для регистрации файла необходимо указать его имя');
-        }
 
-        $hash = $this->hash($data['tempPath']);
+        $hash = $data['hash'] ?? $this->hash($data['tempPath']);
 
         /** @var ZfeFiles_File_OriginInterface|Files $file */
         $file = ($this->fileModelName)::findOneBy('hash', $hash);
-        if (!$file) {
+        if (!$file || $updateFile) {
             try {
-                $file = new $this->fileModelName;
+                if (!$file) {
+                    $file = new $this->fileModelName;
+                }
                 $file->title = ZfeFiles_Helpers::cutExtension($data['fileName']);
                 $file->extension = $data['fileExt'] ?? ZfeFiles_Helpers::extensionFromFilename($data['fileName']);
                 $file->size = $data['fileSize'] ?? filesize($data['tempPath']);
