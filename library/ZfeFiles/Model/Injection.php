@@ -128,7 +128,7 @@ trait ZfeFiles_Model_Injection
         if ($this instanceof ZfeFiles_Manageable) {
             foreach (static::getFileSchemas() as $schema) {
                 $code = $schema->getCode();
-                if (array_key_exists($code, $array)) {
+                if (array_key_exists($code, $array) && $array[$code] !== null) {
                     /** @var ZfeFiles_Manager_Interface $manager */
                     $manager = ($schema->getModel())::getManager();
                     $agents = $manager->createAgents($array[$code], $code, $this);
