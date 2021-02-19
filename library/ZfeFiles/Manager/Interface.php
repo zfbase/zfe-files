@@ -49,7 +49,7 @@ interface ZfeFiles_Manager_Interface
      *
      * @param bool $force обновить вне зависимости от последнего времени изменения файла или связи
      */
-    public function process(string $modelName, int $itemId, bool $force = false): void;
+    public function process(string $modelName, int $itemId, string $schemaCode, bool $force = false): void;
 
     /**
      * Создать агенты по данным файлов и связей.

@@ -238,13 +238,14 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
     /**
      * {@inheritdoc}
      */
-    public function process(string $modelName, int $itemId, bool $force = false): void
+    public function process(string $modelName, int $itemId, string $schemaCode, bool $force = false): void
     {
         $q = ZFE_Query::create()
             ->select('*')
             ->from($this->mediatorModelName . ' x')
             ->addFrom('x.' . $this->mediatorFileRelation)
             ->where('x.model_name = ?', $modelName)
+            ->andWhere('x.schema_code = ?', $schemaCode)
             ->andWhere('x.item_id = ?', $itemId)
         ;
         $mediators = $q->execute();

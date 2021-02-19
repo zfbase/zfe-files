@@ -150,7 +150,7 @@ trait ZfeFiles_Model_Injection
                 /** @var ZfeFiles_Manager_Interface $manager */
                 $manager = ($schema->getModel())::getManager();
                 $manager->updateAgents($this, $schema, $this->getAgents($schema));
-                $manager->process(static::class, $this->id);
+                $manager->process(static::class, $this->id, $schema->getCode());
             }
         }
     }

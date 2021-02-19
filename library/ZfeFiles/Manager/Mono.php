@@ -114,12 +114,13 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
     /**
      * {@inheritdoc}
      */
-    public function process(string $modelName, int $itemId, bool $force = false): void
+    public function process(string $modelName, int $itemId, string $schemaCode, bool $force = false): void
     {
         $q = ZFE_Query::create()
             ->select('*')
             ->from($this->fileModelName)
             ->where('model_name = ?', $modelName)
+            ->andWhere('schema_code = ?', $schemaCode)
             ->andWhere('item_id = ?', $itemId)
         ;
         $files = $q->execute();
