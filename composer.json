@@ -28,7 +28,6 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.4",
-        "zfbase/zfe": "1.35.x-dev",
         "ralouphie/mimey": "dev-master"
     },
     "scripts": {
