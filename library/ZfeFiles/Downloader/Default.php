@@ -25,7 +25,7 @@ class ZfeFiles_Downloader_Default implements ZfeFiles_Downloader_Interface
     protected string $urlField;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __construct(?string $fileModel = null, ?string $taskCode = null, ?string $urlField = null)
     {
@@ -49,7 +49,7 @@ class ZfeFiles_Downloader_Default implements ZfeFiles_Downloader_Interface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function order(array $params): int
     {

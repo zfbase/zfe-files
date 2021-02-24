@@ -27,7 +27,7 @@ class ZfeFiles_Task_Download extends ZFE_Tasks_Performer
     protected $file;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public static function getCode(): string
     {
@@ -48,7 +48,7 @@ class ZfeFiles_Task_Download extends ZFE_Tasks_Performer
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public static function checkRelated(AbstractRecord $item): bool
     {
@@ -56,7 +56,7 @@ class ZfeFiles_Task_Download extends ZFE_Tasks_Performer
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function perform(int $relatedId, ?Zend_Log $logger = null): int
     {
@@ -100,7 +100,7 @@ class ZfeFiles_Task_Download extends ZFE_Tasks_Performer
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($curl, CURLOPT_FILE, $tempFile);
         curl_exec($curl);
@@ -117,4 +117,4 @@ class ZfeFiles_Task_Download extends ZFE_Tasks_Performer
     {
         return (new \Mimey\MimeTypes)->getExtension(mime_content_type($path));
     }
-} 
+}

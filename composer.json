@@ -28,7 +28,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.4",
-        "ralouphie/mimey": "dev-master"
+        "ralouphie/mimey": "^2.1.0"
     },
     "scripts": {
         "lint": "vendor/bin/php-cs-fixer fix --diff --dry-run",

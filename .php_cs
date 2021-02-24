@@ -9,6 +9,7 @@ $header = <<<'EOF'
 EOF;
 
 $finder = PhpCsFixer\Finder::create()
+    ->exclude('node_modules')
     ->exclude('vendor')
     ->in(__DIR__)
 ;
