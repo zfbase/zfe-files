@@ -54,6 +54,11 @@ class ZfeFiles_Schema_Default
     protected $handler;
 
     /**
+     * Скрытность схемы.
+     */
+    protected $hidden = false;
+
+    /**
      * Ключи опций.
      */
     protected $optionKeys = [
@@ -65,6 +70,7 @@ class ZfeFiles_Schema_Default
         'multiple',
         'formHelper',
         'handler',
+        'hidden',
     ];
 
     public function __construct(array $options = [])
@@ -255,6 +261,23 @@ class ZfeFiles_Schema_Default
         }
 
         return $this->handler;
+    }
+
+    /**
+     * Установить скрытность схемы.
+     */
+    public function setHidden(bool $hidden): self
+    {
+        $this->hidden = $hidden;
+        return $this;
+    }
+
+    /**
+     * Схема скрытая?
+     */
+    public function isHidden(): bool
+    {
+        return $this->hidden;
     }
 
     /**
