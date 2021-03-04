@@ -113,7 +113,10 @@ trait ZfeFiles_Model_Injection
                 $code = $schema->getCode();
                 $agents = $this->getAgents($schema);
                 foreach ($agents as $agent) {
-                    $array[$code][] = $agent->getDataForUploader();
+                    $file = $agent->getFile();
+                    if ($file && $file->exists() && !$file->isDeleted()) {
+                        $array[$code][] = $agent->getDataForUploader();
+                    }
                 }
             }
         }
