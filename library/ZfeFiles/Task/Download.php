@@ -115,6 +115,7 @@ class ZfeFiles_Task_Download extends ZFE_Tasks_Performer
      */
     protected function ext(string $path): ?string
     {
-        return (new \Mimey\MimeTypes)->getExtension(mime_content_type($path));
+        $extensions = ZfeFiles_Helpers::getExtensionByMimeType(mime_content_type($path));
+        return $extensions ? $extensions[0] : null;
     }
 }

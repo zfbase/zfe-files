@@ -67,9 +67,31 @@ class ZfeFiles_Helpers
     }
 
     /**
+     * Получить расширения, соответствующие MIME-типу.
+     *
+     * @return string[]|null
+     */
+    public static function getExtensionByMimeType(string $mime)
+    {
+        $map = include_once implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'assets', 'mime-types-map', 'mime2ext.php']);
+        return $map[$mime] ?? null;
+    }
+
+    /**
+     * Получить MIME-типы, соответствующие расширения.
+     *
+     * @return string[]|null
+     */
+    public static function getMimeTypeByExtension(string $ext)
+    {
+        $map = include_once implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'assets', 'mime-types-map', 'ext2mime.php']);
+        return $map[$ext] ?? null;
+    }
+
+    /**
      * Получить абсолютный адрес корня ZFE Files.
      *
-     * Необходим для автозарузчика ZF.
+     * Необходим для автозагрузчика ZF.
      */
     public static function getRoot(): string
     {
