@@ -27,7 +27,7 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.4",
+        "php": ">=7.4 || >8.0",
         "ralouphie/mimey": "^2.1.0"
     },
     "scripts": {
