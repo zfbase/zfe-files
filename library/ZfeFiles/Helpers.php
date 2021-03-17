@@ -39,31 +39,42 @@ class ZfeFiles_Helpers
     /**
      * Получить расширение файла по имени файла.
      */
-    public static function extensionFromFilename(string $name): ?string
+    public static function extensionFromFilename(string $path): ?string
     {
-        $pathParts = explode('/', $name);
-        $filename = end($pathParts);
+        $pathParts = explode(DIRECTORY_SEPARATOR, $path);
+        $fileName = end($pathParts);
 
-        if (mb_strpos($filename, '.') === false) {
+        if (mb_strpos($fileName, '.') === false) {
             return null;
         }
 
-        $nameParts = explode('.', $filename);
-        return mb_strtolower(end($nameParts));
+        $nameParts = explode('.', $fileName);
+        $ext = mb_strtolower(array_pop($nameParts));
+
+        return ($ext == 'crdownload')
+            ? mb_strtolower(array_pop($nameParts))
+            : $ext;
     }
 
     /**
      * Отрезать от имени файла расширение.
      */
-    public static function cutExtension(string $fileName): ?string
+    public static function cutExtension(string $path): ?string
     {
-        $startPosition = (int) mb_strrpos($fileName, DIRECTORY_SEPARATOR);
-        $dotPosition = mb_strrpos($fileName, '.', $startPosition);
-        if ($dotPosition === false) {
+        $pathParts = explode(DIRECTORY_SEPARATOR, $path);
+        $fileName = end($pathParts);
+
+        if (mb_strpos($fileName, '.') === false) {
             return $fileName;
         }
 
-        return mb_substr($fileName, 0, $dotPosition);
+        $nameParts = explode('.', $fileName);
+        $ext = mb_strtolower(array_pop($nameParts));
+        if ($ext == 'crdownload') {
+            array_pop($nameParts);
+        }
+
+        return implode('.', $nameParts);
     }
 
     /**
