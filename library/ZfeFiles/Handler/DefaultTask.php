@@ -15,13 +15,20 @@ class ZfeFiles_Handler_DefaultTask implements ZfeFiles_Handler_Interface
     protected string $taskCode;
 
     /**
+     * Приоритет отложенной задачи.
+     */
+    protected int $taskPriority;
+
+    /**
      * Экземпляр менеджера отложенных задач.
      */
     protected ZFE_Tasks_Manager $taskManager;
 
-    public function __construct(string $taskCode)
+    public function __construct(string $taskCode, int $priority = 0)
     {
         $this->taskCode = $taskCode;
+        $this->taskPriority = $priority;
+
         $this->taskManager = ZFE_Tasks_Manager::getInstance();
     }
 
@@ -42,7 +49,12 @@ class ZfeFiles_Handler_DefaultTask implements ZfeFiles_Handler_Interface
      */
     public function process(ZfeFiles_Agent_Interface $agent, bool $force = false): void
     {
-        $this->taskManager->plan($this->taskCode, $this->getItem($agent));
+        $this->taskManager->plan(
+            $this->taskCode,
+            $this->getItem($agent),
+            null,
+            $this->taskPriority
+        );
     }
 
     /**
