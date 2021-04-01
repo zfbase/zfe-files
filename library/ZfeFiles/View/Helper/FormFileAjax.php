@@ -113,10 +113,11 @@ class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
      */
     protected function preview(array $file): string
     {
-        return $this->view->tag(
-            'a',
-            ['href' => $file['downloadUrl']],
-            '<span class="glyphicon glyphicon-file"></span> ' . $file['name']
-        );
+        $attrs = [];
+        if (!empty($file['downloadUrl'])) {
+            $attrs['href'] = $file['downloadUrl'];
+        }
+        $icon = '<span class="glyphicon glyphicon-file"></span>';
+        return $this->view->tag('a', $attrs, "{$icon} {$file['name']}");
     }
 }
