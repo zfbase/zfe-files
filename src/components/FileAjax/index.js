@@ -19,6 +19,7 @@ const getProps = (node) => {
 
 export default (root) => {
   const $root = $(root);
+  const $form = $root.closest('form');
   const name = $root.data('name');
 
   const files = $.makeArray($root.find(`input[name^=${name}]`).map((i, input) => {
@@ -39,8 +40,6 @@ export default (root) => {
   }));
 
   const getOnLoadedHandler = () => {
-    const $form = $root.closest('form');
-
     if (!$form.data('plugin_checkUnsavedFormData')) {
       return () => {};
     }
@@ -54,7 +53,7 @@ export default (root) => {
   const props = {
     files,
     onLoaded: getOnLoadedHandler(),
-    form: $root.closest('form')[0],
+    form: $form[0],
     ...getProps(root),
   };
 
