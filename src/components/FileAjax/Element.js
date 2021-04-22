@@ -58,7 +58,7 @@ const Element = ({
   form,
   ...options
 }) => {
-  const [items, { addItem, updateItem, removeItem }] = useCollection(files);
+  const [items, { addItem, updateItem, removeItem, getItem }] = useCollection(files);
 
   // Надо использовать валидаторы, указанные в элементе формы
   const valid = (file, settings, success, fail) => {
@@ -177,6 +177,11 @@ const Element = ({
     }
   };
 
+  const cancelUpload = (key) => {
+    getItem(key).abortUpload();
+    removeItem(key);
+  };
+
   return (
     <div {...getRootProps()} className="zfe-files-ajax-dropzone">
       <input {...getInputProps()} />
@@ -200,7 +205,7 @@ const Element = ({
         items={items}
         onDelete={key => updateItem(key, { deleted: true })}
         onUndelete={key => updateItem(key, { deleted: null })}
-        onCancelUpload={key => removeItem(key)}
+        onCancelUpload={cancelUpload}
         setData={(key, data) => updateItem(key, { data })}
         {...options}
       />
