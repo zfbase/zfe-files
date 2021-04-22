@@ -15,7 +15,7 @@ const useCollection = (defaultValue) => {
     return item;
   };
 
-  const getItem = key => _items.filter(item => item.key != key);
+  const getItem = key => _items.find(item => item.key == key);
 
   const replaceItem = (key, value) => {
     _setItems(items => items.map(item => (item.key === key ? value : item)));
