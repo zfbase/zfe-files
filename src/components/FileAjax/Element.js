@@ -44,6 +44,7 @@ const Element = ({
   accept,
   disabled,
   files,
+  uploadBtnLabel,
   maxUploadFileSize,
   modelName,
   multiple,
@@ -189,7 +190,7 @@ const Element = ({
           disabled={disabled}
           onClick={openUploadWindow}
         >
-          Загрузить
+          {uploadBtnLabel}
         </button>
       )}
 
@@ -213,6 +214,7 @@ Element.propTypes = {
   accept: PropTypes.string,
   disabled: PropTypes.bool,
   files: PropTypes.arrayOf(PropTypes.object),
+  uploadBtnLabel: PropTypes.string,
   maxUploadFileSize: PropTypes.number,
   modelName: PropTypes.string.isRequired,
   multiple: PropTypes.bool,
@@ -230,6 +232,7 @@ Element.defaultProps = {
   accept: null,
   disabled: false,
   files: [],
+  uploadBtnLabel: 'Загрузить',
   maxUploadFileSize: 1024 ** 2,
   multiple: false,
   onLoaded: () => {},
