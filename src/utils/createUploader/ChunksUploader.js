@@ -72,7 +72,7 @@ class ChunksUploader {
         if (data.file) {
           this.abort();
           this.onComplete(data.file);
-        } else {
+        } else if (!this.aborted) {
           this.sendNext();
         }
       })
@@ -84,7 +84,9 @@ class ChunksUploader {
         this.countError += 1;
         if (this.countError < this.maxErrors) {
           // Если ошибок меньше допустимого числа, перезапустить отправку
-          this.sendNext();
+          if (!this.aborted) {
+            this.sendNext();
+          }
         } else if (countConnections === 0) {
           // Если ошибок больше допустимого количества и открытых соединений нет – останавливаемся и плачем
           this.abort();
