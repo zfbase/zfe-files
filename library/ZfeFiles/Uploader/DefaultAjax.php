@@ -84,6 +84,8 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
                 $fileSize = $params['fileSize'] ?? null;
                 $fileName = $params['fileName'] ?? $uploadResult->getName();
 
+                set_time_limit($chunksCount);
+
                 $tempPath = realpath($this->tempRoot) . DIRECTORY_SEPARATOR . time() . '-' . $fileName;
                 $chunkPaths = $session->completeChunks;
                 ksort($chunkPaths);  // выравнивание для многопоточной загрузки
