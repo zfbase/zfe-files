@@ -3,7 +3,7 @@ import ChunksUploader from './ChunksUploader';
 
 export default function (props = {}) {
   let { url, file } = props;
-  let maxFileSize = props.maxFileSize || 1024 * 1024;
+  let maxChunkSize = props.maxChunkSize || 1024 ** 2;
   let params = props.params || {};
   let onStart = props.onStart || (() => {});
   let onProgress = props.onProgress || (() => {});
@@ -31,15 +31,15 @@ export default function (props = {}) {
     },
 
     /**
-     * Установить максимальный размер загружаемого файла
+     * Установить максимальный размер загружаемого файла в одном запросе (файлы, большего размера, загружаются частями)
      * @param string value
      */
-    setMaxFileSize(value) {
+    setMaxChunkSize(value) {
       if (uploader) {
         throw new Error('Указать максимальный размер файла для одного запроса можно только до начала загрузки.');
       }
 
-      maxFileSize = value;
+      maxChunkSize = value;
       return this;
     },
 
@@ -152,12 +152,12 @@ export default function (props = {}) {
         onError,
       };
 
-      if (file.size < maxFileSize) {
+      if (file.size < maxChunkSize) {
         uploader = new SimpleUploader(commonProps);
       } else {
         uploader = new ChunksUploader({
           ...commonProps,
-          chunkSize: maxFileSize,
+          chunkSize: maxChunkSize,
         });
       }
 

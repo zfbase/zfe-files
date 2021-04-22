@@ -45,7 +45,8 @@ const Element = ({
   disabled,
   files,
   uploadBtnLabel,
-  maxUploadFileSize,
+  maxChunkSize,
+  maxFileSize,
   modelName,
   multiple,
   name,
@@ -139,7 +140,7 @@ const Element = ({
           () => {
             const uploader = createUploader()
               .setUrl(uploadUrl)
-              .setMaxFileSize(maxUploadFileSize)
+              .setMaxChunkSize(Number(maxChunkSize))
               .setFile(file)
               .setParams({ modelName, schemaCode, itemId })
               .onStart(() => pageUnload.disable(form))
@@ -220,7 +221,8 @@ Element.propTypes = {
   disabled: PropTypes.bool,
   files: PropTypes.arrayOf(PropTypes.object),
   uploadBtnLabel: PropTypes.string,
-  maxUploadFileSize: PropTypes.number,
+  maxChunkSize: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  maxFileSize: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   modelName: PropTypes.string.isRequired,
   multiple: PropTypes.bool,
   name: PropTypes.string.isRequired,
@@ -238,7 +240,8 @@ Element.defaultProps = {
   disabled: false,
   files: [],
   uploadBtnLabel: 'Загрузить',
-  maxUploadFileSize: 1024 ** 2,
+  maxChunkSize: 1024 ** 2,  // 1 MB
+  maxFileSize: 0,  // Unlimited
   multiple: false,
   onLoaded: () => {},
   previewRender: null,
