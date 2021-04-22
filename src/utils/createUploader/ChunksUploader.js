@@ -154,7 +154,6 @@ class ChunksUploader {
       };
 
       xhr.onabort = (error) => {
-        console.log(error);
         reject(new Error('Загрузка остановлена пользователем.'));
         delete this.connections[chunkNum];
       };
