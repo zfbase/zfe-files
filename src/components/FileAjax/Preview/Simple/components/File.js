@@ -6,12 +6,14 @@ import Title from './Title';
 import DownloadLink from './DownloadLink';
 import Button from './Button';
 
-const workingMessage = (percentage) => (percentage < 100) ? `Загрузка… ${percentage ? `${percentage}%` : ''}` : 'Обработка…';
+const workingMessage = percentage => ((percentage < 100)
+  ? `Загрузка… ${percentage ? `${percentage}%` : ''}`
+  : 'Обработка…');
 
 const File = ({ item, onDelete, onUndelete, onCancelUpload }) => (
   <li className={item.deleted && 'deleted'}>
     <Icon />
-    <Title value={item.loading ? workingMessage(item.uploadProgress ? Math.round(item.uploadProgress * 100) / 100 : null) : item.name} />
+    <Title value={item.loading ? workingMessage(item.uploadProgress ? Math.round(item.uploadProgress) : null) : item.name} />
     {item.downloadUrl && <DownloadLink downloadUrl={item.downloadUrl} />}
     {item.deleted
       ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} className="undelete" />
