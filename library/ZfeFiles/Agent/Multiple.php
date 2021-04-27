@@ -45,6 +45,17 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
     /**
      * {@inheritdoc}
      */
+    public function linkManageableItem(string $code, ZfeFiles_Manageable $item, array $data = [])
+    {
+        /** @var ZfeFiles_Manager_Multiple $manager */
+        $manager = ($this->file)::getManager();
+        $this->mediator = $manager->createMediator($this->file, get_class($item), $code, $item->id, $data);
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSchema(): ?ZfeFiles_Schema_Default
     {
         return $this->mediator ? $this->mediator->getSchema() : null;

@@ -45,6 +45,11 @@ interface ZfeFiles_Agent_Interface
     public function getManageableItem();
 
     /**
+     * Привязать управляющую запись.
+     */
+    public function linkManageableItem(string $code, ZfeFiles_Manageable $item, array $data = []);
+
+    /**
      * Получить схему.
      */
     public function getSchema(): ?ZfeFiles_Schema_Default;

@@ -45,6 +45,22 @@ class ZfeFiles_Agent_Mono extends ZfeFiles_Agent_Abstract
     /**
      * {@inheritdoc}
      */
+    public function linkManageableItem(string $code, ZfeFiles_Manageable $item, array $data = [])
+    {
+        $this->item = $item;
+
+        if ($this->file) {
+            $this->file->model_name = get_class($item);
+            $this->file->schema_code = $code;
+            $this->file->item_id = $item->id;
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSchema(): ?ZfeFiles_Schema_Default
     {
         return $this->schema;

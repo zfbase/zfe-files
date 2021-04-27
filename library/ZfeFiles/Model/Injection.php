@@ -144,6 +144,21 @@ trait ZfeFiles_Model_Injection
     }
 
     /**
+     * Расширение postInsert для привязки файлов к новым записям.
+     */
+    protected function _filesPostInsert(): void
+    {
+        if ($this instanceof ZfeFiles_Manageable) {
+            foreach (static::getFileSchemas() as $schema) {
+                $code = $schema->getCode();
+                foreach ($this->getAgents($schema) as $agent) {
+                    $agent->linkManageableItem($code, $this);
+                }
+            }
+        }
+    }
+
+    /**
      * Расширение postSave для привязанных файлов.
      */
     protected function _filesPostSave(): void
