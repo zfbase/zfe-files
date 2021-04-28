@@ -44,7 +44,7 @@ DropzoneLabel.propTypes = {
   multiple: PropTypes.bool.isRequired,
 };
 
-const Element = ({
+const FormElement = ({
   accept,
   disabled,
   files,
@@ -232,7 +232,7 @@ const Element = ({
   );
 };
 
-Element.propTypes = {
+FormElement.propTypes = {
   accept: PropTypes.string,
   disabled: PropTypes.bool,
   files: PropTypes.arrayOf(PropTypes.object),
@@ -248,16 +248,16 @@ Element.propTypes = {
   itemId: PropTypes.number,
   type: PropTypes.string,
   uploadUrl: PropTypes.string.isRequired,
-  form: PropTypes.node,
+  form: PropTypes.instanceOf(Element),
 };
 
-Element.defaultProps = {
+FormElement.defaultProps = {
   accept: null,
   disabled: false,
   files: [],
   uploadBtnLabel: 'Загрузить',
-  maxChunkSize: 1024 ** 2,  // 1 MB
-  maxFileSize: 0,  // Unlimited
+  maxChunkSize: 1024 ** 2, // 1 MB
+  maxFileSize: 0, // Unlimited
   multiple: false,
   onLoaded: () => {},
   previewRender: null,
@@ -266,4 +266,4 @@ Element.defaultProps = {
   form: null,
 };
 
-export default Element;
+export default FormElement;
