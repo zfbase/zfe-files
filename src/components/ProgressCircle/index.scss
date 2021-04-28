@@ -1,46 +1,46 @@
 .zfe-files--progress-circle {
-  font-size: 14px;
-  margin: 10px;
-  position: relative; /* so that children can be absolutely positioned */
-  padding: 0;
-  width: 50px;
-  height: 50px;
-  background-color: #F2E9E1; 
+  background-color: #f2e9e1;
   border-radius: 50%;
+  font-size: 14px;
+  height: 50px;
   line-height: 50px;
+  margin: 10px;
+  padding: 0;
+  position: relative; /* so that children can be absolutely positioned */
+  width: 50px;
 
-  &:after {
-    border: none;
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    text-align: center;
-    display: block;
+  &::after {
+    background-color: #fff;
     border-radius: 50%;
-    width: 43px;
+    border-width: 0;
+    content: ' ';
+    display: block;
     height: 43px;
-    background-color: white;
-    content: " ";
+    left: 3px;
+    position: absolute;
+    text-align: center;
+    top: 3px;
+    width: 43px;
   }
 
   span {
-    position: absolute;
-    line-height: 50px;
-    width: 50px;
-    text-align: center;
+    color: #53777a;
     display: block;
-    color: #53777A;
+    line-height: 50px;
+    position: absolute;
+    text-align: center;
+    width: 50px;
     z-index: 2;
   }
 }
 
 .zfe-files--progress-circle--left-half-clipper {
+  animation: rotate 2s linear infinite;
   border-radius: 50%;
-  width: 50px;
+  clip: rect(0, 50px, 50px, 25px); /* clips the whole left half*/
   height: 50px;
   position: absolute; /* needed for clipping */
-  clip: rect(0, 50px, 50px, 25px); /* clips the whole left half*/ 
-  animation: rotate 2s linear infinite;
+  width: 50px;
 
   .zfe-files--progress-circle.over50 & {
     clip: rect(auto, auto, auto, auto);
@@ -48,27 +48,27 @@
 }
 
 .zfe-files--progress-circle--value-bar {
-  /*This is an overlayed square, that is made round with the border radius,
-  then it is cut to display only the left half, then rotated clockwise
-  to escape the outer clipping path.*/ 
-  position: absolute; /*needed for clipping*/
-  clip: rect(0, 25px, 50px, 0);
-  width: 50px;
-  height: 50px;
+  border: 6px solid #53777a; /*The border is 0.35 but making it larger removes visual artifacts */
   border-radius: 50%;
-  border: 6px solid #53777A; /*The border is 0.35 but making it larger removes visual artifacts */
-  /*background-color: #4D642D;*/ /* for debug */
   box-sizing: border-box;
+  clip: rect(0, 25px, 50px, 0);
+  height: 50px;
+  /* This is an overlayed square, that is made round with the border radius,
+   * then it is cut to display only the left half, then rotated clockwise
+   * to escape the outer clipping path. */
+  position: absolute; /* needed for clipping */
+  width: 50px;
+  /* background-color: #4D642D; *//* for debug */
 }
 
 .zfe-files--progress-circle--first50-bar {
   .zfe-files--progress-circle.over50 & {
-    position: absolute; /*needed for clipping*/
-    clip: rect(0, 50px, 50px, 25px);
-    background-color: #53777A;
+    background-color: #53777a;
     border-radius: 50%;
-    width: 50px;
+    clip: rect(0, 50px, 50px, 25px);
     height: 50px;
+    position: absolute; /*needed for clipping*/
+    width: 50px;
   }
 
   .zfe-files--progress-circle:not(.over50) & {

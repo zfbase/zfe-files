@@ -1,35 +1,35 @@
 .zfe-files-ajax-preview-simple {
   list-style: none;
-  padding: 0;
   margin: 0 0 0 -8px;
+  padding: 0;
 
   > li {
+    display: inline-block;
     margin: 8px 0 0 8px;
     position: relative;
     vertical-align: middle;
-    display: inline-block;
 
     > span,
     > button,
     > a {
-      position: relative;
-      display: inline-block;
-      padding: 4px 6px;
+      background-color: #fff;
+      background-image: none;
       border: 1px solid #ddd;
       border-radius: 4px;
       color: #333;
-      background-color: #fff;
-      background-image: none;
-      vertical-align: middle;
+      display: inline-block;
       font-size: 12px;
       line-height: 1.5;
+      padding: 4px 6px;
+      position: relative;
+      vertical-align: middle;
 
       &:first-child {
         margin-left: 0;
 
         &:not(:last-child) {
-          border-top-right-radius: 0;
           border-bottom-right-radius: 0;
+          border-top-right-radius: 0;
         }
       }
 
@@ -38,8 +38,8 @@
       }
 
       &:last-child:not(:first-child) {
-        border-top-left-radius: 0;
         border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
       }
 
       + span,
@@ -74,6 +74,7 @@
       }
     }
 
+    /* stylelint-disable selector-no-qualifying-type */
     &.deleted {
       > span,
       > a,
