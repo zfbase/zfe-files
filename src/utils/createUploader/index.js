@@ -1,7 +1,7 @@
 import SimpleUploader from './SimpleUploader';
 import ChunksUploader from './ChunksUploader';
 
-export default function (props = {}) {
+export default (props = {}) => {
   let { url, file } = props;
   let maxChunkSize = props.maxChunkSize || 1024 ** 2;
   let params = props.params || {};
@@ -172,6 +172,7 @@ export default function (props = {}) {
       if (uploader) {
         uploader.abort();
       } else {
+        // eslint-disable-next-line no-console
         console.warn('Невозможно остановить загрузку до ее начала.');
       }
     },
@@ -183,9 +184,10 @@ export default function (props = {}) {
       if (uploader) {
         uploader.continue();
       } else {
+        // eslint-disable-next-line no-console
         console.warn('Невозможно перезапустить загрузку до ее начала.');
       }
     },
 
   };
-}
+};

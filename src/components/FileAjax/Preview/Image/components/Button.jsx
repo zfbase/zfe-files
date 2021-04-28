@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cs from 'classnames';
 
-const btnSize = size => (size ? `btn-${size}` : null);
+const btnSize = (size) => (size ? `btn-${size}` : null);
 
 const Button = ({
   icon,

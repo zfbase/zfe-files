@@ -79,6 +79,7 @@ class ChunksUploader {
       .catch((error) => {
         this.chunksQueue.push(chunkNum);
 
+        // eslint-disable-next-line no-console
         console.log(error);
 
         this.countError += 1;
@@ -95,19 +96,12 @@ class ChunksUploader {
       });
   }
 
-  sendChunk(chunk, chunkNum) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const { status, data } = await this.upload(chunk, chunkNum);
-        if (status !== 0 && status !== '0') {
-          reject(new Error('Не удалось загрузить чанк.'));
-          return;
-        }
-        resolve(data);
-      } catch (error) {
-        reject(error);
-      }
-    });
+  async sendChunk(chunk, chunkNum) {
+    const { status, data } = await this.upload(chunk, chunkNum);
+    if (status !== 0 && status !== '0') {
+      throw new Error('Не удалось загрузить чанк.');
+    }
+    return data;
   }
 
   handleProgress(chunkNum, event) {
@@ -131,6 +125,7 @@ class ChunksUploader {
 
   upload(chunk, chunkNum) {
     return new Promise((resolve, reject) => {
+      // eslint-disable-next-line no-multi-assign
       const xhr = this.connections[chunkNum] = new XMLHttpRequest();
 
       const progressListener = this.handleProgress.bind(this, chunkNum);
@@ -153,7 +148,7 @@ class ChunksUploader {
         delete this.connections[chunkNum];
       };
 
-      xhr.onabort = (error) => {
+      xhr.onabort = () => {
         reject(new Error('Загрузка остановлена пользователем.'));
         delete this.connections[chunkNum];
       };
@@ -176,7 +171,7 @@ ChunksUploader.propTypes = {
   chunkSize: PropTypes.number,
   maxThreads: PropTypes.number,
   file: PropTypes.instanceOf(File).isRequired,
-  params: PropTypes.object,
+  params: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   onStart: PropTypes.func,
   onProgress: PropTypes.func,
   onComplete: PropTypes.func,

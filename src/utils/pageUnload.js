@@ -4,6 +4,7 @@ const beforeunload = (e) => {
 };
 
 const submit = (e) => {
+  // eslint-disable-next-line no-alert
   window.alert('Необходимо дождаться завершения загрузки файлов.');
   e.preventDefault();
   e.returnValue = true;

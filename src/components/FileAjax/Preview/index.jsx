@@ -19,6 +19,7 @@ const Preview = ({ previewRender, type, ...props }) => {
     }
   }
 
+  // eslint-disable-next-line react/jsx-props-no-spreading
   return <Helper {...props} />;
 };
 

@@ -14,6 +14,7 @@ const cs = (...args) => args.reduce((classes, val) => {
 
 const ProgressCircle = ({ percent }) => (
   <div className={cs('zfe-files--progress-circle', { over50: percent > 50 })}>
+    {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
     <span>{Math.round(percent)}%</span>
     <div className="zfe-files--progress-circle--left-half-clipper">
       <div className="zfe-files--progress-circle--first50-bar" />

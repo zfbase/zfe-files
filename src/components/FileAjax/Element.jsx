@@ -9,7 +9,7 @@ import Storage from './Storage';
 import Preview from './Preview/index';
 import validImageMinSize from '../../validators/images/MinSize';
 
-const getAcceptForType = type => (['audio', 'video', 'image'].includes(type) ? `${type}/*` : null);
+const getAcceptForType = (type) => (['audio', 'video', 'image'].includes(type) ? `${type}/*` : null);
 
 // Расчет области для кадрирования
 const getImageBox = ({
@@ -32,7 +32,11 @@ const getImageBox = ({
 
 const DropzoneLabel = ({ multiple }) => (
   <span className="zfe-files-ajax-dropzone-label">
-    <span>Для загрузки перетащите {multiple ? 'файлы' : 'файл'} в эту область.</span>
+    <span>
+      Для загрузки перетащите
+      {multiple ? ' файлы ' : ' файл '}
+      в эту область.
+    </span>
   </span>
 );
 
@@ -59,6 +63,7 @@ const Element = ({
   form,
   ...options
 }) => {
+  // eslint-disable-next-line object-curly-newline
   const [items, { addItem, updateItem, removeItem, getItem }] = useCollection(files);
 
   // Надо использовать валидаторы, указанные в элементе формы
@@ -83,7 +88,8 @@ const Element = ({
     onDrop: React.useCallback((acceptedFiles) => {
       acceptedFiles.forEach((file) => {
         if (!multiple) {
-          if (items.filter(i => !i.deleted).length) {
+          if (items.filter((i) => !i.deleted).length) {
+            // eslint-disable-next-line no-alert
             if (!window.confirm('Заменить прикрепленный файл новым?')) {
               return;
             }
@@ -119,7 +125,13 @@ const Element = ({
               canvas.width = proxyWidth * 2;
               canvas.height = proxyHeight * 2;
               const context = canvas.getContext('2d');
-              context.drawImage(image, data.x, data.y, data.width, data.height, 0, 0, canvas.width, canvas.height);
+              context.drawImage(
+                image,
+                data.x, data.y,
+                data.width, data.height,
+                0, 0,
+                canvas.width, canvas.height,
+              );
               context.save();
 
               updateItem(item.key, {
@@ -144,7 +156,10 @@ const Element = ({
               .setFile(file)
               .setParams({ modelName, schemaCode, itemId })
               .onStart(() => pageUnload.disable(form))
-              .onProgress(({ loaded, total }) => updateItem(item.key, { uploadProgress: loaded / total * 100 }))
+              .onProgress(({ loaded, total }) => updateItem(
+                item.key,
+                { uploadProgress: (loaded / total) * 100 },
+              ))
               .onComplete((data) => {
                 updateItem(item.key, { loading: false, ...data });
                 pageUnload.enable(form);
@@ -159,7 +174,8 @@ const Element = ({
             });
           },
           (message) => {
-            alert(message);
+            // eslint-disable-next-line no-alert
+            window.alert(message);
             removeItem(item.key);
           });
       });
@@ -174,7 +190,7 @@ const Element = ({
     open(e);
 
     if (!multiple) {
-      items.map(item => item.deleted && removeItem(item.key));
+      items.map((item) => item.deleted && removeItem(item.key));
     }
   };
 
@@ -189,7 +205,7 @@ const Element = ({
 
       {isDragActive && <DropzoneLabel multiple={multiple} />}
 
-      {(multiple || !items.filter(item => !item.deleted).length) && (
+      {(multiple || !items.filter((item) => !item.deleted).length) && (
         <button
           className="btn btn-default"
           type="button"
@@ -204,14 +220,14 @@ const Element = ({
         previewRender={previewRender}
         type={type}
         items={items}
-        onDelete={key => updateItem(key, { deleted: true })}
-        onUndelete={key => updateItem(key, { deleted: null })}
+        onDelete={(key) => updateItem(key, { deleted: true })}
+        onUndelete={(key) => updateItem(key, { deleted: null })}
         onCancelUpload={cancelUpload}
         setData={(key, data) => updateItem(key, { data })}
-        {...options}
+        {...options} // eslint-disable-line react/jsx-props-no-spreading
       />
 
-      <Storage {...{ items, name }} />
+      <Storage items={items} name={name} />
     </div>
   );
 };
@@ -232,7 +248,7 @@ Element.propTypes = {
   itemId: PropTypes.number,
   type: PropTypes.string,
   uploadUrl: PropTypes.string.isRequired,
-  form: PropTypes.any,
+  form: PropTypes.node,
 };
 
 Element.defaultProps = {

@@ -24,8 +24,8 @@ class SimpleUploader {
     const { signal } = this.controller;
     this.onStart();
     fetch(this.url, { method: 'POST', body, signal })
-      .then(response => response.json())
-      .then(({ status, data }) => {
+      .then((response) => {
+        const { status, data } = response.json();
         if ([0, '0'].includes(status) && data.file) {
           this.onComplete(data.file);
         } else {
@@ -47,7 +47,7 @@ class SimpleUploader {
 SimpleUploader.propTypes = {
   url: PropTypes.string.isRequired,
   file: PropTypes.instanceOf(File).isRequired,
-  params: PropTypes.object,
+  params: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   onStart: PropTypes.func,
   onProgress: PropTypes.func,
   onComplete: PropTypes.func,

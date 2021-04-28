@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from 'react';
 
 const usePlayer = (source, props) => {
   const player = useRef(null);
+
+  // eslint-disable-next-line react/jsx-props-no-spreading
   const Player = () => <audio ref={player} src={source} {...props} />;
 
   const [state, setState] = useState('stop');

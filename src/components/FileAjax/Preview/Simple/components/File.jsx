@@ -6,7 +6,7 @@ import Title from './Title';
 import DownloadLink from './DownloadLink';
 import Button from './Button';
 
-const workingMessage = percentage => ((percentage < 100)
+const workingMessage = (percentage) => ((percentage < 100)
   ? `Загрузка… ${percentage ? `${percentage}%` : ''}`
   : 'Обработка…');
 
@@ -15,7 +15,7 @@ const File = ({ item, onDelete, onUndelete, onCancelUpload }) => (
     <Icon />
     <Title value={item.loading ? workingMessage(item.uploadProgress ? Math.round(item.uploadProgress) : null) : item.name} />
     {item.downloadUrl && <DownloadLink downloadUrl={item.downloadUrl} />}
-    {item.deleted
+    {item.deleted // eslint-disable-line no-nested-ternary
       ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} className="undelete" />
       : (item.loading
         ? <Button icon="remove" title="Отменить загрузку" onClick={() => onCancelUpload(item.key)} />

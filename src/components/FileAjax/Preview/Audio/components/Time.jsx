@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const twoDigit = num => `0${num}`.slice(-2);
+const twoDigit = (num) => `0${num}`.slice(-2);
 
 export const secToTime = (sec) => {
   if (Number.isNaN(sec)) {

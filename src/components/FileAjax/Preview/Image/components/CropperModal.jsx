@@ -4,6 +4,7 @@ import React, { useState, useEffect, createRef } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import Cropper from 'react-cropper';
+
 import 'cropperjs/dist/cropper.css';
 
 import Button from './Button';
@@ -91,7 +92,7 @@ const CropperModal = ({
   };
 
   return (
-    <React.Fragment>
+    <>
       <Button icon="scissors" title="Кадрировать" onClick={openModal} size="xs" />
       <Modal
         isOpen={modalIsOpen}
@@ -124,7 +125,7 @@ const CropperModal = ({
           <Button label="Сохранить" onClick={saveCrop} />
         </div>
       </Modal>
-    </React.Fragment>
+    </>
   );
 };
 
