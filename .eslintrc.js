@@ -21,6 +21,7 @@ module.exports = {
     'jsx-a11y/media-has-caption': 'off',
     'max-len': ['warn', { code: 160 }],
     'no-multiple-empty-lines': 'off',
+    'react/jsx-fragments': 'off',
     'react/jsx-no-target-blank': 'off',
     'react/jsx-props-no-spreading': ['warn', { html: 'ignore' }],
   },

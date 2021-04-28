@@ -21,7 +21,7 @@ const Audio = ({
   } = usePlayer(item.previewUrl);
 
   return (
-    <>
+    <Fragment>
       <Player />
       <Wrapper className={item.deleted && 'deleted'}>
         {state === 'play'
@@ -34,7 +34,7 @@ const Audio = ({
           ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} className="undelete" />
           : <Button icon="remove" title="Удалить" onClick={() => onDelete(item.key)} />}
       </Wrapper>
-    </>
+    </Fragment>
   );
 };
 

@@ -1,6 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
-import React, { useState, useEffect, createRef } from 'react';
+import React, {
+  createRef,
+  Fragment,
+  useEffect,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import Cropper from 'react-cropper';
@@ -92,7 +97,7 @@ const CropperModal = ({
   };
 
   return (
-    <>
+    <Fragment>
       <Button icon="scissors" title="Кадрировать" onClick={openModal} size="xs" />
       <Modal
         isOpen={modalIsOpen}
@@ -125,7 +130,7 @@ const CropperModal = ({
           <Button label="Сохранить" onClick={saveCrop} />
         </div>
       </Modal>
-    </>
+    </Fragment>
   );
 };
 
