@@ -24,8 +24,8 @@ class SimpleUploader {
     const { signal } = this.controller;
     this.onStart();
     fetch(this.url, { method: 'POST', body, signal })
-      .then((response) => {
-        const { status, data } = response.json();
+      .then(response => response.json())
+      .then(({ status, data }) => {
         if ([0, '0'].includes(status) && data.file) {
           this.onComplete(data.file);
         } else {
