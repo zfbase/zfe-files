@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import AudioPreview from './Audio/index';
 import ImagePreview from './Image/index';
 import SimplePreview from './Simple/index';
-// import VideoPreview from './Video/index';
+import VideoPreview from './Video/index';
 
 const Preview = ({ previewRender, type, ...props }) => {
   let Helper;
@@ -14,7 +14,7 @@ const Preview = ({ previewRender, type, ...props }) => {
     switch (type) {
       case 'image': Helper = ImagePreview; break;
       case 'audio': Helper = AudioPreview; break;
-      // case 'video': Helper = VideoPreview; break;
+      case 'video': Helper = VideoPreview; break;
       default: Helper = SimplePreview; break;
     }
   }

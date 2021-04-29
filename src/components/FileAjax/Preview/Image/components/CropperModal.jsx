@@ -12,7 +12,7 @@ import Cropper from 'react-cropper';
 
 import 'cropperjs/dist/cropper.css';
 
-import Button from './Button';
+import Button from '../../Button';
 
 const filterData = ({
   x,
