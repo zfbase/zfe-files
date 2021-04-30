@@ -65,12 +65,8 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
         if ($chunksCount) {
             // Если грузим чанками, то через сессию контролируем загрузку.
             $session = new Zend_Session_Namespace('ChunksUploader-' . ($params['uid'] ?? null));
-            if ($session->chunksCount === null) {
-                $session->chunksCount = $chunksCount;
-                $session->completeChunks = [];
-                $session->chunkFilePrefix = uniqid();
-            } elseif ($session->chunksCount !== $chunksCount) {
-                throw new ZfeFiles_Uploader_Exception('Коллизия сессии загрузки файла чанками');
+            if ($session->tempPath === null) {
+                $session->tempPath = tempnam(sys_get_temp_dir(), 'zfe_');
             }
 
             $chunkHash = $params['chunkHash'] ?? null;
@@ -78,32 +74,37 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
                 throw new ZfeFiles_Uploader_Exception('Указанная хеш-сумма не совпадает с расчетной от загруженного чанка.');
             }
 
-            $session->completeChunks[$chunkNum] = $uploadResult->getPath();
-
-            if ($chunksCount === count($session->completeChunks)) {
-                $fileSize = $params['fileSize'] ?? null;
-                $fileName = $params['fileName'] ?? $uploadResult->getName();
-
-                set_time_limit($chunksCount);
-
-                $tempPath = realpath($this->tempRoot) . DIRECTORY_SEPARATOR . time() . '-' . $fileName;
-                $chunkPaths = $session->completeChunks;
-                ksort($chunkPaths);  // выравнивание для многопоточной загрузки
-                foreach ($chunkPaths as $chunkPath) {
-                    $chunkSize = filesize($chunkPath);
-                    $chunkFile = fopen($chunkPath, 'rb');
-                    $chunkBlob = fread($chunkFile, $chunkSize);
-                    fclose($chunkFile);
-
-                    $tempFile = fopen($tempPath, 'ab');
-                    fwrite($tempFile, $chunkBlob);
-                    fclose($tempFile);
-
-                    unlink($chunkPath);
+            if ($session->lastInsertChunk === null) {
+                if ($chunkNum != 0) {
+                    throw new ZfeFiles_Uploader_Exception('Не корректный порядок чанков.');
                 }
+
+                $session->lastInsertChunk = 0;
+            } elseif ($chunkNum == $session->lastInsertChunk + 1) {
+                $session->lastInsertChunk++;
             } else {
+                throw new ZfeFiles_Uploader_Exception('Не корректный порядок чанков.');
+            }
+
+            $chunkPath = $uploadResult->getPath();
+            $chunkSize = filesize($chunkPath);
+            $chunkFile = fopen($chunkPath, 'rb');
+            $chunkBlob = fread($chunkFile, $chunkSize);
+            fclose($chunkFile);
+
+            $tempFile = fopen($session->tempPath, 'ab');
+            fwrite($tempFile, $chunkBlob);
+            fclose($tempFile);
+
+            unlink($chunkPath);
+
+            if ($chunkNum < $chunksCount - 1) {
                 return null;
             }
+
+            $tempPath = $session->tempPath;
+            $fileSize = filesize($tempPath);
+            $fileName = $params['fileName'] ?? $uploadResult->getName();
         } else {
             $tempPath = $uploadResult->getPath();
             $fileName = $uploadResult->getName();
