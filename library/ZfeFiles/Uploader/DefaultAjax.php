@@ -66,7 +66,7 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
             // Если грузим чанками, то через сессию контролируем загрузку.
             $session = new Zend_Session_Namespace('ChunksUploader-' . ($params['uid'] ?? null));
             if ($session->tempPath === null) {
-                $session->tempPath = tempnam(sys_get_temp_dir(), 'zfe_');
+                $session->tempPath = tempnam($this->tempRoot, 'zfe_');
             }
 
             $chunkHash = $params['chunkHash'] ?? null;

@@ -27,6 +27,11 @@ class ZfeFiles_Task_Download extends ZFE_Tasks_Performer
     protected $file;
 
     /**
+     * Корневая директория для временных фйлов.
+     */
+    protected string $tempRoot;
+
+    /**
      * {@inheritdoc}
      */
     public static function getCode(): string
@@ -45,6 +50,8 @@ class ZfeFiles_Task_Download extends ZFE_Tasks_Performer
         if ($config && $config->download && $config->downloader->urlField) {
             $this->urlField = $config->downloader->urlField;
         }
+
+        $this->tempRoot = $config && !empty($config->tempRoot) ? $config->tempRoot : sys_get_temp_dir();
     }
 
     /**
@@ -95,7 +102,7 @@ class ZfeFiles_Task_Download extends ZFE_Tasks_Performer
      */
     protected function download(string $url): string
     {
-        $tempPath = tempnam(sys_get_temp_dir(), 'ExFile_');
+        $tempPath = tempnam($this->tempRoot, 'ExFile_');
         $tempFile = fopen($tempPath, 'wb');
 
         $curl = curl_init();
