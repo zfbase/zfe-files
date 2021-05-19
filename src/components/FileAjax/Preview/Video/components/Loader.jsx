@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Button from '../../Button';
 
@@ -25,11 +26,24 @@ const Loader = ({ item, onCancelUpload }) => {
           role="progressbar"
           style={{ width: `${percentage}%` }}
         >
-          {percentage}%
+          {percentage}
+          %
         </div>
       </div>
     </div>
   );
+};
+
+Loader.propTypes = {
+  item: PropTypes.shape({
+    key: PropTypes.string,
+    uploadProgress: PropTypes.number,
+  }).isRequired,
+  onCancelUpload: PropTypes.func,
+};
+
+Loader.defaultProps = {
+  onCancelUpload: () => {},
 };
 
 export default Loader;
