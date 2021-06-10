@@ -10,11 +10,6 @@
 class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
 {
     /**
-     * Конфигурация.
-     */
-    protected Zend_Config $config;
-
-    /**
      * Менеджер файла.
      */
     protected ZfeFiles_Manager_Interface $manager;
@@ -34,15 +29,9 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
         ZfeFiles_Uploader_Handler_Interface $uploadHandler = null,
         string $tempRoot = null
     ) {
-        $config = $this->fromConfig();
-
         $this->manager = $manager;
-        $this->uploadHandler = $uploadHandler
-            ?: $config->uploadHandler
-            ?? new ZfeFiles_Uploader_Handler_Default();
-        $this->tempRoot = $tempRoot
-            ?: $config->tempRoot
-            ?? sys_get_temp_dir();
+        $this->uploadHandler = $uploadHandler ?: new (config('files.uploadHandler', ZfeFiles_Uploader_Handler_Default::class));
+        $this->tempRoot = $tempRoot ?: config('files.tempPath', sys_get_temp_dir());
     }
 
     /**
@@ -122,27 +111,5 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
         $agent->process();
 
         return $agent;
-    }
-
-    /**
-     * Получить настройки из конфигурации.
-     *
-     * @return object {
-     *      @var ?ZfeFiles_Uploader_Handler_Interface $uploadHandler
-     *      @var ?string                              $tempRoot
-     * }
-     */
-    protected function fromConfig(): stdClass
-    {
-        try {
-            $this->config = Zend_Registry::get('config');
-            $uhc = $this->config->files->uploadHandler ?? null;
-            return (object) [
-                'uploadHandler' => $uhc ? new $uhc() : null,
-                'tempRoot' => $this->config->files->tempPath ?? null,
-            ];
-        } catch (Zend_Exception $e) {
-            return new stdClass();
-        }
     }
 }
