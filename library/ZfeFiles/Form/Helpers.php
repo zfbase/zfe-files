@@ -18,6 +18,10 @@ trait ZfeFiles_Form_Helpers
      */
     public function addFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
     {
+        if (!is_a($this->_modelName, ZfeFiles_Manageable::class, true)) {
+            throw new ZfeFiles_Exception("Загрузка файлов невозможна: {$this->_modelName} не реализует интерфейс ZfeFiles_Manageable");
+        }
+
         /** @var ZfeFiles_Schema_Default $schema */
         $schema = ($this->_modelName)::getFileSchemas()->getByCode($id);
         $schemaOptions = [
