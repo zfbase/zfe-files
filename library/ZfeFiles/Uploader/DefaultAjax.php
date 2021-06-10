@@ -30,7 +30,14 @@ class ZfeFiles_Uploader_DefaultAjax implements ZfeFiles_Uploader_Interface
         string $tempRoot = null
     ) {
         $this->manager = $manager;
-        $this->uploadHandler = $uploadHandler ?: new (config('files.uploadHandler', ZfeFiles_Uploader_Handler_Default::class));
+
+        if (!$uploadHandler) {
+            $className = config('files.uploadHandler', ZfeFiles_Uploader_Handler_Default::class);
+            $uploadHandler = new $className;
+        }
+
+        $this->uploadHandler = $uploadHandler;
+
         $this->tempRoot = $tempRoot ?: config('files.tempPath', sys_get_temp_dir());
     }
 
