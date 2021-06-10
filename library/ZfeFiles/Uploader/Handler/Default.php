@@ -36,7 +36,7 @@ class ZfeFiles_Uploader_Handler_Default implements ZfeFiles_Uploader_Handler_Int
         $hash = hash_file($config->hashAlgo ?? 'md5', $_FILES[$field]['tmp_name']);
         $path = realpath($config->tempPath ?? sys_get_temp_dir()) . DIRECTORY_SEPARATOR . time() . $hash;
         if (!move_uploaded_file($_FILES[$field]['tmp_name'], $path)) {
-            throw new ZfeFiles_Uploader_Exception('Коллизия загруженного файла.');
+            throw new ZfeFiles_Uploader_Exception('Не удалось переместить файл из директории загрузки.');
         }
 
         $result = new ZfeFiles_Uploader_Result();
