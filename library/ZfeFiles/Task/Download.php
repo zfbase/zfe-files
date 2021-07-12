@@ -41,17 +41,9 @@ class ZfeFiles_Task_Download extends ZFE_Tasks_Performer
 
     protected function __construct()
     {
-        $config = Zend_Registry::get('config')->get('files');
-
-        if ($config && $config->fileModelName) {
-            $this->fileModel = $config->fileModelName;
-        }
-
-        if ($config && $config->download && $config->downloader->urlField) {
-            $this->urlField = $config->downloader->urlField;
-        }
-
-        $this->tempRoot = $config && !empty($config->tempRoot) ? $config->tempRoot : sys_get_temp_dir();
+        $this->fileModel = config('files.fileModelName', $this->fileModel);
+        $this->urlField = config('files.downloader.urlField', $this->urlField);
+        $this->tempRoot = config('files.tempRoot', sys_get_temp_dir());
     }
 
     /**

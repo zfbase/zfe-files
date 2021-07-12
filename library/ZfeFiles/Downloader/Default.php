@@ -29,11 +29,9 @@ class ZfeFiles_Downloader_Default implements ZfeFiles_Downloader_Interface
      */
     public function __construct(?string $fileModel = null, ?string $taskCode = null, ?string $urlField = null)
     {
-        $config = $this->fromConfig();
-
-        $this->fileModel = $fileModel ?: $config->fileModelName ?: 'Files';
-        $this->taskCode = $taskCode ?: $config->taskCode ?: 'FilesDownload';
-        $this->urlField = $urlField ?: $config->urlField ?: 'source_url';
+        $this->fileModel = $fileModel ?: config('files.fileModelName', 'Files');
+        $this->taskCode = $taskCode ?: config('files.downloader.taskCode', 'FilesDownload');
+        $this->urlField = $urlField ?: config('files.downloader.urlField', 'source_url');
 
         if (!is_a($this->fileModel, ZfeFiles_File_Interface::class, true)) {
             throw new ZfeFiles_Exception(
@@ -82,18 +80,5 @@ class ZfeFiles_Downloader_Default implements ZfeFiles_Downloader_Interface
     {
         $taskManager = ZFE_Tasks_Manager::getInstance();
         return $taskManager->plan($this->taskCode, $file);
-    }
-
-    /**
-     * Получить настройки из конфигурации.
-     */
-    protected function fromConfig(): stdClass
-    {
-        $config = Zend_Registry::get('config')->get('files');
-        return (object) [
-            'fileModel' => $config ? ($config->fileModelName ?? null) : null,
-            'taskCode' => $config && isset($config->download) ? ($config->downloader->taskCode ?? null) : null,
-            'urlField' => $config && isset($config->download) ? ($config->downloader->urlField ?? null) : null,
-        ];
     }
 }

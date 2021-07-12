@@ -32,6 +32,13 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     protected $handler;
 
     /**
+     * Алгоритм хеширования.
+     *
+     * @var string
+     */
+    protected $hashAlgo = 'crc32';
+
+    /**
      * Владелец файлов.
      *
      * @var string
@@ -65,9 +72,9 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
         } elseif (is_array($config)) {
             $this->setOptions($config);
         } elseif (is_string($config)) {
-            $this->setOptions(Zend_Registry::get('config')->{$config}->toArray());
+            $this->setOptions(config($config)->toArray());
         } elseif ($config === null) {
-            $settings = Zend_Registry::get('config')->get('files');
+            $settings = config('files');
             if ($settings) {
                 $this->setOptions($settings->toArray());
             }
@@ -118,6 +125,14 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
             }
         }
 
+        if (!empty($options['hashAlgo'])) {
+            if (in_array($options['hashAlgo'], hash_algos())) {
+                $this->hashAlgo = $options['hashAlgo'];
+            } else {
+                throw new ZfeFiles_Exception("Алгоритм хеширования {$options['hashAlgo']} не поддерживается");
+            }
+        }
+
         if (!empty($options['access']) && is_array($options['access'])) {
             $this->owner = $options['access']['owner'] ?? null;
             $this->group = $options['access']['group'] ?? null;
@@ -153,7 +168,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
             return ($this->fileModelName)::hash($path);
         }
 
-        return hash_file(Zend_Registry::get('config')->files->hashAlgo ?? 'crc32', $path);
+        return hash_file($this->hashAlgo, $path);
     }
 
     /**

@@ -44,16 +44,10 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
      */
     protected function getUploader(): ZfeFiles_Uploader_Interface
     {
-        try {
-            $uploaderName = Zend_Registry::get('config')->files->uploader ?? null;
-        } catch (Zend_Exception $ex) {
-            $uploaderName = null;
-        }
-
+        $uploaderName = config('files.uploader');
         if (empty($uploaderName)) {
             $uploaderName = ZfeFiles_Uploader_DefaultAjax::class;
         }
-
         return new $uploaderName((static::$_modelName)::getManager());
     }
 
@@ -77,16 +71,10 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
      */
     protected function getDownloader(): ZfeFiles_Downloader_Interface
     {
-        try {
-            $downloaderName = Zend_Registry::get('config')->files->downloader ?? null;
-        } catch (Zend_Exception $ex) {
-            $downloaderName = null;
-        }
-
+        $downloaderName = config('files.downloader');
         if (empty($downloaderName)) {
             $downloaderName = ZfeFiles_Downloader_Default::class;
         }
-
         return new $downloaderName(static::$_modelName);
     }
 

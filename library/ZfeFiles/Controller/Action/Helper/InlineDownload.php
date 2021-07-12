@@ -19,10 +19,8 @@ class ZfeFiles_Controller_Action_Helper_InlineDownload extends Zend_Controller_A
      */
     public function direct(string $path, string $url): void
     {
-        /** @var Zend_Config $config */
-        $config = Zend_Registry::get('config');
-
-        if (!$config->webserver) {
+        $webserver = config('webserver');
+        if (!$webserver) {
             throw new Zend_Controller_Action_Exception('В конфигурации не указан используемый веб-сервер (параметр webserver)');
         }
 
@@ -30,9 +28,9 @@ class ZfeFiles_Controller_Action_Helper_InlineDownload extends Zend_Controller_A
             'nginx' => 'InlineDownloadNginx',
             'php' => 'InlineDownloadPhp',
         ];
-        if (array_key_exists($config->webserver, $helpersMap)) {
+        if (array_key_exists($webserver, $helpersMap)) {
             /** @var ZfeFiles_Controller_Action_Helper_InlineDownload $action */
-            $action = Zend_Controller_Action_HelperBroker::getStaticHelper($helpersMap[$config->webserver]);
+            $action = Zend_Controller_Action_HelperBroker::getStaticHelper($helpersMap[$webserver]);
             $action->direct($path, $url);
         } else {
             throw new Zend_Controller_Action_Exception('В конфигурации не указан не поддерживаемый веб-сервер', 500);
