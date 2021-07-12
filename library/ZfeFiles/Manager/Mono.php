@@ -52,6 +52,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
         }
 
         $this->move($file, $data['tempPath']);
+        $this->access($file);
 
         return $this->createAgent($file);
     }

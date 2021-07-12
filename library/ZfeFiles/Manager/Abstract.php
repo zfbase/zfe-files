@@ -32,6 +32,27 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     protected $handler;
 
     /**
+     * Владелец файлов.
+     *
+     * @var string
+     */
+    protected $owner;
+
+    /**
+     * Группа владельцев файлов.
+     *
+     * @var string
+     */
+    protected $group;
+
+    /**
+     * Режим доступа к файлам.
+     *
+     * @var string
+     */
+    protected $permissions;
+
+    /**
      * @param Zend_Config|array|string $config конфигурация или её имя в общей конфигурации
      *
      * @throws ZfeFiles_Exception
@@ -95,6 +116,12 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
             } else {
                 throw new ZfeFiles_Exception('Обработчик должен реализовывать интерфейс ZfeFiles_Handler_Interface');
             }
+        }
+
+        if (!empty($options['access']) && is_array($options['access'])) {
+            $this->owner = $options['access']['owner'] ?? null;
+            $this->group = $options['access']['group'] ?? null;
+            $this->permissions = $options['access']['permissions'] ?? null;
         }
     }
 
@@ -179,6 +206,26 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
             }
         } catch (Exception $ex) {
             throw new ZfeFiles_Exception('Не удалось переложить файл из временного на постоянное место хранения', null, $ex);
+        }
+    }
+
+    /**
+     * @param ZfeFiles_File_Interface|AbstractRecord $file
+     */
+    protected function access($file): void
+    {
+        $path = $file->getRealPathHelper()->getPath();
+
+        if ($this->owner && !chown($path, $this->owner)) {
+            trigger_error("Не удалось изменить владельца `{$path}` на `$this->owner`", E_USER_ERROR);
+        }
+
+        if ($this->group && !chgrp($path, $this->group)) {
+            trigger_error("Не удалось изменить группу владельцев `{$path}` на `$this->group`", E_USER_ERROR);
+        }
+
+        if ($this->permissions && !chmod($path, $this->permissions)) {
+            trigger_error("Не удалось изменить режим доступа к `{$path}` на `$this->permissions`", E_USER_ERROR);
         }
     }
 
