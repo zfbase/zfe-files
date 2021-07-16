@@ -106,8 +106,10 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
         $qDelete = ZFE_Query::create()
             ->update($this->fileModelName)
             ->set('item_id', 'NULL')
-            ->where('item_id = ?', $item->id)
-            ->whereNotIn('id', $fileIds)
+            ->whereNotIn('id', $fileIds + [0])
+            ->andWhere('model_name = ?', get_class($item))
+            ->andWhere('schema_code = ?', $schema->getCode())
+            ->andWhere('item_id = ?', $item->id)
         ;
         $qDelete->execute();
     }
