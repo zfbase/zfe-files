@@ -133,10 +133,16 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
             }
         }
 
-        if (!empty($options['access']) && is_array($options['access'])) {
-            $this->owner = $options['access']['owner'] ?? null;
-            $this->group = $options['access']['group'] ?? null;
-            $this->permissions = $options['access']['permissions'] ?? null;
+        if (!empty($options['access'])) {
+            if ($options['access'] instanceof Zend_Config) {
+                $this->owner = $options['access']->owner ?? null;
+                $this->group = $options['access']->group ?? null;
+                $this->permissions = $options['access']->permissions ?? null;
+            } elseif(is_array($options['access'])) {
+                $this->owner = $options['access']['owner'] ?? null;
+                $this->group = $options['access']['group'] ?? null;
+                $this->permissions = $options['access']['permissions'] ?? null;
+            }
         }
     }
 
