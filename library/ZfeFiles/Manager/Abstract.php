@@ -236,17 +236,33 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     protected function access($file): void
     {
         $path = $file->getRealPathHelper()->getPath();
+        $log = Zend_Registry::get('log');
 
         if ($this->owner && !chown($path, $this->owner)) {
-            trigger_error("Не удалось изменить владельца `{$path}` на `$this->owner`", E_USER_ERROR);
+            $chownError = "Не удалось изменить владельца `{$path}` на `$this->owner`";
+            if ($log) {
+                $log->warn($chownError);
+            } else {
+                trigger_error($chownError, E_USER_WARNING);
+            }
         }
 
         if ($this->group && !chgrp($path, $this->group)) {
-            trigger_error("Не удалось изменить группу владельцев `{$path}` на `$this->group`", E_USER_ERROR);
+            $chgrpError = "Не удалось изменить группу владельцев `{$path}` на `$this->group`";
+            if ($log) {
+                $log->warn($chgrpError);
+            } else {
+                trigger_error($chgrpError, E_USER_WARNING);
+            }
         }
 
         if ($this->permissions && !chmod($path, $this->permissions)) {
-            trigger_error("Не удалось изменить режим доступа к `{$path}` на `$this->permissions`", E_USER_ERROR);
+            $chmodError = "Не удалось изменить режим доступа к `{$path}` на `$this->permissions`";
+            if ($log) {
+                $log->warn($chmodError);
+            } else {
+                trigger_error($chmodError, E_USER_WARNING);
+            }
         }
     }
 
