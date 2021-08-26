@@ -22,19 +22,20 @@
   white-space: nowrap;
 }
 
-.zfe-files-ajax-preview-video-info {
-  padding: 5px 10px;
+.zfe-files-ajax-preview-video-info,
+.zfe-files-ajax-preview-video-name {
+  padding: 5px;
+}
+
+.zfe-files-ajax-preview-video-name {
+  padding-right: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .zfe-files-ajax-preview-video-toolbar {
-  width: 80px;
   padding: 0 3px;
-
-  &.btn-toolbar .btn {
-    float: right;
-  }
+  display: flex;
 }
 
 .zfe-files-ajax-preview-video-player {
