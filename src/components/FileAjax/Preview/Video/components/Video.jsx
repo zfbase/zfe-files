@@ -9,7 +9,6 @@ const Video = ({ item, onDelete, onUndelete }) => (
     <div className="zfe-files-ajax-preview-video-header">
       <div className="zfe-files-ajax-preview-video-name">
         {item.name}
-        {item.name}
       </div>
       {item.size ? <div className="zfe-files-ajax-preview-video-info">{item.size}</div> : null}
       {item.duration ? <div className="zfe-files-ajax-preview-video-info">{item.duration}</div> : null}
