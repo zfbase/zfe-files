@@ -236,7 +236,10 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     protected function access($file): void
     {
         $path = $file->getRealPathHelper()->getPath();
-        $log = Zend_Registry::get('log');
+
+        $log = Zend_Registry::isRegistered('get')
+            ? Zend_Registry::get('log')
+            : null;
 
         if ($this->owner && !chown($path, $this->owner)) {
             $chownError = "Не удалось изменить владельца `{$path}` на `$this->owner`";
