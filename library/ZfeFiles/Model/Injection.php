@@ -86,6 +86,20 @@ trait ZfeFiles_Model_Injection
     }
 
     /**
+     * Добавить агента для записи.
+     *
+     * @param string $code
+     * @param ZfeFiles_Agent_Interface $agent
+     *
+     * @return ZfeFiles_Manageable
+     */
+    public function addAgent(string $code, ZfeFiles_Agent_Interface $agent): ZfeFiles_Manageable
+    {
+        $this->_agents[$code][] = $agent;
+        return $this;
+    }
+
+    /**
      * Сохранить данные агентов в БД.
      */
     public function updateAgentsInDb(string $code): void
