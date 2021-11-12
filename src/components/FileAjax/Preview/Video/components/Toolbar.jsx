@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 
 import Button from '../../Button';
 import ButtonLink from '../../ButtonLink';
+import QualityCheck from './QualityCheck';
 
 const Toolbar = ({ item, onDelete, onUndelete }) => (
   <div className="btn-toolbar zfe-files-ajax-preview-video-toolbar" role="toolbar">
+    <QualityCheck />
     {item.downloadUrl ? (
       <ButtonLink
         icon="download-alt"
