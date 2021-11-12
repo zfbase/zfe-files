@@ -8,8 +8,6 @@ const QualityCheck = ({ className, size, ...props }) => (
   <button
     type="button"
     className={cs('btn', 'btn-default', btnSize(size), className)}
-    title="QualityCheck"
-    disabled
     {...props}
   >
     <span className="glyphicon glyphicon-equalizer" />
@@ -17,11 +15,16 @@ const QualityCheck = ({ className, size, ...props }) => (
 );
 
 QualityCheck.propTypes = {
+  title: PropTypes.string,
+  onClick: PropTypes.func,
   className: PropTypes.string,
   size: PropTypes.string,
 };
 
 QualityCheck.defaultProps = {
+  title: 'QualityCheck',
+  // eslint-disable-next-line no-alert
+  onClick: () => window.alert('Система контроля качества видео не подключена.'),
   className: null,
   size: null,
 };
