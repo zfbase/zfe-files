@@ -1,6 +1,6 @@
 {
   "name": "zfe-files",
-  "version": "1.2.13",
+  "version": "1.2.14",
   "description": "Единая точка загрузки и управления файлами для приложений на ZFE",
   "authors": [
     "Ilya Serdyuk <ilya@serdyuk.pro>",
@@ -23,7 +23,8 @@
     "react": "^16.12.0",
     "react-cropper": "^1.3.0",
     "react-dom": "^16.12.0",
-    "react-dropzone": "^10.2.1"
+    "react-dropzone": "^10.2.1",
+    "react-modal": "^3.14.4"
   },
   "devDependencies": {
     "eslint": "^7.25.0",
