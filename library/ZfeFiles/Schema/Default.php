@@ -164,7 +164,7 @@ class ZfeFiles_Schema_Default
     /**
      * Установить фильтр по типам файлов.
      *
-     * @param string[]|string|null $accept
+     * @param string[]|string|Zend_Config|null $accept
      *
      * @throws ZfeFiles_Schema_Exception
      */
@@ -174,6 +174,8 @@ class ZfeFiles_Schema_Default
             $this->accept = $accept;
         } elseif (is_string($accept)) {
             $this->accept = explode(' ', $accept);
+        } elseif ($accept instanceof Zend_Config) {
+            $this->accept = $accept->toArray();
         } elseif ($accept === null) {
             $this->accept = [];
         } else {
