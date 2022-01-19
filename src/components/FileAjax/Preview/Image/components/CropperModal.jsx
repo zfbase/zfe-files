@@ -1,15 +1,13 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
 import React, {
   createRef,
   Fragment,
-  useEffect,
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import Cropper from 'react-cropper';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 import 'cropperjs/dist/cropper.css';
 
 import Button from '../../Button';
@@ -20,16 +18,16 @@ const filterData = ({
   width,
   height,
   rotate,
-  scaleX,
-  scaleY,
+  // scaleX,
+  // scaleY,
 }) => ({
   x: Math.round(x),
   y: Math.round(y),
   width,
   height,
   rotate,
-  scaleX,
-  scaleY,
+  // scaleX,
+  // scaleY,
 });
 
 const CropperModal = ({
@@ -112,6 +110,7 @@ const CropperModal = ({
           viewMode={defaultViewMode}
           data={data}
           rotatable
+          checkOrientation={false}
         />
         <div className="cropper-toolbar form-inline btn-toolbar" role="toolbar">
           <div className="btn-group">
@@ -122,7 +121,7 @@ const CropperModal = ({
             <Button icon="repeat" title="Повернуть" onClick={rotateLeft} style={{ transform: 'scale(-1, 1)' }} />
             <Button icon="repeat" title="Повернуть" onClick={rotateRight} />
           </div>
-          <div className="btn-group">
+          <div className="btn-group hide">
             <Button icon="resize-horizontal" title="Отразить по горизонтали" onClick={flipHorizontal} />
             <Button icon="resize-vertical" title="Отразить по вертикали" onClick={flipVertical} />
           </div>

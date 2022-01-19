@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '../../Button';
@@ -14,6 +14,10 @@ const Image = ({
   height,
 }) => {
   const [preview, setPreview] = useState(null);
+  const data = useMemo(() => {
+    const { scaleX, scaleY, ...other } = item.data || {};
+    return other;
+  }, [item.data]);
   return (
     <div className="zfe-files-ajax-preview-image thumbnail">
       <div className="btn-toolbar" role="toolbar">
@@ -22,7 +26,7 @@ const Image = ({
             src={item.downloadUrl || item.previewLocal}
             width={width}
             height={height}
-            data={item.data || {}}
+            data={data}
             setData={setData}
             setPreview={setPreview}
           />
