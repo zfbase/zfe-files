@@ -23,7 +23,7 @@ const Image = ({
       <div className="btn-toolbar" role="toolbar">
         {width && height ? (
           <CropperModal
-            src={item.downloadUrl || item.previewLocal}
+            src={item.canvasUrl || item.downloadUrl || item.previewLocal}
             width={width}
             height={height}
             data={data}
@@ -58,6 +58,7 @@ const Image = ({
 Image.propTypes = {
   item: PropTypes.shape({
     key: PropTypes.string,
+    canvasUrl: PropTypes.string,
     downloadUrl: PropTypes.string,
     previewUrl: PropTypes.string,
     previewLocal: PropTypes.string,
