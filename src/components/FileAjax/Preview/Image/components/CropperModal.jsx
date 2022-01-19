@@ -43,16 +43,6 @@ const CropperModal = ({
   const closeModal = () => setIsOpen(false);
   const cropper = createRef(null);
 
-  const defaultViewMode = 1;
-  const [viewMode, setViewMode] = useState(defaultViewMode);
-  useEffect(() => {
-    // if (cropper.current) {
-    //   const options = cropper.current.cropper.options;
-    //   options.viewMode = viewMode;
-    //   cropper.current.cropper.reset().clear().replace(options);
-    // }
-  }, [viewMode]);
-
   const styles = {
     overlay: {
       zIndex: 10000,
@@ -107,7 +97,7 @@ const CropperModal = ({
           src={src}
           aspectRatio={width / height}
           style={styles.cropper}
-          viewMode={defaultViewMode}
+          viewMode={1}
           data={data}
           rotatable
           checkOrientation={false}
