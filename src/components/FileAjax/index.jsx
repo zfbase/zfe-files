@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import $ from 'jquery';
 
 import Element from './Element';
 
@@ -18,28 +17,33 @@ const getProps = (node) => {
 };
 
 export default (root) => {
-  const $root = $(root);
-  const $form = $root.closest('form');
-  const name = $root.data('name');
+  const form = root.closest('form');
+  const { name } = root.dataset;
 
-  const files = $.makeArray($root.find(`input[name^=${name}]`).map((i, input) => {
-    const $input = $(input);
-    const data = $input.data();
+  const files = Array.from(root.querySelectorAll(`input[name^=${name}]`)).map((input) => {
+    const data = input.dataset;
     const options = { data: {} };
     Object.keys(data).forEach((key) => {
+      const parsed = parseInt(data[key], 10);
+      const value = parsed.toString() === data[key] ? parsed : data[key];
       if (/^data/.test(key)) {
-        options.data[key.substr(4, 1)[0].toLowerCase() + key.substr(5)] = data[key];
+        options.data[key.charAt(4).toLowerCase() + key.substring(5)] = value;
       } else {
-        options[key] = data[key];
+        options[key] = value;
       }
     });
     return {
-      id: $input.val(),
+      id: input.value,
       ...options,
     };
-  }));
+  });
 
   const getOnLoadedHandler = () => {
+    if (typeof window.jQuery === 'undefined') {
+      return () => {};
+    }
+    const $form = window.jQuery(form);
+
     if (!$form.data('plugin_checkUnsavedFormData')) {
       return () => {};
     }
@@ -53,7 +57,7 @@ export default (root) => {
   const props = {
     files,
     onLoaded: getOnLoadedHandler(),
-    form: $form[0],
+    form,
     ...getProps(root),
   };
 

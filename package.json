@@ -1,6 +1,6 @@
 {
   "name": "zfe-files",
-  "version": "1.2.16",
+  "version": "1.2.18",
   "description": "Единая точка загрузки и управления файлами для приложений на ZFE",
   "authors": [
     "Ilya Serdyuk <ilya@serdyuk.pro>",
