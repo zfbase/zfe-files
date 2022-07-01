@@ -92,6 +92,14 @@ abstract class ZfeFiles_Agent_Abstract implements ZfeFiles_Agent_Interface
     /**
      * {@inheritdoc}
      */
+    public function getData(): array
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function toArray(bool $deep = true): array
     {
         return [

@@ -70,6 +70,11 @@ interface ZfeFiles_Agent_Interface
     public function setData(array $data): void;
 
     /**
+     * Получить дополнительные данные.
+     */
+    public function getData(): array;
+
+    /**
      * Привести к массиву.
      */
     public function toArray(bool $deep = true): array;
