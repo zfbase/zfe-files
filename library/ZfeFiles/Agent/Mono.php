@@ -61,6 +61,22 @@ class ZfeFiles_Agent_Mono extends ZfeFiles_Agent_Abstract
     /**
      * {@inheritdoc}
      */
+    public function cloneToManageableItem(ZfeFiles_Manageable $item, string $code = null)
+    {
+        /** @var ZfeFiles_Manager_Multiple $manager */
+        $manager = ($this->file)::getManager();
+        $agent = $manager->createAgent($this->getFile());
+        $agent->linkManageableItem(
+            $code ?: $this->schema->getCode(),
+            $item,
+            $this->getData(),
+        );
+        return $agent;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSchema(): ?ZfeFiles_Schema_Default
     {
         return $this->schema;

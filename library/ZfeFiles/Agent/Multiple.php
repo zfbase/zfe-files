@@ -56,6 +56,25 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
     /**
      * {@inheritdoc}
      */
+    public function cloneToManageableItem(ZfeFiles_Manageable $item, string $code = null)
+    {
+        /** @var ZfeFiles_Manager_Multiple $manager */
+        $manager = ($this->file)::getManager();
+        $localMediator = $this->getMediator();
+        $mediator = $manager->createMediator(
+            $this->getFile(),
+            get_class($item),
+            $code ?: $localMediator->getCode(),
+            $item->id,
+            $localMediator->getData(),
+            false,
+        );
+        return $manager->createAgent($this->getFile(), $mediator);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSchema(): ?ZfeFiles_Schema_Default
     {
         return $this->mediator ? $this->mediator->getSchema() : null;

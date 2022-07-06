@@ -50,6 +50,13 @@ interface ZfeFiles_Agent_Interface
     public function linkManageableItem(string $code, ZfeFiles_Manageable $item, array $data = []);
 
     /**
+     * Склонировать агент для другой управляющей записи.
+     *
+     * @return static
+     */
+    public function cloneToManageableItem(ZfeFiles_Manageable $item, string $code = null);
+
+    /**
      * Получить схему.
      */
     public function getSchema(): ?ZfeFiles_Schema_Default;
