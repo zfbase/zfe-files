@@ -226,6 +226,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
                 throw new ZfeFiles_Uploader_Exception('Не удалось переложить загруженный файл из временной директории');
             }
         } catch (Exception $ex) {
+            ZFE_Utilities::logException($ex);
             throw new ZfeFiles_Exception('Не удалось переложить файл из временного на постоянное место хранения', null, $ex);
         }
     }

@@ -34,8 +34,7 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
             }
         } catch (Exception $ex) {
             ZFE_Utilities::popupException($ex);
-
-            $this->_json(static::STATUS_FAIL, [], 'Не удалось загрузить файл: ' . $ex->getMessage());
+            $this->error('Не удалось загрузить файл: ' . $ex->getMessage(), $ex);
         }
     }
 
@@ -61,8 +60,7 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
             $this->_json(static::STATUS_SUCCESS, ['id' => $fileId]);
         } catch (Exception $ex) {
             ZFE_Utilities::popupException($ex);
-
-            $this->_json(static::STATUS_FAIL, [], 'Не удалось загрузить файл: ' . $ex->getMessage());
+            $this->error('Не удалось загрузить файл: ' . $ex->getMessage(), $ex);
         }
     }
 
