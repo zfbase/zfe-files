@@ -220,6 +220,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
             if (rename($tempPath, $newPath)) {
                 if ($file->contains('path')) {
                     $file->path = $newPath;
+                    $file->clearRelated(); // FIX для решения проблемы с созданием лишних связанных записей
                     $file->save();
                 }
             } else {
