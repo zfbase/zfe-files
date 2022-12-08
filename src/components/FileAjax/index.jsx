@@ -3,13 +3,23 @@ import ReactDOM from 'react-dom';
 
 import Element from './Element';
 
+const numberProps = [
+  'itemId',
+  'maxChunkSize',
+  'maxFileSize',
+];
+
 const getProps = (node) => {
   const props = {};
   for (let i = 0; i < node.attributes.length; i += 1) {
     if (/^data-/.test(node.attributes[i].name)) {
       const keyArr = /^data-(.*)/[Symbol.replace](node.attributes[i].name, '$1').split('-');
-      const key = [keyArr.shift(), ...keyArr.map((k) => k.substr(0, 1).toUpperCase() + k.substr(1).toLowerCase())].join('');
-      props[key] = node.attributes[i].value;
+      const key = [
+        keyArr.shift(),
+        ...keyArr.map((k) => k.substr(0, 1).toUpperCase() + k.substr(1).toLowerCase()),
+      ].join('');
+      const value = node.attributes[i].value;
+      props[key] = numberProps.includes(key) ? parseInt(value, 10) : value;
     }
   }
   props.multiple = ['1', 'multiple'].includes(props.multiple);

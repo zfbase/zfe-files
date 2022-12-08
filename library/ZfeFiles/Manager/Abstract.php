@@ -155,6 +155,22 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getLinkUrl(): string
+    {
+        return "/{$this->controllerName}/link";
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUnlinkUrl(): string
+    {
+        return "/{$this->controllerName}/unlink";
+    }
+
+    /**
      * Получить хеш-сумму для файла.
      *
      * @throws ZfeFiles_Exception

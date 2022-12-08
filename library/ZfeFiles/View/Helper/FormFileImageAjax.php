@@ -16,22 +16,22 @@ class ZfeFiles_View_Helper_FormFileImageAjax extends ZfeFiles_View_Helper_FormFi
         return $this->formFileAjax($name, $value, $attribs);
     }
 
+    protected $valueProps = [
+        'id',
+        'x',
+        'y',
+        'width',
+        'height',
+        'scaleX',
+        'scaleY',
+        'rotate',
+    ];
+
     protected function getInputValue(array $file): string
     {
-        $valueProps = [
-            'id',
-            'x',
-            'y',
-            'width',
-            'height',
-            'scaleX',
-            'scaleY',
-            'rotate',
-        ];
-
         $value = [];
         foreach (array_keys($file) as $key) {
-            if (in_array($key, $valueProps)) {
+            if (in_array($key, $this->valueProps)) {
                 $value[$key] = $file[$key];
             }
         }

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import createUploader from '../../utils/createUploader';
@@ -60,6 +60,8 @@ const FormElement = ({
   itemId,
   type,
   uploadUrl,
+  linkUrl,
+  unlinkUrl,
   form,
   ...options
 }) => {
@@ -152,7 +154,7 @@ const FormElement = ({
           () => {
             const uploader = createUploader()
               .setUrl(uploadUrl)
-              .setMaxChunkSize(Number(maxChunkSize))
+              .setMaxChunkSize(maxChunkSize)
               .setFile(file)
               .setParams({ modelName, schemaCode, itemId })
               .onStart(() => pageUnload.disable(form))
@@ -186,18 +188,66 @@ const FormElement = ({
     accept: accept || getAcceptForType(type),
   });
 
-  const openUploadWindow = (e) => {
+  const openUploadWindow = useCallback((e) => {
     open(e);
 
     if (!multiple) {
       items.map((item) => item.deleted && removeItem(item.key));
     }
-  };
+  }, [open, items, removeItem]);
 
-  const cancelUpload = (key) => {
+  const cancelUpload = useCallback((key) => {
     getItem(key).abortUpload();
     removeItem(key);
-  };
+  }, [getItem, removeItem]);
+
+  const autoSave = itemId && modelName && schemaCode && unlinkUrl && linkUrl;
+
+  const onDelete = useCallback((key) => {
+    updateItem(key, { deleted: true });
+
+    if (autoSave) {
+      const { id } = getItem(key);
+
+      const formData = new FormData();
+      formData.append('id', id);
+      formData.append('model', modelName);
+      formData.append('schema', schemaCode);
+      formData.append('rel-id', itemId);
+
+      fetch(unlinkUrl, {
+        method: 'POST',
+        cache: 'no-cache',
+        body: formData,
+      });
+    }
+  }, [updateItem, getItem]);
+
+  const onUndelete = useCallback(key => {
+    updateItem(key, { deleted: null });
+
+    if (autoSave) {
+      const { id, data } = getItem(key);
+
+      const formData = new FormData();
+      formData.append('id', id);
+      formData.append('model', modelName);
+      formData.append('schema', schemaCode);
+      formData.append('rel-id', itemId);
+      Object.keys(data).forEach(key => formData.append(`data[${key}]`, data[key]));
+
+      fetch(linkUrl, {
+        method: 'POST',
+        cache: 'no-cache',
+        body: formData,
+      });
+    }
+  }, [updateItem]);
+
+  const setData = useCallback(
+    (key, data) => updateItem(key, { data }),
+    [updateItem],
+  );
 
   return (
     <div {...getRootProps()} className="zfe-files-ajax-dropzone">
@@ -220,10 +270,10 @@ const FormElement = ({
         previewRender={previewRender}
         type={type}
         items={items}
-        onDelete={(key) => updateItem(key, { deleted: true })}
-        onUndelete={(key) => updateItem(key, { deleted: null })}
+        onDelete={onDelete}
+        onUndelete={onUndelete}
         onCancelUpload={cancelUpload}
-        setData={(key, data) => updateItem(key, { data })}
+        setData={setData}
         {...options} // eslint-disable-line react/jsx-props-no-spreading
       />
 
@@ -237,8 +287,8 @@ FormElement.propTypes = {
   disabled: PropTypes.bool,
   files: PropTypes.arrayOf(PropTypes.object),
   uploadBtnLabel: PropTypes.string,
-  maxChunkSize: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  maxFileSize: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  maxChunkSize: PropTypes.number,
+  maxFileSize: PropTypes.number,
   modelName: PropTypes.string.isRequired,
   multiple: PropTypes.bool,
   name: PropTypes.string.isRequired,
@@ -248,6 +298,8 @@ FormElement.propTypes = {
   itemId: PropTypes.number,
   type: PropTypes.string,
   uploadUrl: PropTypes.string.isRequired,
+  linkUrl: PropTypes.string,
+  unlinkUrl: PropTypes.string,
   form: PropTypes.instanceOf(Element),
 };
 
@@ -264,6 +316,8 @@ FormElement.defaultProps = {
   itemId: null,
   type: null,
   form: null,
+  linkUrl: null,
+  unlinkUrl: null,
 };
 
 export default FormElement;

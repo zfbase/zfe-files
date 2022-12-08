@@ -23,4 +23,9 @@ interface ZfeFiles_MediatorInterface
      * Получить схему.
      */
     public function getSchema(): ?ZfeFiles_Schema_Default;
+
+    /**
+     * Отвязать файл (удалить медиатор).
+     */
+    public function delete();
 }

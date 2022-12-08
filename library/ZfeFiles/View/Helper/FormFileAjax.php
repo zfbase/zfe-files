@@ -55,22 +55,25 @@ class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
         return $this->view->tag('div', $attribs, $body);
     }
 
+    protected $attributesForModify = [
+        'accept',
+        'model_name',
+        'multiple',
+        'required',
+        'schema_code',
+        'item_id',
+        'type',
+        'upload_url',
+        'link_url',
+        'unlink_url',
+    ];
+
     /**
      * Модифицировать атрибуты.
      */
     protected function modifyAttributes(array &$attribs): void
     {
-        $map = [
-            'accept',
-            'model_name',
-            'multiple',
-            'required',
-            'schema_code',
-            'itemId',
-            'type',
-            'upload_url',
-        ];
-        foreach ($map as $key) {
+        foreach ($this->attributesForModify as $key) {
             if (array_key_exists($key, $attribs)) {
                 $attribs['data-' . str_replace('_', '-', $key)] = $attribs[$key];
                 unset($attribs[$key]);

@@ -50,6 +50,11 @@ interface ZfeFiles_Agent_Interface
     public function linkManageableItem(string $code, ZfeFiles_Manageable $item, array $data = []);
 
     /**
+     * Отвязать управляющую запись.
+     */
+    public function unlinkManageableItem();
+
+    /**
      * Получить схему.
      */
     public function getSchema(): ?ZfeFiles_Schema_Default;

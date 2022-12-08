@@ -56,6 +56,18 @@ class ZfeFiles_Agent_Multiple extends ZfeFiles_Agent_Abstract
     /**
      * {@inheritdoc}
      */
+    public function unlinkManageableItem()
+    {
+        if ($this->mediator) {
+            $this->mediator->delete();
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSchema(): ?ZfeFiles_Schema_Default
     {
         return $this->mediator ? $this->mediator->getSchema() : null;

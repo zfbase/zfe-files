@@ -15,6 +15,16 @@ interface ZfeFiles_Manager_Interface
     public function getUploadUrl(): string;
 
     /**
+     * Получить адрес для привязки файла.
+     */
+    public function getLinkUrl(): string;
+
+    /**
+     * Получить адрес для отвязывания файла.
+     */
+    public function getUnlinkUrl(): string;
+
+    /**
      * Зарегистрировать новый файл по метаданным.
      *
      * @param array $data {

@@ -24,11 +24,15 @@ trait ZfeFiles_Form_Helpers
 
         /** @var ZfeFiles_Schema_Default $schema */
         $schema = ($this->_modelName)::getFileSchemas()->getByCode($id);
+
+        /** @var ZfeFiles_Manager_Interface $manager */
+        $manager = ($schema->getModel())::getManager();
+
         $schemaOptions = [
             'label' => $schema->getTitle(),
             'required' => $schema->getRequired(),
             'multiple' => $schema->getMultiple(),
-            'upload_url' => ($schema->getModel())::getManager()->getUploadUrl(),
+            'upload_url' => $manager->getUploadUrl(),
             'accept' => $schema->getAccept(),
         ];
 
@@ -36,6 +40,12 @@ trait ZfeFiles_Form_Helpers
             'model_name' => $this->_modelName,
             'schema_code' => $id,
         ];
+
+        if (!empty($customOptions['autoSave'])) {
+            $localOptions['link_url'] = $manager->getLinkUrl();
+            $localOptions['unlink_url'] = $manager->getUnlinkUrl();
+            unset($customOptions['autoSave']);
+        }
 
         $options = array_replace_recursive($schemaOptions, $localOptions, $customOptions);
 

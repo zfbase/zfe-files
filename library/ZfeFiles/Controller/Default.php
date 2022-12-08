@@ -81,10 +81,7 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
      */
     public function checkAction(): void
     {
-        $id = (int) $this->getParam('id');
-        if (!$id) {
-            $this->abort(400, 'Не указан обязательный параметр <code>id</code>');
-        }
+        $id = (int) $this->getParamOrAbort('id');
 
         /** @var AbstractRecord|ZfeFiles_File_Interface */
         $file = (static::$_modelName)::hardFind($id);
@@ -108,10 +105,7 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
      */
     public function downloadAction(): void
     {
-        $id = (int) $this->getParam('id');
-        if (!$id) {
-            $this->abort(400, 'Не указан обязательный параметр <code>id</code>');
-        }
+        $id = (int) $this->getParamOrAbort('id');
 
         $modelName = $this->getParam('model');
         $schemaCode = $this->getParam('schema');
@@ -136,5 +130,63 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
             $agent->getFile()->getWebPathHelper()->getVirtualPath(),
             $agent->getFilename()
         );
+    }
+
+    /**
+     * Привязать файл к записи.
+     */
+    public function linkAction()
+    {
+        $id = (int) $this->getParamOrAbort('id');
+        $schemaCode = $this->getParamOrAbort('schema');
+        $data = $this->getParam('data', []);
+
+        $modelName = $this->getParamOrAbort('model');
+        $relId = (int) $this->getParamOrAbort('rel-id');
+        $item = $modelName::find($relId);
+        if (empty($item)) {
+            $this->abort(404, $modelName::decline('%s не найден.', '%s не найдена.', '%s не найдено.'));
+        }
+
+        /** @var ZfeFiles_Manager_Interface $manager */
+        $manager = (static::$_modelName)::getManager();
+        $agent = $manager->getAgentByFileId($id);
+        $agent->linkManageableItem($schemaCode, $item, $data);
+        $agent->save();
+
+        $this->_json(static::STATUS_SUCCESS);
+    }
+
+    /**
+     * Отвязать файл от записи.
+     */
+    public function unlinkAction()
+    {
+        $id = (int) $this->getParamOrAbort('id');
+        $modelName = $this->getParamOrAbort('model');
+        $schemaCode = $this->getParamOrAbort('schema');
+        $relId = (int) $this->getParamOrAbort('rel-id');
+
+        /** @var ZfeFiles_Manager_Interface $manager */
+        $manager = (static::$_modelName)::getManager();
+        $agent = $manager->getAgentByRelation($id, $modelName, $schemaCode, $relId);
+        $agent->unlinkManageableItem();
+        $agent->save();
+
+        $this->_json(static::STATUS_SUCCESS);
+    }
+
+    /**
+     * Получить обязательный параметр, иначе прервать выполнение.
+     *
+     * @todo Перенести в основной репозиторий ZFE.
+     */
+    private function getParamOrAbort(string $name): string
+    {
+        $value = $this->getParam($name);
+        if ($value === null) {
+            $this->abort(400, "Не указан обязательный параметр <code>{$name}</code>");
+        }
+        return $value;
     }
 }
