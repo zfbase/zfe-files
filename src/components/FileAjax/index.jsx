@@ -26,7 +26,7 @@ const getProps = (node) => {
   return props;
 };
 
-export default (root) => {
+export default (root, customProps) => {
   const form = root.closest('form');
   const { name } = root.dataset;
 
@@ -69,6 +69,7 @@ export default (root) => {
     onLoaded: getOnLoadedHandler(),
     form,
     ...getProps(root),
+    ...customProps,
   };
 
   // eslint-disable-next-line react/jsx-props-no-spreading
