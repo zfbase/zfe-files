@@ -8,7 +8,7 @@ import VideoPreview from './Video/index';
 
 const Preview = ({ previewRender, type, ...props }) => {
   let Helper;
-  if (React.isValidElement(previewRender)) {
+  if (typeof previewRender == 'function') {
     Helper = previewRender;
   } else {
     switch (type) {
@@ -24,7 +24,7 @@ const Preview = ({ previewRender, type, ...props }) => {
 };
 
 Preview.propTypes = {
-  previewRender: PropTypes.element,
+  previewRender: PropTypes.func,
   type: PropTypes.string,
 };
 

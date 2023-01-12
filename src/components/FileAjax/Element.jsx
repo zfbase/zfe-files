@@ -293,7 +293,7 @@ FormElement.propTypes = {
   multiple: PropTypes.bool,
   name: PropTypes.string.isRequired,
   onLoaded: PropTypes.func,
-  previewRender: PropTypes.element,
+  previewRender: PropTypes.func,
   schemaCode: PropTypes.string.isRequired,
   itemId: PropTypes.number,
   type: PropTypes.string,
