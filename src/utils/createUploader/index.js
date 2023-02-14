@@ -65,7 +65,12 @@ export default (props = {}) => {
         throw new Error('Указать дополнительные параметры запроса загрузки можно только до начала загрузки.');
       }
 
-      params = value;
+      params = Object.keys(value).reduce((acc, key) => {
+        if (value[key] !== null && value[key] !== undefined) {
+          acc[key] = value[key];
+        }
+        return acc;
+      }, {});
       return this;
     },
 
