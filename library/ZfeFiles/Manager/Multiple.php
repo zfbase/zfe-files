@@ -87,6 +87,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
                 $file->hash = $hash;
                 $file->save();
             } catch (Exception $ex) {
+                ZFE_Utilities::logException($ex);
                 throw new ZfeFiles_Exception('Не удалось сохранить файл', null, $ex);
             }
 
@@ -107,6 +108,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
             try {
                 $mediator = $this->createMediator($file, $modelName, $schemaCode, $itemId);
             } catch (Exception $ex) {
+                ZFE_Utilities::logException($ex);
                 throw new ZfeFiles_Exception('Не удалось связать файл с записью: ' . $ex->getMessage(), null, $ex);
             }
 
