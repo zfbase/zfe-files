@@ -5,7 +5,7 @@ import Button from '../../Button';
 import ButtonLink from '../../ButtonLink';
 import QualityCheck from './QualityCheck';
 
-const Toolbar = ({ item, onDelete, onUndelete }) => (
+const Toolbar = ({ item, disabled, onDelete, onUndelete }) => (
   <div className="btn-toolbar zfe-files-ajax-preview-video-toolbar" role="toolbar">
     <QualityCheck />
     {item.downloadUrl ? (
@@ -15,9 +15,11 @@ const Toolbar = ({ item, onDelete, onUndelete }) => (
         url={item.downloadUrl}
       />
     ) : null}
-    {item.deleted
-      ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} size="xs" />
-      : <Button icon="remove" title="Удалить" onClick={() => onDelete(item.key)} size="xs" />}
+    {disabled ? null : (
+      item.deleted
+        ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} size="xs" />
+        : <Button icon="remove" title="Удалить" onClick={() => onDelete(item.key)} size="xs" />
+    )}
   </div>
 );
 
@@ -27,8 +29,13 @@ Toolbar.propTypes = {
     deleted: PropTypes.bool,
     key: PropTypes.string,
   }).isRequired,
+  disabled: PropTypes.bool,
   onDelete: PropTypes.func.isRequired,
   onUndelete: PropTypes.func.isRequired,
+};
+
+Toolbar.defaultProps = {
+  disabled: false,
 };
 
 export default Toolbar;

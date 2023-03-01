@@ -20,6 +20,11 @@ const getProps = (node) => {
       ].join('');
       const value = node.attributes[i].value;
       props[key] = numberProps.includes(key) ? parseInt(value, 10) : value;
+    } else if (node.attributes[i].name == 'disabled') {
+      const value = node.attributes[i].value;
+      if (value === 'disabled' || value == 1) {
+        props.disabled = true;
+      }
     }
   }
   props.multiple = ['1', 'multiple'].includes(props.multiple);

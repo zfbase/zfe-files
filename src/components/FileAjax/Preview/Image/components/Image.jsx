@@ -7,6 +7,7 @@ import CropperModal from './CropperModal';
 
 const Image = ({
   item,
+  disabled,
   onDelete,
   onUndelete,
   setData,
@@ -21,7 +22,7 @@ const Image = ({
   return (
     <div className="zfe-files-ajax-preview-image thumbnail">
       <div className="btn-toolbar" role="toolbar">
-        {width && height ? (
+        {width && height && !disabled ? (
           <CropperModal
             src={item.canvasUrl || item.downloadUrl || item.previewLocal}
             width={width}
@@ -38,9 +39,11 @@ const Image = ({
             url={item.downloadUrl}
           />
         ) : null}
-        {item.deleted
-          ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} size="xs" />
-          : <Button icon="remove" title="Удалить" onClick={() => onDelete(item.key)} size="xs" />}
+        {disabled ? null : (
+          item.deleted
+            ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} size="xs" />
+            : <Button icon="remove" title="Удалить" onClick={() => onDelete(item.key)} size="xs" />
+        )}
       </div>
       <div
         className="zfe-files-ajax-preview-image-canvas"
@@ -65,6 +68,7 @@ Image.propTypes = {
     deleted: PropTypes.bool,
     data: PropTypes.object,
   }).isRequired,
+  disabled: PropTypes.bool,
   onDelete: PropTypes.func.isRequired,
   onUndelete: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,
@@ -81,6 +85,7 @@ Image.propTypes = {
 Image.defaultProps = {
   width: null,
   height: null,
+  disabled: false,
 };
 
 export default Image;

@@ -9,6 +9,7 @@ import { Button, DownloadLink } from '../../Simple';
 
 const Audio = ({
   item,
+  disabled,
   onDelete,
   onUndelete,
   Wrapper,
@@ -30,9 +31,11 @@ const Audio = ({
         <Title value={item.loading ? 'Загрузка…' : item.name} />
         {item.downloadUrl && <DownloadLink downloadUrl={item.downloadUrl} />}
         {item.duration && <Time value={item.duration} />}
-        {item.deleted
-          ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} className="undelete" />
-          : <Button icon="remove" title="Удалить" onClick={() => onDelete(item.key)} />}
+        {disabled ? null : (
+          item.deleted
+            ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} className="undelete" />
+            : <Button icon="remove" title="Удалить" onClick={() => onDelete(item.key)} />
+        )}
       </Wrapper>
     </Fragment>
   );
@@ -48,6 +51,7 @@ Audio.propTypes = {
     deleted: PropTypes.bool,
     loading: PropTypes.bool,
   }).isRequired,
+  disabled: PropTypes.bool,
   onDelete: PropTypes.func.isRequired,
   onUndelete: PropTypes.func.isRequired,
   Wrapper: PropTypes.oneOfType([
@@ -58,6 +62,7 @@ Audio.propTypes = {
 
 Audio.defaultProps = {
   Wrapper: 'div',
+  disabled: false,
 };
 
 export default Audio;

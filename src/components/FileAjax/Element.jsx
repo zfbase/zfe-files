@@ -270,6 +270,7 @@ const FormElement = ({
         previewRender={previewRender}
         type={type}
         items={items}
+        disabled={disabled}
         onDelete={onDelete}
         onUndelete={onUndelete}
         onCancelUpload={cancelUpload}
