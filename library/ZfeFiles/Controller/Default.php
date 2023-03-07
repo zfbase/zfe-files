@@ -106,7 +106,7 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
     public function downloadAction(): void
     {
         $id = (int) $this->getParamOrAbort('id');
-        $download = $this->getParam('download', true);
+        $download = $this->getParam('download') !== 'false';
 
         $modelName = $this->getParam('model');
         $schemaCode = $this->getParam('schema');
