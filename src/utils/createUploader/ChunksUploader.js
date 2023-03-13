@@ -12,7 +12,7 @@ class ChunksUploader {
   constructor(props) {
     this.url = props.url;
     this.chunkSize = props.chunkSize || 1024 * 1024;
-    this.maxThreads = props.maxThreads || 2;
+    this.maxThreads = props.maxThreads || 1;
     this.file = props.file;
     this.params = props.params || {};
     this.onStart = props.onStart || (() => {});
