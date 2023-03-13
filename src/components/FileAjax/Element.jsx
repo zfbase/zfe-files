@@ -162,7 +162,20 @@ const FormElement = ({
                 item.key,
                 { uploadProgress: (loaded / total) * 100 },
               ))
-              .onComplete((data) => {
+              .onComplete((raw) => {
+                const data = { data: {} };
+                Object.keys(raw).forEach((key) => {
+                  if (/^data/.test(key)) {
+                    const keyArr = /^data-(.*)/[Symbol.replace](key, '$1').split('-');
+                    const newKey = [
+                      keyArr.shift(),
+                      ...keyArr.map((k) => k.substr(0, 1).toUpperCase() + k.substr(1).toLowerCase()),
+                    ].join('');
+                    data.data[newKey] = raw[key];
+                  } else {
+                    data[key] = raw[key];
+                  }
+                });
                 updateItem(item.key, { loading: false, ...data });
                 pageUnload.enable(form);
               })
