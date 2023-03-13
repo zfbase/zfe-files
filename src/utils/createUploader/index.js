@@ -163,6 +163,7 @@ export default (props = {}) => {
         uploader = new ChunksUploader({
           ...commonProps,
           chunkSize: maxChunkSize,
+          maxThreads: props.maxThreads,
         });
       }
 
