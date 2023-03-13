@@ -18,11 +18,11 @@ const getProps = (node) => {
         keyArr.shift(),
         ...keyArr.map((k) => k.substr(0, 1).toUpperCase() + k.substr(1).toLowerCase()),
       ].join('');
-      const value = node.attributes[i].value;
+      const { value } = node.attributes[i];
       props[key] = numberProps.includes(key) ? parseInt(value, 10) : value;
-    } else if (node.attributes[i].name == 'disabled') {
-      const value = node.attributes[i].value;
-      if (value === 'disabled' || value == 1) {
+    } else if (node.attributes[i].name === 'disabled') {
+      const { value } = node.attributes[i];
+      if (value === 'disabled' || value === '1') {
         props.disabled = true;
       }
     }

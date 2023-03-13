@@ -236,7 +236,7 @@ const FormElement = ({
     }
   }, [updateItem, getItem]);
 
-  const onUndelete = useCallback(key => {
+  const onUndelete = useCallback((key) => {
     updateItem(key, { deleted: null });
 
     if (autoSave) {
@@ -247,7 +247,7 @@ const FormElement = ({
       formData.append('model', modelName);
       formData.append('schema', schemaCode);
       formData.append('rel-id', itemId);
-      Object.keys(data).forEach(key => formData.append(`data[${key}]`, data[key]));
+      Object.keys(data).forEach((prop) => formData.append(`data[${prop}]`, data[prop]));
 
       fetch(linkUrl, {
         method: 'POST',
