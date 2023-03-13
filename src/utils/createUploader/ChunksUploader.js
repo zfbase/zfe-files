@@ -69,6 +69,10 @@ class ChunksUploader {
 
     this.sendChunk(chunk, chunkNum)
       .then((data) => {
+        // Максимум 10 попыток для одного чанка
+        // Как вернем поддержку многопоточной загрузки потребуется доработка для привязки числа ошибок к соединениям
+        this.countError = 0;
+
         if (data.file) {
           this.abort();
           this.onComplete(data.file);
