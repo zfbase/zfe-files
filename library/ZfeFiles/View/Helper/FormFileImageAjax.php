@@ -17,6 +17,7 @@ class ZfeFiles_View_Helper_FormFileImageAjax extends ZfeFiles_View_Helper_FormFi
     }
 
     protected $valueProps = [
+        'alt',
         'id',
         'x',
         'y',

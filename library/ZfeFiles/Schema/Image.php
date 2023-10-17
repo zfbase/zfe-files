@@ -25,6 +25,11 @@ class ZfeFiles_Schema_Image extends ZfeFiles_Schema_Default
     protected ?int $height = null;
 
     /**
+     * Поддержка редактирования атрибута Alt
+     */
+    protected bool $alt = false;
+
+    /**
      * {@inheritdoc}
      *
      * @throws ZfeFiles_Schema_Exception
@@ -35,6 +40,10 @@ class ZfeFiles_Schema_Image extends ZfeFiles_Schema_Default
 
         $this->optionKeys[] = 'width';
         $this->optionKeys[] = 'height';
+        if (isset($options['alt']) && $options['alt'] === true) {
+            $this->alt = true;
+            $this->optionKeys[] = 'alt';
+        }
         parent::__construct($options);
     }
 

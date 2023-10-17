@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Button from '../../Button';
 import ButtonLink from '../../ButtonLink';
 import CropperModal from './CropperModal';
+import AltButton from './AltButton';
 
 const Image = ({
   item,
@@ -22,6 +23,7 @@ const Image = ({
   return (
     <div className="zfe-files-ajax-preview-image thumbnail">
       <div className="btn-toolbar" role="toolbar">
+        {typeof data.alt !== 'undefined' && <AltButton data={data} setData={setData} />}
         {width && height && !disabled ? (
           <CropperModal
             src={item.canvasUrl || item.downloadUrl || item.previewLocal}
