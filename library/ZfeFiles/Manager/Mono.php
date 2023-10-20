@@ -52,8 +52,13 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
             throw new ZfeFiles_Exception($msg, null, $ex);
         }
 
-        $this->move($file, $data['tempPath']);
-        $this->access($file);
+        try {
+            $this->move($file, $data['tempPath']);
+            $this->access($file);
+        } catch (Throwable $err) {
+            $file->delete();
+            throw $err;
+        }
 
         return $this->createAgent($file);
     }
@@ -74,8 +79,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
         $q = ZFE_Query::create()
             ->select('*')
             ->from($this->fileModelName)
-            ->whereIn('id', $ids)
-        ;
+            ->whereIn('id', $ids);
         $files = $q->execute();
         foreach ($files as $file) {
             $agent = $this->createAgent($file);
@@ -110,8 +114,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
             ->whereNotIn('id', $fileIds + [0])
             ->andWhere('model_name = ?', get_class($item))
             ->andWhere('schema_code = ?', $schema->getCode())
-            ->andWhere('item_id = ?', $item->id)
-        ;
+            ->andWhere('item_id = ?', $item->id);
         $qDelete->execute();
     }
 
@@ -125,8 +128,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
             ->from($this->fileModelName)
             ->where('model_name = ?', $modelName)
             ->andWhere('schema_code = ?', $schemaCode)
-            ->andWhere('item_id = ?', $itemId)
-        ;
+            ->andWhere('item_id = ?', $itemId);
         $files = $q->execute();
         foreach ($files as $file) {
             $this->createAgent($file)->process($force);
@@ -147,8 +149,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
             ->from($this->fileModelName)
             ->where('model_name = ?', get_class($item))
             ->andWhere('schema_code = ?', $schemaCode)
-            ->andWhere('item_id = ?', $item->id)
-        ;
+            ->andWhere('item_id = ?', $item->id);
         $files = $q->execute();
         $agents = [];
         foreach ($files as $file) {
@@ -174,8 +175,7 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
             ->where('id = ?', $fileId)
             ->andWhere('model_name = ?', $modelName)
             ->andWhere('schema_code = ?', $schemaCode)
-            ->andWhere('item_id = ?', $itemId)
-        ;
+            ->andWhere('item_id = ?', $itemId);
         $file = $q->fetchOne();
         return $file ? $this->createAgent($file) : null;
     }

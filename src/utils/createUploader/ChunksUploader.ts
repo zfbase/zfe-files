@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import nanoid from 'nanoid';
+import PropTypes from 'prop-types';
 
 import createFormData from './createFormData';
 
@@ -22,7 +22,10 @@ class ChunksUploader {
 
     this.uploadId = nanoid();
     this.chunksCount = Math.ceil(this.file.size / this.chunkSize);
-    this.chunksQueue = new Array(this.chunksCount).fill().map((_, index) => index).reverse();
+    this.chunksQueue = new Array(this.chunksCount)
+      .fill()
+      .map((_, index) => index)
+      .reverse();
     this.connections = {};
     this.uploadedSize = 0;
     this.progressCache = {};
@@ -62,13 +65,14 @@ class ChunksUploader {
       return;
     }
 
-
     const chunkNum = this.chunksQueue.pop();
     const sentSize = chunkNum * this.chunkSize;
     const chunk = this.file.slice(sentSize, sentSize + this.chunkSize);
 
+    console.log({ chunkNum, sentSize });
     this.sendChunk(chunk, chunkNum)
       .then((data) => {
+        console.log('data', data);
         // Максимум 10 попыток для одного чанка
         // Как вернем поддержку многопоточной загрузки потребуется доработка для привязки числа ошибок к соединениям
         this.countError = 0;
@@ -118,8 +122,14 @@ class ChunksUploader {
       delete this.progressCache[chunkNum];
     }
 
-    const inProgress = Object.keys(this.progressCache).reduce((memo, id) => memo + this.progressCache[id], 0);
-    const sendedLength = Math.min(this.uploadedSize + inProgress, this.file.size);
+    const inProgress = Object.keys(this.progressCache).reduce(
+      (memo, id) => memo + this.progressCache[id],
+      0,
+    );
+    const sendedLength = Math.min(
+      this.uploadedSize + inProgress,
+      this.file.size,
+    );
 
     this.onProgress({
       loaded: sendedLength || 0,
@@ -130,7 +140,7 @@ class ChunksUploader {
   upload(chunk, chunkNum) {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line no-multi-assign
-      const xhr = this.connections[chunkNum] = new XMLHttpRequest();
+      const xhr = (this.connections[chunkNum] = new XMLHttpRequest());
 
       const progressListener = this.handleProgress.bind(this, chunkNum);
       xhr.upload.addEventListener('progress', progressListener);
@@ -157,15 +167,17 @@ class ChunksUploader {
         delete this.connections[chunkNum];
       };
 
-      xhr.send(createFormData({
-        ...this.params,
-        file: chunk,
-        fileName: this.file.name,
-        fileSize: this.file.size,
-        chunksCount: this.chunksCount,
-        chunkNum,
-        uid: this.uploadId,
-      }));
+      xhr.send(
+        createFormData({
+          ...this.params,
+          file: chunk,
+          fileName: this.file.name,
+          fileSize: this.file.size,
+          chunksCount: this.chunksCount,
+          chunkNum,
+          uid: this.uploadId,
+        }),
+      );
     });
   }
 }
