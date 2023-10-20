@@ -17,6 +17,8 @@ module.exports = {
   ],
   rules: {
     'react/jsx-sort-props': ['warn', { multiline: 'last' }],
+    'import/order': ['warn', { alphabetize: { order: 'asc' } }],
     'typescript-sort-keys/interface': 'warn',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
 };

@@ -1,12 +1,12 @@
 import { ChunksUploaderOptions, UploadResult } from './ChunksUploader';
-import createFormData, { FormDataPayload } from './createFormData';
+import { createFormData } from './createFormData';
 
 type SimpleUploaderOptions = Omit<
   ChunksUploaderOptions,
   'chunkSize' | 'maxThreads'
 >;
 
-class SimpleUploader {
+export class SimpleUploader {
   private abortController;
   private formData;
 
@@ -43,5 +43,3 @@ class SimpleUploader {
     this.start();
   }
 }
-
-export default SimpleUploader;

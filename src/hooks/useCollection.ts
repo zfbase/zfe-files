@@ -1,22 +1,22 @@
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 
-type SetItems<T extends {}> = (items: T[]) => void;
-type AddItem<T extends {}> = (item: T) => T;
-type GetItem<T extends {}> = (key: string) => T | undefined;
-type ReplaceItem<T extends {}> = (key: string, value: T) => T | undefined;
-type UpdateItem<T extends {}> = (
+type SetItems<T extends object> = (items: T[]) => void;
+type AddItem<T extends object> = (item: T) => T;
+type GetItem<T extends object> = (key: string) => T | undefined;
+type ReplaceItem<T extends object> = (key: string, value: T) => T | undefined;
+type UpdateItem<T extends object> = (
   key: string,
   value: Partial<T>,
 ) => T | undefined;
-type RemoveItem<T extends {}> = (key: string) => void;
-type FilterItems<T extends {}> = (filter: (value: T) => boolean) => T[];
+type RemoveItem = (key: string) => void;
+type FilterItems<T extends object> = (filter: (value: T) => boolean) => T[];
 
-function prepare<T extends {}>(items: T[]) {
+function prepare<T extends object>(items: T[]) {
   return items.map((item) => ({ key: nanoid(), ...item }));
 }
 
-function useCollection<T extends {}>(
+export function useCollection<T extends object>(
   defaultValue: T[],
 ): [
   T[],
@@ -24,7 +24,7 @@ function useCollection<T extends {}>(
     addItem: AddItem<T>;
     filterItems: FilterItems<T>;
     getItem: GetItem<T>;
-    removeItem: RemoveItem<T>;
+    removeItem: RemoveItem;
     replaceItem: ReplaceItem<T>;
     setItems: SetItems<T>;
     updateItem: UpdateItem<T>;
@@ -56,7 +56,7 @@ function useCollection<T extends {}>(
     return getItem(key);
   };
 
-  const removeItem: RemoveItem<T> = (key) =>
+  const removeItem: RemoveItem = (key) =>
     _setItems((items) => items.filter((item) => item.key !== key));
 
   const filterItems: FilterItems<T> = (filter) => {
@@ -77,5 +77,3 @@ function useCollection<T extends {}>(
     },
   ];
 }
-
-export default useCollection;

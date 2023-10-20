@@ -1,8 +1,9 @@
 @import './components/FileAjax/index';
 @import './components/ProgressCircle/index';
+@import 'cropperjs/dist/cropper.css';
 
 @keyframes rotate {
   to {
-    transform: rotate(360deg); 
+    transform: rotate(360deg);
   }
 }

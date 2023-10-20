@@ -25,7 +25,7 @@ export interface ChunksUploaderOptions {
  * @todo Добавить ограничение на общее ограничение потоков для всех экземпляров
  */
 
-class ChunksUploader {
+export class ChunksUploader {
   private chunkSize;
   private maxThreads;
   private uploadId = nanoid();
@@ -204,5 +204,3 @@ class ChunksUploader {
     });
   }
 }
-
-export default ChunksUploader;

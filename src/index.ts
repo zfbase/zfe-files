@@ -1,3 +1,3 @@
 /* eslint-disable import/prefer-default-export */
-export { default as createFileAjax } from './components/FileAjax/index';
-export { default as ProgressCircle } from './components/ProgressCircle/index';
+export { createFileAjax } from './components/createFileAjax';
+export { ProgressCircle } from './components/ProgressCircle';

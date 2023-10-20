@@ -10,7 +10,7 @@ const submit = (e: Event) => {
   e.returnValue = true;
 };
 
-export default {
+export const pageUnload = {
   /**
    * Заблокировать покидание страницы.
    * @param node|null form

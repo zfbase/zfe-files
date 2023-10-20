@@ -1,6 +1,6 @@
-export default function validImageMinSize(
+export function validImageMinSize(
   file: File,
-  options: { height: number, width: number; },
+  options: { height: number; width: number },
   successCallback: () => void,
   failCallback: (error: string) => void,
 ) {
