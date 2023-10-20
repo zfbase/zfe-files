@@ -1,18 +1,25 @@
-import { VideoToolbar } from './VideoToolbar';
+import { GenericUploadItem } from '../Preview';
 import { VideoFrames } from './VideoFrames';
 import { VideoPlayer } from './VideoPlayer';
+import { VideoToolbar } from './VideoToolbar';
 
-export interface VideoItem {
-  deleted: boolean;
-  downloadUrl: string;
+export interface VideoItem extends GenericUploadItem {
+  canvasUrl: string;
   duration: string;
-  key: string;
-  loading: boolean;
-  name: string;
-  previewUrl: string;
-  size: string;
-  uploadProgress: number;
+  previewLocal: string;
 }
+
+// export interface VideoItem {
+//   deleted: boolean;
+//   downloadUrl: string;
+//   duration: string;
+//   key: string;
+//   loading: boolean;
+//   name: string;
+//   previewUrl: string;
+//   size: string;
+//   uploadProgress: number;
+// }
 
 export interface VideoProps {
   disabled: boolean;

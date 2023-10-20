@@ -1,6 +1,11 @@
 import { useMemo, useState } from 'react';
 import { Button } from '../Button';
 import { ButtonLink } from '../ButtonLink';
+import type {
+  CommonPreviewProps,
+  GenericPreviewItem,
+  GenericUploadItem,
+} from '../Preview';
 import { AltButton } from './AltButton';
 import { CropperModal } from './CropperModal';
 
@@ -10,29 +15,18 @@ export interface ImageData {
   scaleY: number;
 }
 
-export interface ImageItem {
+export interface ImageItem extends GenericUploadItem<ImageData> {
   canvasUrl: string;
-  data?: ImageData;
-  deleted: boolean;
-  downloadUrl: string;
-  key: string;
-  loading: boolean;
   previewLocal: string;
-  previewUrl: string;
-  uploadProgress: number;
 }
 
-export interface ImageProps {
-  disabled?: boolean;
+export interface ImageProps extends CommonPreviewProps {
   height: number | string;
   item: ImageItem;
-  onDelete: (key: string) => void;
-  onUndelete: (key: string) => void;
-  setData: (data: ImageData) => void;
   width: number | string;
 }
 
-export const Image: React.FC<ImageProps> = ({
+export const Image: React.FC<GenericPreviewItem<ImageItem, ImageData>> = ({
   item,
   disabled,
   onDelete,
@@ -44,7 +38,7 @@ export const Image: React.FC<ImageProps> = ({
   const [preview, setPreview] = useState(null);
 
   const data = useMemo(() => {
-    const { scaleX, scaleY, ...other } = item.data || {};
+    const { scaleX, scaleY, ...other } = item.data || { scaleX: 1, scaleY: 1 };
     return other;
   }, [item.data]);
 
@@ -52,7 +46,7 @@ export const Image: React.FC<ImageProps> = ({
     <div className="zfe-files-ajax-preview-image thumbnail">
       <div className="btn-toolbar" role="toolbar">
         {typeof item.data?.alt !== 'undefined' && (
-          <AltButton data={data} setData={setData} />
+          <AltButton data={item.data} setData={setData} />
         )}
         {width && height && !disabled ? (
           <CropperModal

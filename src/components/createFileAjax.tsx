@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 
-import Element from './FileAjax';
+import { FileAjax } from './FileAjax';
 
 const numberProps = ['itemId', 'maxChunkSize', 'maxFileSize'];
 
@@ -92,5 +92,5 @@ export function createFileAjax(root: HTMLElement, customProps: object) {
 
   const reactRoot = createRoot(root);
   // eslint-disable-next-line react/jsx-props-no-spreading
-  reactRoot.render(<Element {...props} />);
+  reactRoot.render(<FileAjax {...props} />);
 }

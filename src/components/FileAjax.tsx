@@ -1,12 +1,11 @@
 import { useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-
-import useCollection from '../hooks/useCollection';
-import createUploader from '../utils/createUploader/createUploader';
-import pageUnload from '../utils/pageUnload';
-import validImageMinSize from '../validators/images/validImageMinSize';
-import Preview from './Preview/Preview';
-import Storage from './Storage';
+import { useCollection } from '../hooks/useCollection';
+import { createUploader } from '../utils/createUploader/createUploader';
+import { pageUnload } from '../utils/pageUnload';
+import { validImageMinSize } from '../validators/images/validImageMinSize';
+import { GenericUploadItem, Preview } from './Preview/Preview';
+import { Storage } from './Storage';
 
 function getAcceptForType(type: string) {
   return ['audio', 'video', 'image'].includes(type) ? `${type}/*` : null;
@@ -52,7 +51,7 @@ const DropzoneLabel: React.FC<DropzoneLabelProps> = ({ multiple }) => (
 interface FileAjaxProps {
   accept?: string;
   disabled?: boolean;
-  files?: {}[];
+  files?: Omit<GenericUploadItem<unknown>, 'key'>[];
   form?: HTMLFormElement;
   itemId?: number;
   linkUrl?: string;
@@ -97,7 +96,7 @@ export const FileAjax: React.FC<FileAjaxProps> = ({
   itemId,
   linkUrl,
   maxChunkSize = 1024 ** 2, // 1 MB
-  maxFileSize,
+  maxFileSize = 0,
   modelName,
   multiple,
   name,
@@ -133,8 +132,8 @@ export const FileAjax: React.FC<FileAjaxProps> = ({
   }, [onLoaded]);
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
-    onDrop: React.useCallback(
-      (acceptedFiles) => {
+    onDrop: useCallback(
+      (acceptedFiles: File[]) => {
         acceptedFiles.forEach((file) => {
           if (!multiple) {
             if (items.filter((i) => !i.deleted).length) {
@@ -146,7 +145,14 @@ export const FileAjax: React.FC<FileAjaxProps> = ({
             items.forEach(({ key }) => removeItem(key));
           }
 
-          const item = addItem({ loading: true });
+          const item = addItem({
+            loading: true,
+            data: {},
+            deleted: false,
+            size: '',
+            uploadProgress: 0,
+            name: '',
+          });
 
           if (type === 'image') {
             const reader = new FileReader();
@@ -169,6 +175,9 @@ export const FileAjax: React.FC<FileAjaxProps> = ({
                 canvas.width = proxyWidth * 2;
                 canvas.height = proxyHeight * 2;
                 const context = canvas.getContext('2d');
+                if (!context) {
+                  return;
+                }
                 context.drawImage(
                   image,
                   data.x,

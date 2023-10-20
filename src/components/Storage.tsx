@@ -1,13 +1,8 @@
 import { Fragment, ReactNode } from 'react';
-
-interface RenderedItem {
-  data?: object;
-  deleted: boolean;
-  id: number | string;
-}
+import { GenericUploadItem } from './Preview/Preview';
 
 interface LiteRenderProps {
-  item: RenderedItem;
+  item: GenericUploadItem<unknown>;
   name: string;
 }
 
@@ -16,7 +11,7 @@ export const LiteRender: React.FC<LiteRenderProps> = ({ item, name }) => (
 );
 
 interface ExtendedRenderProps {
-  item: RenderedItem;
+  item: GenericUploadItem<unknown>;
   name: string;
 }
 
@@ -29,15 +24,15 @@ export const ExtendedRender: React.FC<ExtendedRenderProps> = ({
     type="hidden"
     value={JSON.stringify({
       id: item.id,
-      ...item.data,
+      ...(item.data ?? {}),
     })}
   />
 );
 
 interface StorageProps {
-  items: RenderedItem[];
+  items: GenericUploadItem<unknown>[];
   name: string;
-  render?: (item: RenderedItem, name: string) => ReactNode;
+  render?: (item: GenericUploadItem<unknown>, name: string) => ReactNode;
 }
 
 export const Storage: React.FC<StorageProps> = ({ name, items, render }) => {

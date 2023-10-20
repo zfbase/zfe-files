@@ -7,7 +7,7 @@ interface GetUploaderOptions extends ChunksUploaderOptions {
   maxChunkSize?: number;
 }
 
-export default function createUploader(options: GetUploaderOptions) {
+export function createUploader(options: GetUploaderOptions) {
   let { url, file } = options;
   let maxChunkSize = options.maxChunkSize ?? 1024 ** 2;
   let payload = options.payload ?? {};

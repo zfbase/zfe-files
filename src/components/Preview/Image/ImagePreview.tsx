@@ -1,16 +1,12 @@
-import {
-  type ImageItem,
-  type ImageData,
-  type ImageProps,
-  Image,
-} from './Image';
-import { ImageLoading, type ImageLoadingProps } from './ImageLoading';
+import { CommonPreviewProps } from '../Preview';
+import { Image, ImageItem } from './Image';
+import { ImageLoading } from './ImageLoading';
 
-type ImagePreviewProps = {
+interface ImagePreviewProps extends CommonPreviewProps {
+  height: number;
   items: ImageItem[];
-  setData: (key: string, data: ImageData) => void;
-} & Omit<ImageProps, 'item' | 'setData'> &
-  Pick<ImageLoadingProps, 'onCancelUpload'>;
+  width: number;
+}
 
 export const ImagePreview: React.FC<ImagePreviewProps> = ({
   items,

@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import createFormData, { FormDataPayload } from './createFormData';
+import { createFormData, type FormDataPayload } from './createFormData';
 
 export interface UploadResult {
   data: {

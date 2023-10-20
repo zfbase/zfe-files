@@ -1,9 +1,11 @@
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 
+type WithKey<T extends object> = T & { key: string };
+
 type SetItems<T extends object> = (items: T[]) => void;
 type AddItem<T extends object> = (item: T) => T;
-type GetItem<T extends object> = (key: string) => T | undefined;
+type GetItem<T extends object> = (key: string) => WithKey<T> | undefined;
 type ReplaceItem<T extends object> = (key: string, value: T) => T | undefined;
 type UpdateItem<T extends object> = (
   key: string,
@@ -12,14 +14,14 @@ type UpdateItem<T extends object> = (
 type RemoveItem = (key: string) => void;
 type FilterItems<T extends object> = (filter: (value: T) => boolean) => T[];
 
-function prepare<T extends object>(items: T[]) {
+function prepare<T extends object>(items: T[]): WithKey<T>[] {
   return items.map((item) => ({ key: nanoid(), ...item }));
 }
 
 export function useCollection<T extends object>(
   defaultValue: T[],
 ): [
-  T[],
+  WithKey<T>[],
   {
     addItem: AddItem<T>;
     filterItems: FilterItems<T>;

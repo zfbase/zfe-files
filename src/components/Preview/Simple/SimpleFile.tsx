@@ -1,3 +1,4 @@
+import { CommonPreviewProps } from '../Preview';
 import { DownloadLink } from './DownloadLink';
 import { FileIcon } from './FileIcon';
 import { IconButton } from './IconButton';
@@ -26,7 +27,7 @@ function workingMessage(percentage: number) {
     : 'Обработка…';
 }
 
-export const SimpleFile: React.FC<SimpleFileProps> = ({
+export const SimpleFile: React.FC<CommonPreviewProps> = ({
   item,
   disabled,
   onDelete,
