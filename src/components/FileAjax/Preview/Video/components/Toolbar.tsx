@@ -4,8 +4,8 @@ import QualityCheck from './QualityCheck';
 import { VideoItem } from './Video';
 
 interface VideoToolbarProps {
-  item: VideoItem;
   disabled: boolean;
+  item: VideoItem;
   onDelete: (key: string) => void;
   onUndelete: (key: string) => void;
 }
@@ -31,16 +31,16 @@ const VideoToolbar: React.FC<VideoToolbarProps> = ({
     {disabled ? null : item.deleted ? (
       <Button
         icon="repeat"
-        title="Восстановить"
         onClick={() => onUndelete(item.key)}
         size="xs"
+        title="Восстановить"
       />
     ) : (
       <Button
         icon="remove"
-        title="Удалить"
         onClick={() => onDelete(item.key)}
         size="xs"
+        title="Удалить"
       />
     )}
   </div>

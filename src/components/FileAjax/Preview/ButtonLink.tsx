@@ -15,9 +15,9 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
   ...props
 }) => (
   <a
-    rel="button"
     className={classNames('btn btn-xs btn-default', className)}
     href={url}
+    rel="button"
     target="_blank"
     {...props}
   >

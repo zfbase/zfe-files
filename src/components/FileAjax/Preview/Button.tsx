@@ -22,6 +22,7 @@ const Button: React.FC<ButtonProps> = ({
   ...props
 }) => (
   <button
+    title={title || label}
     type="button"
     className={classNames(
       'btn',
@@ -29,7 +30,6 @@ const Button: React.FC<ButtonProps> = ({
       size && btnSize(size),
       className,
     )}
-    title={title || label}
     {...props}
   >
     {icon ? <span className={`glyphicon glyphicon-${icon}`} /> : null}

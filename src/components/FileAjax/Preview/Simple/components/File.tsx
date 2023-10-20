@@ -4,20 +4,20 @@ import Icon from './Icon';
 import Title from './Title';
 
 export interface FileItem {
-  key: string;
-  name: string;
-  downloadUrl: string;
   deleted: boolean;
+  downloadUrl: string;
+  key: string;
   loading: boolean;
+  name: string;
   uploadProgress: number;
 }
 
 export interface FileProps {
-  item: FileItem;
   disabled?: boolean;
+  item: FileItem;
+  onCancelUpload: (key: string) => void;
   onDelete: (key: string) => void;
   onUndelete: (key: string) => void;
-  onCancelUpload: (key: string) => void;
 }
 
 function workingMessage(percentage: number) {
@@ -47,22 +47,22 @@ const File: React.FC<FileProps> = ({
     {item.downloadUrl && <DownloadLink downloadUrl={item.downloadUrl} />}
     {disabled ? null : item.deleted ? (
       <Button
-        icon="repeat"
-        title="Восстановить"
-        onClick={() => onUndelete(item.key)}
         className="undelete"
+        icon="repeat"
+        onClick={() => onUndelete(item.key)}
+        title="Восстановить"
       />
     ) : item.loading ? (
       <Button
         icon="remove"
-        title="Отменить загрузку"
         onClick={() => onCancelUpload(item.key)}
+        title="Отменить загрузку"
       />
     ) : (
       <Button
         icon="remove"
-        title="Удалить"
         onClick={() => onDelete(item.key)}
+        title="Удалить"
       />
     )}
   </li>

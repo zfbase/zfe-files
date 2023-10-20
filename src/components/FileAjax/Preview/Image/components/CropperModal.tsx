@@ -29,12 +29,12 @@ any) {
 }
 
 interface CropperModalProps {
-  src: string;
-  width: number;
-  height: number;
   data: ImageData;
+  height: number;
   setData: (data: ImageData) => void;
   setPreview: (preview: string) => void;
+  src: string;
+  width: number;
 }
 
 const CropperModal: React.FC<CropperModalProps> = ({
@@ -101,45 +101,45 @@ const CropperModal: React.FC<CropperModalProps> = ({
     <Fragment>
       <Button
         icon="scissors"
-        title="Кадрировать"
         onClick={openModal}
         size="xs"
+        title="Кадрировать"
       />
       <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={styles}>
         <Cropper
-          ref={cropper}
-          src={src}
           aspectRatio={width / height}
+          checkOrientation={false}
+          data={data}
+          ref={cropper}
+          rotatable
+          src={src}
           style={styles.cropper}
           viewMode={1}
-          data={data}
-          rotatable
-          checkOrientation={false}
         />
         <div className="cropper-toolbar form-inline btn-toolbar" role="toolbar">
           <div className="btn-group">
-            <Button icon="zoom-in" title="Увеличить" onClick={zoomIn} />
-            <Button icon="zoom-out" title="Уменьшить" onClick={zoomOut} />
+            <Button icon="zoom-in" onClick={zoomIn} title="Увеличить" />
+            <Button icon="zoom-out" onClick={zoomOut} title="Уменьшить" />
           </div>
           <div className="btn-group">
             <Button
               icon="repeat"
-              title="Повернуть"
               onClick={rotateLeft}
               style={{ transform: 'scale(-1, 1)' }}
+              title="Повернуть"
             />
-            <Button icon="repeat" title="Повернуть" onClick={rotateRight} />
+            <Button icon="repeat" onClick={rotateRight} title="Повернуть" />
           </div>
           <div className="btn-group hide">
             <Button
               icon="resize-horizontal"
-              title="Отразить по горизонтали"
               onClick={flipHorizontal}
+              title="Отразить по горизонтали"
             />
             <Button
               icon="resize-vertical"
-              title="Отразить по вертикали"
               onClick={flipVertical}
+              title="Отразить по вертикали"
             />
           </div>
           <Button label="Отменить" onClick={reset} />

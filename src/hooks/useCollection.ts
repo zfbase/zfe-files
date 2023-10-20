@@ -21,13 +21,13 @@ function useCollection<T extends {}>(
 ): [
   T[],
   {
-    setItems: SetItems<T>;
     addItem: AddItem<T>;
-    getItem: GetItem<T>;
-    replaceItem: ReplaceItem<T>;
-    updateItem: UpdateItem<T>;
-    removeItem: RemoveItem<T>;
     filterItems: FilterItems<T>;
+    getItem: GetItem<T>;
+    removeItem: RemoveItem<T>;
+    replaceItem: ReplaceItem<T>;
+    setItems: SetItems<T>;
+    updateItem: UpdateItem<T>;
   },
 ] {
   const [_items, _setItems] = useState(() => prepare(defaultValue));

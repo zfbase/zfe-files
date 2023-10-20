@@ -17,8 +17,8 @@ export interface VideoItem {
 }
 
 export interface VideoProps {
-  item: VideoItem;
   disabled: boolean;
+  item: VideoItem;
   onDelete: (key: string) => void;
   onUndelete: (key: string) => void;
 }
@@ -39,8 +39,8 @@ const Video: React.FC<VideoProps> = ({
         <div className="zfe-files-ajax-preview-video-info">{item.duration}</div>
       ) : null}
       <Toolbar
-        item={item}
         disabled={disabled}
+        item={item}
         onDelete={onDelete}
         onUndelete={onUndelete}
       />

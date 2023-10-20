@@ -7,8 +7,8 @@ type ButtonProps = {
 
 const Button: React.FC<ButtonProps> = ({ className, icon, ...props }) => (
   <button
-    type="button"
     className={`btn btn-xs btn-default ${className ?? ''}`}
+    type="button"
     {...props}
   >
     <span className={`glyphicon glyphicon-${icon}`} />

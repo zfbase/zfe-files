@@ -17,9 +17,9 @@ const VideoLoader: React.FC<VideoLoaderProps> = ({ item, onCancelUpload }) => {
         <div className="btn-toolbar zfe-files-ajax-preview-video-toolbar">
           <Button
             icon="remove"
-            title="Отменить загрузку"
             onClick={() => onCancelUpload(item.key)}
             size="xs"
+            title="Отменить загрузку"
           />
         </div>
       </div>

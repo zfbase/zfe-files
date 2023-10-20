@@ -120,8 +120,8 @@ const Trimmer: React.FC<TrimmerProps> = ({
       >
         <button
           className="btn btn-default"
-          style={{ fontWeight: 900 }}
           onClick={saveStart}
+          style={{ fontWeight: 900 }}
           title="Сохранить позицию начала"
           type="button"
         >
@@ -158,8 +158,8 @@ const Trimmer: React.FC<TrimmerProps> = ({
         </div>
         <button
           className="btn btn-default"
-          style={{ fontWeight: 900 }}
           onClick={saveEnd}
+          style={{ fontWeight: 900 }}
           title="Сохранить позицию конца"
           type="button"
         >

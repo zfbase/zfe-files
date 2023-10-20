@@ -9,6 +9,7 @@ interface AltButtonProps {
 const AltButton: React.FC<AltButtonProps> = ({ data, setData }) => (
   <Button
     icon="eye-open"
+    size="xs"
     title="Кадрировать"
     onClick={() => {
       const v = prompt(
@@ -19,7 +20,6 @@ const AltButton: React.FC<AltButtonProps> = ({ data, setData }) => (
         setData({ ...data, alt: v });
       }
     }}
-    size="xs"
   />
 );
 

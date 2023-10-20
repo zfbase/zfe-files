@@ -1,65 +1,47 @@
-import PropTypes from 'prop-types';
+import { ChunksUploaderOptions, UploadResult } from './ChunksUploader';
+import createFormData, { FormDataPayload } from './createFormData';
 
-import createFormData from './createFormData';
+type SimpleUploaderOptions = Omit<
+  ChunksUploaderOptions,
+  'chunkSize' | 'maxThreads'
+>;
 
 class SimpleUploader {
-  constructor(props) {
-    this.url = props.url;
-    this.file = props.file;
-    this.params = props.params || {};
-    this.onStart = props.onStart || (() => {});
-    this.onProgress = props.onProgress || (() => {});
-    this.onComplete = props.onComplete || (() => {});
-    this.onError = props.onError || (() => {});
+  private abortController;
+  private formData;
 
-    this.formData = createFormData(this.params);
-    this.formData.append('file', this.file);
-    this.formData.append('fileSize', this.file.size);
+  constructor(private options: SimpleUploaderOptions) {
+    this.formData = createFormData(this.options.payload);
+    this.formData.append('file', this.options.file);
+    this.formData.append('fileSize', this.options.file.size.toString());
 
-    this.controller = new AbortController();
+    this.abortController = new AbortController();
   }
 
   start() {
     const body = this.formData;
-    const { signal } = this.controller;
-    this.onStart();
-    fetch(this.url, { method: 'POST', body, signal })
-      .then(response => response.json())
+    const { signal } = this.abortController;
+    this.options.onStart?.();
+
+    fetch(this.options.url, { method: 'POST', body, signal })
+      .then((response) => response.json() as Promise<UploadResult>)
       .then(({ status, data }) => {
         if ([0, '0'].includes(status) && data.file) {
-          this.onComplete(data.file);
+          this.options.onComplete?.(data.file);
         } else {
           throw new Error('Не удалось загрузить файл.');
         }
       })
-      .catch(this.onError);
+      .catch(this.options.onError);
   }
 
   abort() {
-    this.controller.abort();
+    this.abortController.abort();
   }
 
   continue() {
     this.start();
   }
 }
-
-SimpleUploader.propTypes = {
-  url: PropTypes.string.isRequired,
-  file: PropTypes.instanceOf(File).isRequired,
-  params: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-  onStart: PropTypes.func,
-  onProgress: PropTypes.func,
-  onComplete: PropTypes.func,
-  onError: PropTypes.func,
-};
-
-SimpleUploader.defaultProps = {
-  params: {},
-  onStart: () => {},
-  onProgress: () => {},
-  onComplete: () => {},
-  onError: () => {},
-};
 
 export default SimpleUploader;

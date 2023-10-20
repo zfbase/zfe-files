@@ -21,17 +21,17 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
     {items.map((item) =>
       item.loading ? (
         <ImageLoading
+          height={props.height}
           item={item}
           key={item.key}
           onCancelUpload={onCancelUpload}
           width={props.width}
-          height={props.height}
         />
       ) : (
         <Image
           item={item}
-          setData={(data) => setData(item.key, data)}
           key={item.key}
+          setData={(data) => setData(item.key, data)}
           {...props}
         />
       ),

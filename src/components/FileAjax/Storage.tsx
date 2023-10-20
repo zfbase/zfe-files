@@ -1,9 +1,9 @@
 import { Fragment, ReactNode } from 'react';
 
 interface RenderedItem {
-  id: number | string;
-  deleted: boolean;
   data?: {};
+  deleted: boolean;
+  id: number | string;
 }
 
 interface LiteRenderProps {
@@ -12,7 +12,7 @@ interface LiteRenderProps {
 }
 
 export const LiteRender: React.FC<LiteRenderProps> = ({ item, name }) => (
-  <input type="hidden" name={`${name}[]`} value={item.id} />
+  <input name={`${name}[]`} type="hidden" value={item.id} />
 );
 
 interface ExtendedRenderProps {
@@ -25,8 +25,8 @@ export const ExtendedRender: React.FC<ExtendedRenderProps> = ({
   name,
 }) => (
   <input
-    type="hidden"
     name={`${name}[]`}
+    type="hidden"
     value={JSON.stringify({
       id: item.id,
       ...item.data,
@@ -35,8 +35,8 @@ export const ExtendedRender: React.FC<ExtendedRenderProps> = ({
 );
 
 interface StorageProps {
-  name: string;
   items: RenderedItem[];
+  name: string;
   render?: (item: RenderedItem, name: string) => ReactNode;
 }
 
@@ -48,13 +48,13 @@ const Storage: React.FC<StorageProps> = ({ name, items, render }) => {
         render ? (
           render(item, name)
         ) : item.data ? (
-          <ExtendedRender item={item} name={name} key={item.id} />
+          <ExtendedRender item={item} key={item.id} name={name} />
         ) : (
-          <LiteRender item={item} name={name} key={item.id} />
+          <LiteRender item={item} key={item.id} name={name} />
         ),
       )}
       {filteredItems.length === 0 && (
-        <input type="hidden" name={`${name}[]`} key="0" />
+        <input key="0" name={`${name}[]`} type="hidden" />
       )}
     </Fragment>
   );

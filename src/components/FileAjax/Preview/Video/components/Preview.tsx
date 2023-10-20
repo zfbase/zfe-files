@@ -15,9 +15,9 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
     {items.map((item) =>
       item.loading ? (
         <VideoLoader
-          onCancelUpload={onCancelUpload}
           item={item}
           key={item.key}
+          onCancelUpload={onCancelUpload}
         />
       ) : (
         <Video item={item} key={item.key} {...props} />

@@ -8,10 +8,10 @@ const DownloadLink: React.FC<DownloadLinkProps> = ({
   downloadUrl,
 }) => (
   <a
-    href={downloadUrl}
-    target="_blank"
-    title="Скачать оригинал"
     className={className}
+    href={downloadUrl}
+    rel="noreferrer"
+    target="_blank" title="Скачать оригинал"
   >
     <span className="glyphicon glyphicon-download-alt" />
   </a>

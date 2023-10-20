@@ -6,9 +6,9 @@ import CropperModal from './CropperModal';
 import AltButton from './AltButton';
 
 export interface ImageData {
+  alt?: string;
   scaleX: number;
   scaleY: number;
-  alt?: string;
 }
 
 export interface ImageItem {
@@ -24,13 +24,13 @@ export interface ImageItem {
 }
 
 export interface ImageProps {
-  item: ImageItem;
   disabled?: boolean;
+  height: number | string;
+  item: ImageItem;
   onDelete: (key: string) => void;
   onUndelete: (key: string) => void;
   setData: (data: ImageData) => void;
   width: number | string;
-  height: number | string;
 }
 
 const Image: React.FC<ImageProps> = ({
@@ -57,12 +57,12 @@ const Image: React.FC<ImageProps> = ({
         )}
         {width && height && !disabled ? (
           <CropperModal
-            src={item.canvasUrl || item.downloadUrl || item.previewLocal}
-            width={width}
-            height={height}
             data={data}
+            height={height}
             setData={setData}
             setPreview={setPreview}
+            src={item.canvasUrl || item.downloadUrl || item.previewLocal}
+            width={width}
           />
         ) : null}
         {item.downloadUrl ? (
@@ -75,16 +75,16 @@ const Image: React.FC<ImageProps> = ({
         {disabled ? null : item.deleted ? (
           <Button
             icon="repeat"
-            title="Восстановить"
             onClick={() => onUndelete(item.key)}
             size="xs"
+            title="Восстановить"
           />
         ) : (
           <Button
             icon="remove"
-            title="Удалить"
             onClick={() => onDelete(item.key)}
             size="xs"
+            title="Удалить"
           />
         )}
       </div>

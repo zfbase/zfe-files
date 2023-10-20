@@ -6,21 +6,21 @@ import Time from './Time';
 import Title from './Title';
 
 export interface AudioItem {
-  key: string;
-  name: string;
-  duration: number;
-  downloadUrl: string;
-  previewUrl: string;
   deleted: boolean;
+  downloadUrl: string;
+  duration: number;
+  key: string;
   loading: boolean;
+  name: string;
+  previewUrl: string;
 }
 
 export interface AudioProps {
-  item: AudioItem;
+  Wrapper: string | React.ElementType;
   disabled: boolean;
+  item: AudioItem;
   onDelete: (key: string) => void;
   onUndelete: (key: string) => void;
-  Wrapper: string | React.ElementType;
 }
 
 const Audio: React.FC<AudioProps> = ({
@@ -46,16 +46,16 @@ const Audio: React.FC<AudioProps> = ({
         {item.duration && <Time value={item.duration} />}
         {disabled ? null : item.deleted ? (
           <Button
-            icon="repeat"
-            title="Восстановить"
-            onClick={() => onUndelete(item.key)}
             className="undelete"
+            icon="repeat"
+            onClick={() => onUndelete(item.key)}
+            title="Восстановить"
           />
         ) : (
           <Button
             icon="remove"
-            title="Удалить"
             onClick={() => onDelete(item.key)}
+            title="Удалить"
           />
         )}
       </Wrapper>

@@ -1,7 +1,9 @@
-const createFormData = (params) => {
+export type FormDataPayload = Record<string, string | Blob>;
+
+function createFormData(payload: FormDataPayload) {
   const formData = new FormData();
-  Object.entries(params).map(([key, value]) => formData.append(key, value));
+  Object.entries(payload).map(([key, value]) => formData.append(key, value));
   return formData;
-};
+}
 
 export default createFormData;

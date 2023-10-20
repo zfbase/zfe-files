@@ -19,6 +19,7 @@ const QualityCheck: React.FC<QualityCheckProps> = ({
   ...props
 }) => (
   <button
+    title={title ?? 'QualityCheck'}
     type="button"
     className={classNames(
       'btn',
@@ -26,7 +27,6 @@ const QualityCheck: React.FC<QualityCheckProps> = ({
       size && btnSize(size),
       className,
     )}
-    title={title ?? 'QualityCheck'}
     onClick={
       onClick ?? (() => alert('Система контроля качества видео не подключена.'))
     }

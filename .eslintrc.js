@@ -1,28 +1,22 @@
 module.exports = {
-  env: {
-    browser: true,
-    es2021: true,
-  },
-  extends: [
-    'plugin:react/recommended',
-    'airbnb',
-  ],
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-    ecmaVersion: 12,
-    sourceType: 'module',
-  },
+  root: true,
+  parser: '@typescript-eslint/parser',
   plugins: [
-    'react',
+    '@typescript-eslint',
+    'typescript-sort-keys',
+    'eslint-plugin-react',
+    'eslint-plugin-import',
+    'eslint-plugin-react-hooks',
+    'eslint-plugin-typescript-sort-keys',
+  ],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
   ],
   rules: {
-    'jsx-a11y/media-has-caption': 'off',
-    'max-len': ['warn', { code: 160 }],
-    'no-multiple-empty-lines': 'off',
-    'react/jsx-fragments': 'off',
-    'react/jsx-no-target-blank': 'off',
-    'react/jsx-props-no-spreading': ['warn', { html: 'ignore' }],
+    'react/jsx-sort-props': ['warn', { multiline: 'last' }],
+    'typescript-sort-keys/interface': 'warn',
   },
 };

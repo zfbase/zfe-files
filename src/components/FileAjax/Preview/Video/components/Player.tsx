@@ -45,13 +45,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
       <video
         className="zfe-files-ajax-preview-video-player"
         controls
+        onPause={() => setPlaying(false)}
+        onPlay={() => setPlaying(true)}
+        ref={playerRef}
+        src={src}
         onTimeUpdate={(e) => {
           setDisplayTime(e.currentTarget.currentTime);
         }}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-        ref={playerRef}
-        src={src}
         style={
           trimmer
             ? {
@@ -73,13 +73,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
             start={start}
           />
           <input
-            type="hidden"
             name="timecode_start"
+            type="hidden"
             value={typeof start === 'number' ? start.toFixed(0) : '0'}
           />
           <input
-            type="hidden"
             name="timecode_end"
+            type="hidden"
             value={typeof end === 'number' ? end.toFixed(0) : '0'}
           />
         </>
