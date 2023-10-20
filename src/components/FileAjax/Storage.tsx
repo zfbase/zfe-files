@@ -1,21 +1,29 @@
-import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
+import { Fragment, ReactNode } from 'react';
 
+interface RenderedItem {
+  id: number | string;
+  deleted: boolean;
+  data?: {};
+}
 
-export const LiteRender = ({ item, name }) => <input type="hidden" name={`${name}[]`} value={item.id} />;
+interface LiteRenderProps {
+  item: RenderedItem;
+  name: string;
+}
 
-LiteRender.propTypes = {
-  item: PropTypes.shape({
-    id: PropTypes.oneOfType([
-      PropTypes.number,
-      PropTypes.string,
-    ]).isRequired,
-  }).isRequired,
-  name: PropTypes.string.isRequired,
-};
+export const LiteRender: React.FC<LiteRenderProps> = ({ item, name }) => (
+  <input type="hidden" name={`${name}[]`} value={item.id} />
+);
 
+interface ExtendedRenderProps {
+  item: RenderedItem;
+  name: string;
+}
 
-export const ExtendedRender = ({ item, name }) => (
+export const ExtendedRender: React.FC<ExtendedRenderProps> = ({
+  item,
+  name,
+}) => (
   <input
     type="hidden"
     name={`${name}[]`}
@@ -26,37 +34,30 @@ export const ExtendedRender = ({ item, name }) => (
   />
 );
 
-ExtendedRender.propTypes = {
-  item: PropTypes.object.isRequired,
-  name: PropTypes.string.isRequired,
-};
+interface StorageProps {
+  name: string;
+  items: RenderedItem[];
+  render?: (item: RenderedItem, name: string) => ReactNode;
+}
 
-
-const Storage = ({ name, items, render }) => {
-  const filteredItems = items.filter(item => item.id && !item.deleted);
+const Storage: React.FC<StorageProps> = ({ name, items, render }) => {
+  const filteredItems = items.filter((item) => item.id && !item.deleted);
   return (
     <Fragment>
-      {filteredItems.map(item => render(item, name))}
-      {(filteredItems.length === 0) && <input type="hidden" name={`${name}[]`} key="0" />}
+      {filteredItems.map((item) =>
+        render ? (
+          render(item, name)
+        ) : item.data ? (
+          <ExtendedRender item={item} name={name} key={item.id} />
+        ) : (
+          <LiteRender item={item} name={name} key={item.id} />
+        ),
+      )}
+      {filteredItems.length === 0 && (
+        <input type="hidden" name={`${name}[]`} key="0" />
+      )}
     </Fragment>
   );
-};
-
-Storage.propTypes = {
-  name: PropTypes.string.isRequired,
-  items: PropTypes.arrayOf(
-    PropTypes.object,
-  ),
-  render: PropTypes.func,
-};
-
-Storage.defaultProps = {
-  items: [],
-  render: (item, name) => (
-    item.data
-      ? <ExtendedRender item={item} name={name} key={item.id} />
-      : <LiteRender item={item} name={name} key={item.id} />
-  ),
 };
 
 export default Storage;

@@ -1,8 +1,10 @@
-export default (file, options, successCallback, failCallback) => {
-  const {
-    width: minWidth,
-    height: minHeight,
-  } = options;
+export default function MinSize(
+  file: File,
+  options: { width: number; height: number },
+  successCallback: () => void,
+  failCallback: (error: string) => void,
+) {
+  const { width: minWidth, height: minHeight } = options;
 
   if (!minWidth || !minHeight) {
     successCallback();
@@ -14,12 +16,16 @@ export default (file, options, successCallback, failCallback) => {
   image.onload = () => {
     const { width, height } = image;
     URL.revokeObjectURL(objectUrl);
-    if ((width >= minWidth && height >= minHeight)
-      || (width >= minHeight && height >= minWidth)) {
+    if (
+      (width >= minWidth && height >= minHeight) ||
+      (width >= minHeight && height >= minWidth)
+    ) {
       successCallback();
     } else {
-      failCallback(`Изображение должно быть не менее чем ${minWidth}×${minHeight} (загружаемое: ${width}×${height})`);
+      failCallback(
+        `Изображение должно быть не менее чем ${minWidth}×${minHeight} (загружаемое: ${width}×${height})`,
+      );
     }
   };
   image.src = objectUrl;
-};
+}

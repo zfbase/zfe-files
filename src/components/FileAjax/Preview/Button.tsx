@@ -1,10 +1,19 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import cs from 'classnames';
+import classNames from 'classnames';
 
-export const btnSize = (size) => (size ? `btn-${size}` : null);
+export type ButtonSize = 'xs' | 'sm' | 'lg';
 
-const Button = ({
+export const btnSize = (size: ButtonSize) => (size ? `btn-${size}` : null);
+
+type ButtonProps = {
+  icon?: string;
+  label?: string;
+  size?: ButtonSize;
+} & React.DetailedHTMLProps<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>;
+
+const Button: React.FC<ButtonProps> = ({
   icon,
   label,
   title,
@@ -14,7 +23,12 @@ const Button = ({
 }) => (
   <button
     type="button"
-    className={cs('btn', 'btn-default', btnSize(size), className)}
+    className={classNames(
+      'btn',
+      'btn-default',
+      size && btnSize(size),
+      className,
+    )}
     title={title || label}
     {...props}
   >
@@ -23,22 +37,5 @@ const Button = ({
     {label}
   </button>
 );
-
-Button.propTypes = {
-  icon: PropTypes.string,
-  label: PropTypes.string,
-  title: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
-  className: PropTypes.string,
-  size: PropTypes.string,
-};
-
-Button.defaultProps = {
-  icon: null,
-  label: null,
-  title: '',
-  className: null,
-  size: null,
-};
 
 export default Button;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import Element from './Element';
@@ -9,7 +8,8 @@ const getProps = (node) => {
   const props = {};
   for (let i = 0; i < node.attributes.length; i += 1) {
     if (/^data-/.test(node.attributes[i].name)) {
-      const keyArr = /^data-(.*)/[Symbol.replace](node.attributes[i].name, '$1')
+      const keyArr = /^data-(.*)/
+        [Symbol.replace](node.attributes[i].name, '$1')
         .split('-');
       const key = [
         keyArr.shift(),

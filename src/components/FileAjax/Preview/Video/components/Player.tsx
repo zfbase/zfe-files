@@ -1,40 +1,41 @@
-import React, {
-  useCallback, useEffect, useRef, useState,
-} from 'react';
-import PropTypes from 'prop-types';
+import { useEffect, useRef, useState } from 'react';
 import Trimmer from './Trimmer';
 
-const Player = ({ src }) => {
+interface VideoPlayerProps {
+  src: string;
+}
+
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
   const [playing, setPlaying] = useState(false);
   const [trimmer, setTrimmer] = useState(false);
-  const playerRef = useRef();
+  const playerRef = useRef<HTMLVideoElement>(null);
 
   const [displayTime, setDisplayTime] = useState(0);
 
-  const onTimeUpdate = useCallback((e) => {
-    setDisplayTime(e.currentTarget.currentTime);
-  }, []);
-
-  const [start, setStart] = useState(null);
-  const [end, setEnd] = useState(null);
+  const [start, setStart] = useState<number | null>(null);
+  const [end, setEnd] = useState<number | null>(null);
 
   useEffect(() => {
-    const startInput = document.querySelector('.form-control[name=timecode_start]');
+    const startInput = document.querySelector<HTMLInputElement>(
+      '.form-control[name=timecode_start]',
+    );
     if (startInput) {
       const parsedStart = parseFloat(startInput.value);
       if (!Number.isNaN(parsedStart) && parsedStart > 0) {
         setStart(parsedStart);
       }
-      startInput.closest('.form-group').remove();
+      startInput.closest('.form-group')?.remove();
       setTrimmer(true);
     }
-    const endInput = document.querySelector('.form-control[name=timecode_end]');
+    const endInput = document.querySelector<HTMLInputElement>(
+      '.form-control[name=timecode_end]',
+    );
     if (endInput) {
       const parsedEnd = parseFloat(endInput.value);
       if (!Number.isNaN(parsedEnd) && parsedEnd > 0) {
         setEnd(parsedEnd);
       }
-      endInput.closest('.form-group').remove();
+      endInput.closest('.form-group')?.remove();
       setTrimmer(true);
     }
   }, []);
@@ -44,41 +45,47 @@ const Player = ({ src }) => {
       <video
         className="zfe-files-ajax-preview-video-player"
         controls
-        onTimeUpdate={onTimeUpdate}
+        onTimeUpdate={(e) => {
+          setDisplayTime(e.currentTarget.currentTime);
+        }}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         ref={playerRef}
         src={src}
-        style={trimmer ? {
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-        } : undefined}
+        style={
+          trimmer
+            ? {
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+              }
+            : undefined
+        }
       />
       {trimmer && (
-      <>
-        <Trimmer
-          displayTime={displayTime}
-          end={end}
-          onEndChange={setEnd}
-          onStartChange={setStart}
-          playerRef={playerRef}
-          playing={playing}
-          start={start}
-        />
-        <input type="hidden" name="timecode_start" value={typeof start === 'number' ? start.toFixed(0) : '0'} />
-        <input type="hidden" name="timecode_end" value={typeof end === 'number' ? end.toFixed(0) : '0'} />
-      </>
+        <>
+          <Trimmer
+            displayTime={displayTime}
+            end={end}
+            onEndChange={setEnd}
+            onStartChange={setStart}
+            playerRef={playerRef}
+            playing={playing}
+            start={start}
+          />
+          <input
+            type="hidden"
+            name="timecode_start"
+            value={typeof start === 'number' ? start.toFixed(0) : '0'}
+          />
+          <input
+            type="hidden"
+            name="timecode_end"
+            value={typeof end === 'number' ? end.toFixed(0) : '0'}
+          />
+        </>
       )}
     </>
   );
 };
 
-Player.propTypes = {
-  src: PropTypes.string,
-};
-
-Player.defaultProps = {
-  src: null,
-};
-
-export default Player;
+export default VideoPlayer;

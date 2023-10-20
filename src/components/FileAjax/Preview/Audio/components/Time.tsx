@@ -1,16 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+function twoDigit(num: number) {
+  return `0${num}`.slice(-2);
+}
 
-const twoDigit = (num) => `0${num}`.slice(-2);
-
-export const secToTime = (sec) => {
+export function secToTime(sec: number) {
   if (Number.isNaN(sec)) {
     return '?';
   }
 
   const hours = Math.floor(sec / 3600);
-  const minutes = Math.floor(sec / 60) - (hours * 60);
-  const seconds = Math.floor(sec) - (hours * 3600) - (minutes * 60);
+  const minutes = Math.floor(sec / 60) - hours * 60;
+  const seconds = Math.floor(sec) - hours * 3600 - minutes * 60;
 
   let timeStr = `${twoDigit(minutes)}:${twoDigit(seconds)}`;
   if (hours > 0) {
@@ -18,16 +17,14 @@ export const secToTime = (sec) => {
   }
 
   return timeStr;
-};
+}
 
-const Time = ({ value }) => <span>{secToTime(value)}</span>;
+interface TimeProps {
+  value: number;
+}
 
-Time.propTypes = {
-  value: PropTypes.number,
-};
-
-Time.defaultProps = {
-  value: null,
-};
+const Time: React.FC<TimeProps> = ({ value }) => (
+  <span>{secToTime(value)}</span>
+);
 
 export default Time;

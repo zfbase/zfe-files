@@ -1,23 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import VideoLoader, { type VideoLoaderProps } from './Loader';
+import Video, { type VideoItem, type VideoProps } from './Video';
 
-import Video from './Video';
-import Loader from './Loader';
+type VideoPreviewProps = {
+  items: VideoItem[];
+} & Omit<VideoProps, 'item'> &
+  Pick<VideoLoaderProps, 'onCancelUpload'>;
 
-const Preview = ({ items, ...props }) => (
+const VideoPreview: React.FC<VideoPreviewProps> = ({
+  items,
+  onCancelUpload,
+  ...props
+}) => (
   <div className="zfe-files-ajax-preview-video-wrap">
-    {items.map(item => React.createElement(
-      item.loading ? Loader : Video,
-      { item, ...props, key: item.key },
-    ))}
+    {items.map((item) =>
+      item.loading ? (
+        <VideoLoader
+          onCancelUpload={onCancelUpload}
+          item={item}
+          key={item.key}
+        />
+      ) : (
+        <Video item={item} key={item.key} {...props} />
+      ),
+    )}
   </div>
 );
 
-Preview.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.string,
-    loading: PropTypes.bool,
-  })).isRequired,
-};
-
-export default Preview;
+export default VideoPreview;

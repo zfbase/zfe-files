@@ -1,36 +1,38 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { ReactNode } from 'react';
 
 import AudioPreview from './Audio/index';
 import ImagePreview from './Image/index';
 import SimplePreview from './Simple/index';
 import VideoPreview from './Video/index';
 
-const Preview = ({ previewRender, type, ...props }) => {
-  let Helper;
+interface PreviewProps {
+  previewRender?: () => ReactNode;
+  type?: string;
+}
+
+const Preview: React.FC<PreviewProps> = ({ previewRender, type, ...props }) => {
+  let Helper: React.FC;
   if (typeof previewRender == 'function') {
     Helper = previewRender;
   } else {
     switch (type) {
-      case 'image': Helper = ImagePreview; break;
-      case 'audio': Helper = AudioPreview; break;
-      case 'video': Helper = VideoPreview; break;
-      default: Helper = SimplePreview; break;
+      case 'image':
+        Helper = ImagePreview;
+        break;
+      case 'audio':
+        Helper = AudioPreview;
+        break;
+      case 'video':
+        Helper = VideoPreview;
+        break;
+      default:
+        Helper = SimplePreview;
+        break;
     }
   }
 
   // eslint-disable-next-line react/jsx-props-no-spreading
   return <Helper {...props} />;
-};
-
-Preview.propTypes = {
-  previewRender: PropTypes.func,
-  type: PropTypes.string,
-};
-
-Preview.defaultProps = {
-  previewRender: null,
-  type: null,
 };
 
 export default Preview;

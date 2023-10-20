@@ -1,32 +1,39 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import cs from 'classnames';
+import classNames from 'classnames';
+import { btnSize, type ButtonSize } from '../../Button';
 
-import { btnSize } from '../../Button';
+type QualityCheckProps = {
+  size?: ButtonSize;
+} & Omit<
+  React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  >,
+  'type'
+>;
 
-const QualityCheck = ({ className, size, ...props }) => (
+const QualityCheck: React.FC<QualityCheckProps> = ({
+  className,
+  size,
+  title,
+  onClick,
+  ...props
+}) => (
   <button
     type="button"
-    className={cs('btn', 'btn-default', btnSize(size), className)}
+    className={classNames(
+      'btn',
+      'btn-default',
+      size && btnSize(size),
+      className,
+    )}
+    title={title ?? 'QualityCheck'}
+    onClick={
+      onClick ?? (() => alert('Система контроля качества видео не подключена.'))
+    }
     {...props}
   >
     <span className="glyphicon glyphicon-equalizer" />
   </button>
 );
-
-QualityCheck.propTypes = {
-  title: PropTypes.string,
-  onClick: PropTypes.func,
-  className: PropTypes.string,
-  size: PropTypes.string,
-};
-
-QualityCheck.defaultProps = {
-  title: 'QualityCheck',
-  // eslint-disable-next-line no-alert
-  onClick: () => window.alert('Система контроля качества видео не подключена.'),
-  className: null,
-  size: null,
-};
 
 export default QualityCheck;

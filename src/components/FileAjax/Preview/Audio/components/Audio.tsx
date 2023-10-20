@@ -1,38 +1,35 @@
-import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
-
+import { Fragment } from 'react';
+import { Button, DownloadLink } from '../../Simple';
 import usePlayer from '../utils/usePlayer';
 import ControlBtn from './ControlBtn';
-import Title from './Title';
 import Time from './Time';
-import { Button, DownloadLink } from '../../Simple';
+import Title from './Title';
 
-interface AudioProps {
-  item:{
-    key: PropTypes.string,
-    name: PropTypes.string,
-    duration: PropTypes.number,
-    downloadUrl: PropTypes.string,
-    previewUrl: PropTypes.string,
-    deleted: PropTypes.bool,
-    loading: PropTypes.bool,
-  },
-  disabled: PropTypes.bool,
-  onDelete: PropTypes.func.isRequired,
-  onUndelete: PropTypes.func.isRequired,
-  Wrapper: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.element,
-  ]),
-};
+export interface AudioItem {
+  key: string;
+  name: string;
+  duration: number;
+  downloadUrl: string;
+  previewUrl: string;
+  deleted: boolean;
+  loading: boolean;
+}
 
-Audio.defaultProps = {
-  Wrapper: 'div',
-  disabled: false,
-};
+export interface AudioProps {
+  item: AudioItem;
+  disabled: boolean;
+  onDelete: (key: string) => void;
+  onUndelete: (key: string) => void;
+  Wrapper: string | React.ElementType;
+}
 
-
-const Audio: React.FC<AudioProps> = ({ item, disabled, onDelete, onUndelete, Wrapper }) => {
+const Audio: React.FC<AudioProps> = ({
+  item,
+  disabled,
+  onDelete,
+  onUndelete,
+  Wrapper = 'div',
+}) => {
   const { Player, play, pause, state } = usePlayer(item.previewUrl);
 
   return (
@@ -44,7 +41,7 @@ const Audio: React.FC<AudioProps> = ({ item, disabled, onDelete, onUndelete, Wra
         ) : (
           <ControlBtn icon="play" onClick={play} />
         )}
-        <Title value={item.loading ? 'Загрузка…' : item.name} />
+        <Title label={item.loading ? 'Загрузка…' : item.name} />
         {item.downloadUrl && <DownloadLink downloadUrl={item.downloadUrl} />}
         {item.duration && <Time value={item.duration} />}
         {disabled ? null : item.deleted ? (

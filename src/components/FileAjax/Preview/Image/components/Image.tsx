@@ -1,12 +1,39 @@
-import React, { useMemo, useState } from 'react';
-import PropTypes from 'prop-types';
+import { useMemo, useState } from 'react';
 
 import Button from '../../Button';
 import ButtonLink from '../../ButtonLink';
 import CropperModal from './CropperModal';
 import AltButton from './AltButton';
 
-const Image = ({
+export interface ImageData {
+  scaleX: number;
+  scaleY: number;
+  alt?: string;
+}
+
+export interface ImageItem {
+  canvasUrl: string;
+  data?: ImageData;
+  deleted: boolean;
+  downloadUrl: string;
+  key: string;
+  loading: boolean;
+  previewLocal: string;
+  previewUrl: string;
+  uploadProgress: number;
+}
+
+export interface ImageProps {
+  item: ImageItem;
+  disabled?: boolean;
+  onDelete: (key: string) => void;
+  onUndelete: (key: string) => void;
+  setData: (data: ImageData) => void;
+  width: number | string;
+  height: number | string;
+}
+
+const Image: React.FC<ImageProps> = ({
   item,
   disabled,
   onDelete,
@@ -16,14 +43,18 @@ const Image = ({
   height,
 }) => {
   const [preview, setPreview] = useState(null);
+
   const data = useMemo(() => {
     const { scaleX, scaleY, ...other } = item.data || {};
     return other;
   }, [item.data]);
+
   return (
     <div className="zfe-files-ajax-preview-image thumbnail">
       <div className="btn-toolbar" role="toolbar">
-        {typeof data.alt !== 'undefined' && <AltButton data={data} setData={setData} />}
+        {typeof item.data?.alt !== 'undefined' && (
+          <AltButton data={data} setData={setData} />
+        )}
         {width && height && !disabled ? (
           <CropperModal
             src={item.canvasUrl || item.downloadUrl || item.previewLocal}
@@ -41,16 +72,28 @@ const Image = ({
             url={item.downloadUrl}
           />
         ) : null}
-        {disabled ? null : (
-          item.deleted
-            ? <Button icon="repeat" title="Восстановить" onClick={() => onUndelete(item.key)} size="xs" />
-            : <Button icon="remove" title="Удалить" onClick={() => onDelete(item.key)} size="xs" />
+        {disabled ? null : item.deleted ? (
+          <Button
+            icon="repeat"
+            title="Восстановить"
+            onClick={() => onUndelete(item.key)}
+            size="xs"
+          />
+        ) : (
+          <Button
+            icon="remove"
+            title="Удалить"
+            onClick={() => onDelete(item.key)}
+            size="xs"
+          />
         )}
       </div>
       <div
         className="zfe-files-ajax-preview-image-canvas"
         style={{
-          backgroundImage: `url(${preview || item.previewUrl || item.previewLocal})`,
+          backgroundImage: `url(${
+            preview || item.previewUrl || item.previewLocal
+          })`,
           opacity: item.deleted ? 0.5 : 1,
           width: `${width || 200}px`,
           height: `${height || 200}px`,
@@ -58,36 +101,6 @@ const Image = ({
       />
     </div>
   );
-};
-
-Image.propTypes = {
-  item: PropTypes.shape({
-    key: PropTypes.string,
-    canvasUrl: PropTypes.string,
-    downloadUrl: PropTypes.string,
-    previewUrl: PropTypes.string,
-    previewLocal: PropTypes.string,
-    deleted: PropTypes.bool,
-    data: PropTypes.object,
-  }).isRequired,
-  disabled: PropTypes.bool,
-  onDelete: PropTypes.func.isRequired,
-  onUndelete: PropTypes.func.isRequired,
-  setData: PropTypes.func.isRequired,
-  width: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-  ]),
-  height: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-  ]),
-};
-
-Image.defaultProps = {
-  width: null,
-  height: null,
-  disabled: false,
 };
 
 export default Image;

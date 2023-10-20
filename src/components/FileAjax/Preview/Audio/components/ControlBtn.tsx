@@ -1,15 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+interface ControlBtnProps {
+  icon: string;
+  onClick: () => void;
+}
 
-const ControlBtn = ({ icon, onClick }) => (
+const ControlBtn: React.FC<ControlBtnProps> = ({ icon, onClick }) => (
   <button type="button" onClick={onClick}>
     <span className={`glyphicon glyphicon-${icon}`} />
   </button>
 );
-
-ControlBtn.propTypes = {
-  icon: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
-};
 
 export default ControlBtn;

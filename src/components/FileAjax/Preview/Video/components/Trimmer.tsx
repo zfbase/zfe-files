@@ -1,22 +1,32 @@
-/* eslint-disable no-param-reassign */
-import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
+import { MutableRefObject, useCallback } from 'react';
 
-const formatTime = (t, addSS = false) => {
-  if (typeof t === 'number') {
-    const h = Math.floor(t / 3600);
-    const m = Math.floor((t / 60) % 60);
-    const s = Math.floor(t % 60);
-    const hms = [h, m, s].map((v) => v.toFixed(0).padStart(2, '0')).join(':');
-    return `${hms}${addSS ? `.${t.toFixed(2).split('.')[1]}` : ''}`;
-  }
-  return '';
-};
+function formatTime(t: number, addSS = false) {
+  const h = Math.floor(t / 3600);
+  const m = Math.floor((t / 60) % 60);
+  const s = Math.floor(t % 60);
+  const hms = [h, m, s].map((v) => v.toFixed(0).padStart(2, '0')).join(':');
+  return `${hms}${addSS ? `.${t.toFixed(2).split('.')[1]}` : ''}`;
+}
 
-const roundTimeUp = (t) => Math.ceil(t / 2) * 2;
-const roundTimeDown = (t) => Math.floor(t / 2) * 2;
+function roundTimeUp(t: number) {
+  return Math.ceil(t / 2) * 2;
+}
 
-const Trimmer = ({
+function roundTimeDown(t: number) {
+  return Math.floor(t / 2) * 2;
+}
+
+interface TrimmerProps {
+  displayTime: number;
+  end: number | null;
+  onEndChange: (value: number | null) => void;
+  onStartChange: (value: number | null) => void;
+  playerRef: MutableRefObject<HTMLVideoElement | null>;
+  playing: boolean;
+  start: number | null;
+}
+
+const Trimmer: React.FC<TrimmerProps> = ({
   displayTime,
   end,
   onEndChange,
@@ -26,6 +36,9 @@ const Trimmer = ({
   start,
 }) => {
   const playPause = useCallback(() => {
+    if (!playerRef.current) {
+      return;
+    }
     if (playerRef.current.paused) {
       playerRef.current.play();
     } else {
@@ -34,37 +47,52 @@ const Trimmer = ({
   }, [playerRef]);
 
   const step = useCallback(
-    (s) => () => {
-      playerRef.current.currentTime = s > 0
-        ? roundTimeDown(playerRef.current.currentTime) + s
-        : roundTimeUp(playerRef.current.currentTime) + s;
+    (s: number) => () => {
+      if (!playerRef.current) {
+        return;
+      }
+      playerRef.current.currentTime =
+        s > 0
+          ? roundTimeDown(playerRef.current.currentTime) + s
+          : roundTimeUp(playerRef.current.currentTime) + s;
     },
     [playerRef],
   );
 
   const goStart = useCallback(() => {
-    playerRef.current.currentTime = typeof start === 'number' ? start : 0;
+    if (playerRef.current) {
+      playerRef.current.currentTime = typeof start === 'number' ? start : 0;
+    }
   }, [playerRef, start]);
 
   const goEnd = useCallback(() => {
-    playerRef.current.currentTime = typeof end === 'number' ? end : playerRef.current.duration;
+    if (playerRef.current) {
+      playerRef.current.currentTime =
+        typeof end === 'number' ? end : playerRef.current.duration;
+    }
   }, [playerRef, end]);
 
   const saveStart = useCallback(() => {
+    if (!playerRef.current) {
+      return;
+    }
     let nextStart = roundTimeDown(playerRef.current.currentTime);
     if (typeof end === 'number' && nextStart > end) {
       nextStart = 0;
     }
-    onStartChange(nextStart <= 0 ? undefined : nextStart);
+    onStartChange(nextStart <= 0 ? null : nextStart);
   }, [onStartChange, end]);
 
   const saveEnd = useCallback(() => {
-    let nextEnd = roundTimeUp(playerRef.current.currentTime);
+    if (!playerRef.current) {
+      return;
+    }
+    let nextEnd: number | null = roundTimeUp(playerRef.current.currentTime);
     if (typeof start === 'number' && nextEnd < start) {
-      nextEnd = Number.Infinity;
+      nextEnd = Number.POSITIVE_INFINITY;
     }
     if (nextEnd >= playerRef.current.duration) {
-      nextEnd = undefined;
+      nextEnd = null;
     }
     onEndChange(nextEnd);
   }, [onEndChange, start]);
@@ -148,33 +176,17 @@ const Trimmer = ({
         }}
       >
         <div style={{ width: '30%', textAlign: 'left' }}>
-          {formatTime(start, true)}
+          {start === null ? null : formatTime(start, true)}
         </div>
         <div style={{ width: '30%', textAlign: 'center' }}>
           {formatTime(displayTime, true)}
         </div>
         <div style={{ width: '30%', textAlign: 'right' }}>
-          {formatTime(end, true)}
+          {end === null ? null : formatTime(end, true)}
         </div>
       </div>
     </div>
   );
-};
-
-Trimmer.propTypes = {
-  displayTime: PropTypes.number.isRequired,
-  end: PropTypes.number,
-  onEndChange: PropTypes.func.isRequired,
-  onStartChange: PropTypes.func.isRequired,
-  playerRef: PropTypes.shape().isRequired,
-  playing: PropTypes.bool,
-  start: PropTypes.number,
-};
-
-Trimmer.defaultProps = {
-  end: undefined,
-  playing: false,
-  start: undefined,
 };
 
 export default Trimmer;

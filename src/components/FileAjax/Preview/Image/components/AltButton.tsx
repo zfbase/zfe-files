@@ -1,10 +1,12 @@
-/* eslint-disable no-alert */
-import PropTypes from 'prop-types';
-import React from 'react';
-
 import Button from '../../Button';
+import type { ImageData } from './Image';
 
-const AltButton = ({ data, setData }) => (
+interface AltButtonProps {
+  data: ImageData;
+  setData: (data: ImageData) => void;
+}
+
+const AltButton: React.FC<AltButtonProps> = ({ data, setData }) => (
   <Button
     icon="eye-open"
     title="Кадрировать"
@@ -20,14 +22,5 @@ const AltButton = ({ data, setData }) => (
     size="xs"
   />
 );
-
-AltButton.propTypes = {
-  data: PropTypes.shape(),
-  setData: PropTypes.func.isRequired,
-};
-
-AltButton.defaultProps = {
-  data: {},
-};
 
 export default AltButton;

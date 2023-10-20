@@ -1,18 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import Audio, { AudioItem, AudioProps } from './Audio';
 
-import Audio from './Audio';
+type AudioPreviewProps = {
+  items: AudioItem[];
+} & Omit<AudioProps, 'item'>;
 
-const Preview = ({ items, ...props }) => (
+const AudioPreview: React.FC<AudioPreviewProps> = ({ items, ...props }) => (
   <ul className="zfe-files-ajax-preview-simple">
     {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-    {items.map((item) => <Audio item={item} {...props} Wrapper="li" key={item.key} />)}
+    {items.map((item) => (
+      <Audio item={item} {...props} Wrapper="li" key={item.key} />
+    ))}
   </ul>
 );
 
-Preview.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  items: PropTypes.array.isRequired,
-};
-
-export default Preview;
+export default AudioPreview;
