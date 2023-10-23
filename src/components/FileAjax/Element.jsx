@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import createUploader from '../../utils/createUploader';
@@ -67,6 +67,7 @@ const FormElement = ({
 }) => {
   // eslint-disable-next-line object-curly-newline
   const [items, { addItem, updateItem, removeItem, getItem }] = useCollection(files);
+  const [error, setError] = useState();
 
   // Надо использовать валидаторы, указанные в элементе формы
   const valid = (file, settings, success, fail) => {
@@ -152,6 +153,7 @@ const FormElement = ({
 
         valid(file, options,
           () => {
+            setError(undefined);
             const uploader = createUploader()
               .setUrl(uploadUrl)
               .setMaxChunkSize(maxChunkSize)
@@ -180,7 +182,7 @@ const FormElement = ({
                 pageUnload.enable(form);
               })
               // eslint-disable-next-line no-console
-              .onError(console.error)
+              .onError((err) => { setError(err.message); })
               .start();
 
             updateItem(item.key, {
@@ -264,6 +266,17 @@ const FormElement = ({
 
   return (
     <div {...getRootProps()} className="zfe-files-ajax-dropzone">
+      {error && (
+      <div className="alert alert-danger">
+        <button type="button" className="close" aria-label="Закрыть" onClick={() => { setError(undefined); }}>
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>Ошибка:</strong>
+        {' '}
+        {error}
+      </div>
+      )}
+
       <input {...getInputProps()} />
 
       {isDragActive && <DropzoneLabel multiple={multiple} />}

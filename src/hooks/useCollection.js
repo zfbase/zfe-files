@@ -5,7 +5,7 @@ import { useState } from 'react';
 const prepare = (items) => items.map((item) => ({ key: nanoid(), ...item }));
 
 const useCollection = (defaultValue) => {
-  const [_items, _setItems] = useState(prepare(defaultValue));
+  const [_items, _setItems] = useState(() => prepare(defaultValue));
 
   const setItems = (items) => _setItems(prepare(items));
 

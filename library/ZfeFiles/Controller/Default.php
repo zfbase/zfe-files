@@ -33,8 +33,11 @@ abstract class ZfeFiles_Controller_Default extends Controller_AbstractResource
                 );
             }
         } catch (Exception $ex) {
-            ZFE_Utilities::popupException($ex);
-            $this->error('Не удалось загрузить файл: ' . $ex->getMessage(), $ex);
+            $this->_json(
+                static::STATUS_FAIL,
+                [],
+                'Не удалось загрузить файл: ' . $ex->getMessage()
+            );
         }
     }
 

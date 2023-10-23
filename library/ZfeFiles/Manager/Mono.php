@@ -32,6 +32,8 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
             throw new ZfeFiles_Exception('Для регистрации файла необходимо указать его имя');
         }
 
+        $conn = Doctrine_Manager::connection();
+        $conn->beginTransaction();
         try {
             /** @var ZfeFiles_File_OriginInterface|Files $file */
             $file = new $this->fileModelName;
@@ -42,18 +44,25 @@ class ZfeFiles_Manager_Mono extends ZfeFiles_Manager_Abstract
             $file->extension = $data['fileExt'] ?? ZfeFiles_Helpers::extensionFromFilename($data['fileName']);
             $file->size = $data['fileSize'] ?? filesize($data['tempPath']);
             $file->hash = $this->hash($data['tempPath']);
-            $file->save();
+            $file->save($conn);
         } catch (Exception $ex) {
             ZFE_Utilities::logException($ex);
             $msg = 'Не удалось сохранить файл';
             if (Zend_Registry::get('user')->noticeDetails) {
                 $msg .= ': ' . $ex->getMessage();
             }
+            $conn->rollback();
             throw new ZfeFiles_Exception($msg, null, $ex);
         }
 
+        try {
         $this->move($file, $data['tempPath']);
         $this->access($file);
+        } catch (Throwable $err) {
+            $conn->rollback();
+            throw $err;
+        }
+        $conn->commit();
 
         return $this->createAgent($file);
     }

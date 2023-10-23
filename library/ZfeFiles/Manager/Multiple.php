@@ -74,6 +74,8 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
 
         $hash = $data['hash'] ?? $this->hash($data['tempPath']);
 
+        $conn = Doctrine_Manager::connection();
+        $conn->beginTransaction();
         /** @var ZfeFiles_File_OriginInterface|Files $file */
         $file = ($this->fileModelName)::findOneBy('hash', $hash);
         if (!$file || $updateFile) {
@@ -88,12 +90,19 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
                 $file->save();
             } catch (Exception $ex) {
                 ZFE_Utilities::logException($ex);
+                $conn->rollback();
                 throw new ZfeFiles_Exception('Не удалось сохранить файл', null, $ex);
             }
 
+            try {
             $this->move($file, $data['tempPath']);
             $this->access($file);
+            } catch (Throwable $err) {
+                $conn->rollback();
+                throw $err;
+            }
         }
+        $conn->commit();
 
         $modelName = $data['modelName'] ?? null;
         $schemaCode = $data['schemaCode'] ?? null;
