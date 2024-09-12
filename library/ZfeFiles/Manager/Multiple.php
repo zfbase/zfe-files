@@ -77,7 +77,7 @@ class ZfeFiles_Manager_Multiple extends ZfeFiles_Manager_Abstract
         $conn = Doctrine_Manager::connection();
         $conn->beginTransaction();
         /** @var ZfeFiles_File_OriginInterface|Files $file */
-        $file = ($this->fileModelName)::findOneBy('hash', $hash);
+        $file = ZFE_Query::create()->from($this->fileModelName)->where('hash = ?', $hash)->fetchOne();
         if (!$file || $updateFile) {
             try {
                 if (!$file) {
