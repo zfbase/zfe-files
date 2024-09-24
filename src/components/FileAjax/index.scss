@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .zfe-files-ajax {
   position: relative;
 }
@@ -10,7 +12,7 @@
   padding: 7px 0;
 
   li {
-    margin-bottom: (ceil($form-group-margin-bottom / 3));
+    margin-bottom: (math.ceil(math.div($form-group-margin-bottom, 3)));
   }
 }
 

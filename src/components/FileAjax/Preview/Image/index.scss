@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .zfe-files-ajax-preview-image-wrap {
   display: flow-root;
 }
@@ -5,20 +7,20 @@
 .zfe-files-ajax-preview-image {
   box-sizing: content-box;
   float: left;
-  margin: (ceil($form-group-margin-bottom / 2)) (ceil($form-group-margin-bottom / 2)) 0 0;
+  margin: (math.ceil(math.div($form-group-margin-bottom, 2))) (math.ceil(math.div($form-group-margin-bottom, 2))) 0 0;
   max-width: 100%;
   min-height: 22px;
   min-width: 100px;
   position: relative;
 
-  > .btn-toolbar {
+  >.btn-toolbar {
     opacity: 0.5;
     position: absolute;
     right: $thumbnail-padding;
     z-index: 2;
   }
 
-  &:hover > .btn-toolbar {
+  &:hover>.btn-toolbar {
     opacity: 1;
   }
 
