@@ -1,7 +1,5 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
-
-import Element from './Element';
+import { FileAjaxElement } from './FileAjaxElement';
 
 const numberProps = ['itemId', 'maxChunkSize', 'maxFileSize'];
 
@@ -9,12 +7,13 @@ const getProps = (node) => {
   const props = {};
   for (let i = 0; i < node.attributes.length; i += 1) {
     if (/^data-/.test(node.attributes[i].name)) {
-      const keyArr = /^data-(.*)/[Symbol.replace](node.attributes[i].name, '$1')
+      const keyArr = /^data-(.*)/
+        [Symbol.replace](node.attributes[i].name, '$1')
         .split('-');
       const key = [
         keyArr.shift(),
         ...keyArr.map(
-          (k) => k.substr(0, 1).toUpperCase() + k.substr(1).toLowerCase(),
+          (k) => k.substring(0, 1).toUpperCase() + k.substring(1).toLowerCase(),
         ),
       ].join('');
       const { value } = node.attributes[i];
@@ -80,5 +79,5 @@ export default (root, customProps) => {
 
   const reactRoot = createRoot(root);
   // eslint-disable-next-line react/jsx-props-no-spreading
-  reactRoot.render(<Element {...props} />);
+  reactRoot.render(<FileAjaxElement {...props} />);
 };

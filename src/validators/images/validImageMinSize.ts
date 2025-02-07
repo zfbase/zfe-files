@@ -1,4 +1,4 @@
-export function ValidatorImageMinSize(
+export function validImageMinSize(
   file: File,
   options: { width: number; height: number },
   successCallback: () => unknown,

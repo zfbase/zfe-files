@@ -1,3 +1,18 @@
+export interface StorageItem {
+  id?: number | string;
+  deleted?: boolean;
+  data?: {};
+}
+
+export interface FileItem {
+  key: string;
+  name: string;
+  downloadUrl: string;
+  deleted: boolean;
+  loading?: boolean;
+  uploadProgress?: number;
+}
+
 export type ButtonSize = 'lg' | 'sm' | 'xs';
 
 export type GlyphIconName =
