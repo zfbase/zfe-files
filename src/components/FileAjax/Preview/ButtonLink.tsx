@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import { AnchorHTMLAttributes, DetailedHTMLProps } from 'react';
+import { GlyphIconName } from '../../../CommonTypes';
 
 type ButtonLinkProps = {
-  icon?: string;
+  icon?: GlyphIconName;
   url?: string;
 } & DetailedHTMLProps<
   AnchorHTMLAttributes<HTMLAnchorElement>,

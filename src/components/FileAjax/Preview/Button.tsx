@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
+import { GlyphIconName } from '../../../CommonTypes';
 
 type ButtonProps = {
-  icon?: string;
+  icon?: GlyphIconName;
   label?: string;
   size?: 'lg' | 'sm' | 'xs';
 } & DetailedHTMLProps<
