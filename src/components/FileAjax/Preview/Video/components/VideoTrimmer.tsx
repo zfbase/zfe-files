@@ -1,8 +1,6 @@
-/* eslint-disable no-param-reassign */
-import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
+import { RefObject, useMemo } from 'react';
 
-const formatTime = (t, addSS = false) => {
+function formatTime(t: number | undefined, addSS = false) {
   if (typeof t === 'number') {
     const h = Math.floor(t / 3600);
     const m = Math.floor((t / 60) % 60);
@@ -11,12 +9,27 @@ const formatTime = (t, addSS = false) => {
     return `${hms}${addSS ? `.${t.toFixed(2).split('.')[1]}` : ''}`;
   }
   return '';
-};
+}
 
-const roundTimeUp = (t) => Math.ceil(t / 2) * 2;
-const roundTimeDown = (t) => Math.floor(t / 2) * 2;
+function roundTimeUp(t: number) {
+  return Math.ceil(t / 2) * 2;
+}
 
-const Trimmer = ({
+function roundTimeDown(t: number) {
+  return Math.floor(t / 2) * 2;
+}
+
+interface VideoTrimmerProps {
+  displayTime: number;
+  end?: number;
+  onEndChange: (end: number | undefined) => unknown;
+  onStartChange: (start: number | undefined) => unknown;
+  playerRef: RefObject<HTMLVideoElement | null>;
+  playing?: boolean;
+  start?: number;
+}
+
+export const VideoTrimmer: React.FC<VideoTrimmerProps> = ({
   displayTime,
   end,
   onEndChange,
@@ -25,49 +38,80 @@ const Trimmer = ({
   playing,
   start,
 }) => {
-  const playPause = useCallback(() => {
-    if (playerRef.current.paused) {
-      playerRef.current.play();
-    } else {
-      playerRef.current.pause();
-    }
-  }, [playerRef]);
-
-  const step = useCallback(
-    (s) => () => {
-      playerRef.current.currentTime = s > 0
-        ? roundTimeDown(playerRef.current.currentTime) + s
-        : roundTimeUp(playerRef.current.currentTime) + s;
+  const playPause = useMemo(
+    () => () => {
+      if (playerRef.current) {
+        if (playerRef.current.paused) {
+          playerRef.current.play();
+        } else {
+          playerRef.current.pause();
+        }
+      }
     },
     [playerRef],
   );
 
-  const goStart = useCallback(() => {
-    playerRef.current.currentTime = typeof start === 'number' ? start : 0;
-  }, [playerRef, start]);
+  const step = useMemo(
+    () => (s: number) => () => {
+      if (playerRef.current) {
+        playerRef.current.currentTime =
+          s > 0
+            ? roundTimeDown(playerRef.current.currentTime) + s
+            : roundTimeUp(playerRef.current.currentTime) + s;
+      }
+    },
+    [playerRef],
+  );
 
-  const goEnd = useCallback(() => {
-    playerRef.current.currentTime = typeof end === 'number' ? end : playerRef.current.duration;
-  }, [playerRef, end]);
+  const goStart = useMemo(
+    () => () => {
+      if (playerRef.current) {
+        playerRef.current.currentTime = typeof start === 'number' ? start : 0;
+      }
+    },
+    [playerRef, start],
+  );
 
-  const saveStart = useCallback(() => {
-    let nextStart = roundTimeDown(playerRef.current.currentTime);
-    if (typeof end === 'number' && nextStart > end) {
-      nextStart = 0;
-    }
-    onStartChange(nextStart <= 0 ? undefined : nextStart);
-  }, [onStartChange, end]);
+  const goEnd = useMemo(
+    () => () => {
+      if (playerRef.current) {
+        playerRef.current.currentTime =
+          typeof end === 'number' ? end : playerRef.current.duration;
+      }
+    },
+    [playerRef, end],
+  );
 
-  const saveEnd = useCallback(() => {
-    let nextEnd = roundTimeUp(playerRef.current.currentTime);
-    if (typeof start === 'number' && nextEnd < start) {
-      nextEnd = Number.Infinity;
-    }
-    if (nextEnd >= playerRef.current.duration) {
-      nextEnd = undefined;
-    }
-    onEndChange(nextEnd);
-  }, [onEndChange, start]);
+  const saveStart = useMemo(
+    () => () => {
+      if (playerRef.current) {
+        let nextStart = roundTimeDown(playerRef.current.currentTime);
+        if (typeof end === 'number' && nextStart > end) {
+          nextStart = 0;
+        }
+        onStartChange(nextStart <= 0 ? undefined : nextStart);
+      }
+    },
+    [onStartChange, end],
+  );
+
+  const saveEnd = useMemo(
+    () => () => {
+      if (playerRef.current) {
+        let nextEnd: number | undefined = roundTimeUp(
+          playerRef.current.currentTime,
+        );
+        if (typeof start === 'number' && nextEnd < start) {
+          nextEnd = Number.POSITIVE_INFINITY;
+        }
+        if (nextEnd >= playerRef.current.duration) {
+          nextEnd = undefined;
+        }
+        onEndChange(nextEnd);
+      }
+    },
+    [onEndChange, start],
+  );
 
   return (
     <div
@@ -160,21 +204,3 @@ const Trimmer = ({
     </div>
   );
 };
-
-Trimmer.propTypes = {
-  displayTime: PropTypes.number.isRequired,
-  end: PropTypes.number,
-  onEndChange: PropTypes.func.isRequired,
-  onStartChange: PropTypes.func.isRequired,
-  playerRef: PropTypes.shape().isRequired,
-  playing: PropTypes.bool,
-  start: PropTypes.number,
-};
-
-Trimmer.defaultProps = {
-  end: undefined,
-  playing: false,
-  start: undefined,
-};
-
-export default Trimmer;

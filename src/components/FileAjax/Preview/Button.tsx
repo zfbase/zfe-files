@@ -1,11 +1,11 @@
 import classNames from 'classnames';
 import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
-import { GlyphIconName } from '../../../CommonTypes';
+import { ButtonSize, GlyphIconName } from '../../../CommonTypes';
 
 type ButtonProps = {
   icon?: GlyphIconName;
   label?: string;
-  size?: 'lg' | 'sm' | 'xs';
+  size?: ButtonSize;
 } & DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement

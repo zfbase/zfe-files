@@ -1,3 +1,5 @@
+export type ButtonSize = 'lg' | 'sm' | 'xs';
+
 export type GlyphIconName =
   | 'adjust'
   | 'alert'
