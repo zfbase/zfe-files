@@ -3,8 +3,8 @@ import { FileAjaxElement } from './FileAjaxElement';
 
 const numberProps = ['itemId', 'maxChunkSize', 'maxFileSize'];
 
-const getProps = (node) => {
-  const props = {};
+const getProps = (node: HTMLElement) => {
+  const props: Record<string, string | number | boolean> = {};
   for (let i = 0; i < node.attributes.length; i += 1) {
     if (/^data-/.test(node.attributes[i].name)) {
       const keyArr = /^data-(.*)/
@@ -25,39 +25,42 @@ const getProps = (node) => {
       }
     }
   }
-  props.multiple = ['1', 'multiple'].includes(props.multiple);
+  props.multiple =
+    typeof props.multiple === 'string' &&
+    ['1', 'multiple'].includes(props.multiple);
   return props;
 };
 
-export default (root, customProps) => {
+export default (root: HTMLElement, customProps: {}) => {
   const form = root.closest('form');
   const { name } = root.dataset;
 
-  const files = Array.from(root.querySelectorAll(`input[name^=${name}]`)).map(
-    (input) => {
-      const data = input.dataset;
-      const options = { data: {} };
-      Object.keys(data).forEach((key) => {
-        const parsed = parseInt(data[key], 10);
-        const value = parsed.toString() === data[key] ? parsed : data[key];
-        if (/^data/.test(key)) {
-          options.data[key.charAt(4).toLowerCase() + key.substring(5)] = value;
-        } else {
-          options[key] = value;
-        }
-      });
-      return {
-        id: input.value,
-        ...options,
-      };
-    },
-  );
+  const files = Array.from(
+    root.querySelectorAll<HTMLInputElement>(`input[name^=${name}]`),
+  ).map((input) => {
+    const data: Record<string, string | number | undefined> = input.dataset;
+    const options: Record<string, unknown> & { data: typeof data } = { data };
+    Object.keys(data).forEach((key) => {
+      const parsed =
+        typeof data[key] === 'string' ? parseInt(data[key] ?? '', 10) : '';
+      const value = parsed.toString() === data[key] ? parsed : data[key];
+      if (/^data/.test(key)) {
+        options.data[key.charAt(4).toLowerCase() + key.substring(5)] = value;
+      } else {
+        options[key] = value;
+      }
+    });
+    return {
+      id: input.value,
+      ...options,
+    };
+  });
 
   const getOnLoadedHandler = () => {
-    if (typeof window.jQuery === 'undefined') {
+    if (typeof (window as any).jQuery === 'undefined') {
       return () => {};
     }
-    const $form = window.jQuery(form);
+    const $form = (window as any).jQuery(form);
 
     if (!$form.data('plugin_checkUnsavedFormData')) {
       return () => {};
@@ -78,6 +81,5 @@ export default (root, customProps) => {
   };
 
   const reactRoot = createRoot(root);
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  reactRoot.render(<FileAjaxElement {...props} />);
+  reactRoot.render(<FileAjaxElement {...(props as any)} />);
 };

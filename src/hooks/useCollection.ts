@@ -26,7 +26,7 @@ export function useCollection<T extends {}>(defaultValue: T[]) {
       return getItem(key);
     };
 
-    const updateItem = (key: string, value: T) => {
+    const updateItem = (key: string, value: Partial<T>) => {
       _setItems((items) =>
         items.map((item) => (item.key === key ? { ...item, ...value } : item)),
       );

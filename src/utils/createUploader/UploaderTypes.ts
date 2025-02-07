@@ -1,10 +1,10 @@
 export interface SimpleUploaderProps {
   url: string;
   file: File;
-  params?: Record<string, string>;
+  params?: Record<string, string | number>;
   onStart?: () => void;
   onProgress?: (progress: { loaded: number; total: number }) => void;
-  onComplete?: (file: {}) => void;
+  onComplete?: (data: Record<string, string | number>) => void;
   onError?: (err: unknown) => void;
 }
 

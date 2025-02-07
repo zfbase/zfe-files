@@ -1,16 +1,25 @@
 export interface StorageItem {
   id?: number | string;
   deleted?: boolean;
-  data?: {};
+  data?: Record<string, string | number>;
 }
 
 export interface FileItem {
+  id?: number | string;
   key: string;
   name: string;
   downloadUrl: string;
   deleted: boolean;
   loading?: boolean;
   uploadProgress?: number;
+  data?: Record<string, string | number>;
+  abortUpload?: () => unknown;
+  continueUpload?: () => unknown;
+}
+
+export interface FileOptions {
+  width: number;
+  height: number;
 }
 
 export type ButtonSize = 'lg' | 'sm' | 'xs';

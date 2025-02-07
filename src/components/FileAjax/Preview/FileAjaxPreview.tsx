@@ -3,10 +3,17 @@ import { AudioPreview } from './Audio/components/AudioPreview';
 import { ImagePreview } from './Image/components/ImagePreview';
 import { SimplePreview } from './Simple/components/SimplePreview';
 import { VideoPreview } from './Video/components/VideoPreview';
+import { FileItem } from '../../../CommonTypes';
 
 interface FileAjaxPreviewProps {
+  disabled?: boolean;
+  items: FileItem[];
   previewRender?: () => ReactNode;
   type?: 'image' | 'audio' | 'video';
+  onDelete: (key: string) => unknown;
+  onUndelete: (key: string) => unknown;
+  onCancelUpload: (key: string) => unknown;
+  setData: (key: string, data: FileItem['data']) => unknown;
 }
 
 export const FileAjaxPreview: React.FC<FileAjaxPreviewProps> = ({

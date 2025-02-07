@@ -64,19 +64,22 @@ export function createUploader(props: ChunksUploaderProps) {
      * Установить дополнительные параметры загрузки
      * @param string value
      */
-    setParams(value: NonNullable<ChunksUploaderProps['params']>) {
+    setParams(value: Record<string, string | number | undefined>) {
       if (uploader) {
         throw new Error(
           'Указать дополнительные параметры запроса загрузки можно только до начала загрузки.',
         );
       }
 
-      params = Object.keys(value).reduce<typeof value>((acc, key) => {
-        if (value[key] !== null && value[key] !== undefined) {
-          acc[key] = value[key];
-        }
-        return acc;
-      }, {});
+      params = Object.keys(value).reduce<Record<string, string | number>>(
+        (acc, key) => {
+          if (value[key] !== null && value[key] !== undefined) {
+            acc[key] = value[key];
+          }
+          return acc;
+        },
+        {},
+      );
       return this;
     },
 
