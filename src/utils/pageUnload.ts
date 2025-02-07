@@ -1,22 +1,19 @@
-const beforeunload = (e) => {
+const beforeunload = (e: Event) => {
   e.preventDefault();
-  e.returnValue = true;
 };
 
-const submit = (e) => {
+const submit = (e: Event) => {
   // eslint-disable-next-line no-alert
   window.alert('Необходимо дождаться завершения загрузки файлов.');
   e.preventDefault();
-  e.returnValue = true;
 };
 
-export default {
-
+export const pageUnload = {
   /**
    * Заблокировать покидание страницы.
    * @param node|null form
    */
-  disable: (form) => {
+  disable: (form: HTMLFormElement) => {
     window.addEventListener('beforeunload', beforeunload);
     if (form) {
       form.addEventListener('submit', submit);
@@ -31,7 +28,7 @@ export default {
    * Разблокировать покидание страницы
    * @param node|null form
    */
-  enable: (form) => {
+  enable: (form: HTMLFormElement) => {
     if (form) {
       const btn = form.querySelector('[type="submit"]');
       if (btn) {
@@ -41,5 +38,4 @@ export default {
     }
     window.removeEventListener('beforeunload', beforeunload);
   },
-
 };
