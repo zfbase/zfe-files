@@ -44,7 +44,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
   files = [],
   uploadBtnLabel = 'Загрузить',
   maxChunkSize = 1024 ** 2,
-  maxFileSize = 0,
+  // maxFileSize = 0,
   modelName,
   multiple = false,
   name,
@@ -59,19 +59,21 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
   form,
   ...options
 }) => {
-  // eslint-disable-next-line object-curly-newline
   const [items, { addItem, updateItem, removeItem, getItem }] =
     useCollection(files);
   const [error, setError] = useState<string>();
 
   // Надо использовать валидаторы, указанные в элементе формы
-  const valid: typeof validImageMinSize = (file, settings, success, fail) => {
-    if (type === 'image') {
-      validImageMinSize(file, settings, success, fail);
-    } else {
-      success();
-    }
-  };
+  const valid = useMemo<typeof validImageMinSize>(
+    () => (file, settings, success, fail) => {
+      if (type === 'image') {
+        validImageMinSize(file, settings, success, fail);
+      } else {
+        success();
+      }
+    },
+    [type]
+  );
 
   useEffect(() => {
     if (onLoaded) {
@@ -92,7 +94,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
             items.forEach(({ key }) => removeItem(key));
           }
 
-          const item = addItem({ loading: true });
+          const item = addItem({ loading: true } as any);
 
           if (type === 'image') {
             const reader = new FileReader();
@@ -128,7 +130,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
                     0,
                     0,
                     canvas.width,
-                    canvas.height,
+                    canvas.height
                   );
                   context.save();
                 }
@@ -136,7 +138,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
                 updateItem(item.key, {
                   data,
                   previewLocal: canvas.toDataURL('image/jpg'),
-                });
+                } as any);
               };
               if (typeof reader.result === 'string') {
                 image.src = reader.result;
@@ -144,7 +146,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
 
               updateItem(item.key, {
                 previewLocal: reader.result,
-              });
+              } as any);
             };
             reader.readAsDataURL(file);
           }
@@ -154,7 +156,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
             options,
             () => {
               setError(undefined);
-              const uploader = createUploader()
+              const uploader = createUploader({} as any)
                 .setUrl(uploadUrl)
                 .setMaxChunkSize(maxChunkSize)
                 .setFile(file)
@@ -167,12 +169,13 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
                 .onProgress(({ loaded, total }) =>
                   updateItem(item.key, {
                     uploadProgress: (loaded / total) * 100,
-                  }),
+                  })
                 )
                 .onComplete((raw) => {
-                  const data: {
-                    data: NonNullable<FileItem['data']>;
-                  } = {
+                  const data: Record<
+                    string,
+                    string | number | Record<string, string | number>
+                  > = {
                     data: {},
                   };
                   Object.keys(raw).forEach((key) => {
@@ -185,10 +188,13 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
                         ...keyArr.map(
                           (k) =>
                             k.substring(0, 1).toUpperCase() +
-                            k.substring(1).toLowerCase(),
+                            k.substring(1).toLowerCase()
                         ),
                       ].join('');
-                      data.data[newKey] = raw[key];
+                      if (!data.data) {
+                        data.data = {};
+                        data.data[newKey] = raw[key];
+                      }
                     } else {
                       data[key] = raw[key];
                     }
@@ -198,7 +204,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
                     pageUnload.enable(form);
                   }
                 })
-                // eslint-disable-next-line no-console
+
                 .onError((err) => {
                   if (err instanceof Error) {
                     setError(err.message);
@@ -212,19 +218,36 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
               });
             },
             (message) => {
-              // eslint-disable-next-line no-alert
               window.alert(message);
               removeItem(item.key);
-            },
+            }
           );
         });
       },
-      [items],
+      [
+        addItem,
+        form,
+        itemId,
+        items,
+        maxChunkSize,
+        modelName,
+        multiple,
+        options,
+        removeItem,
+        schemaCode,
+        type,
+        updateItem,
+        uploadUrl,
+        valid,
+      ]
     ),
     noClick: true,
     multiple,
     disabled,
-    accept: accept ?? getAcceptForType(type),
+    accept:
+      accept ?? getAcceptForType(type)
+        ? { [(accept ?? getAcceptForType(type)) as string]: [] }
+        : undefined,
   });
   const openUploadWindow = useMemo<MouseEventHandler>(
     () => () => {
@@ -234,7 +257,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
         items.map((item) => item.deleted && removeItem(item.key));
       }
     },
-    [open, items, removeItem],
+    [open, multiple, items, removeItem]
   );
 
   const cancelUpload = useMemo(
@@ -245,7 +268,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
       }
       removeItem(key);
     },
-    [getItem, removeItem],
+    [getItem, removeItem]
   );
 
   const autoSave = !!(
@@ -278,7 +301,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
         }
       }
     },
-    [updateItem, getItem],
+    [updateItem, autoSave, getItem, modelName, schemaCode, itemId, unlinkUrl]
   );
 
   const onUndelete = useMemo(
@@ -295,7 +318,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
           formData.append('rel-id', itemId.toString());
           if (item.data) {
             Object.entries(item.data).forEach(([key, value]) =>
-              formData.append(`data[${key}]`, `${value}`),
+              formData.append(`data[${key}]`, `${value}`)
             );
           }
 
@@ -307,12 +330,12 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
         }
       }
     },
-    [updateItem],
+    [autoSave, getItem, itemId, linkUrl, modelName, schemaCode, updateItem]
   );
 
   const setData = useMemo(
     () => (key: string, data: FileItem['data']) => updateItem(key, { data }),
-    [updateItem],
+    [updateItem]
   );
 
   return (

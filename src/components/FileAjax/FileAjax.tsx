@@ -13,7 +13,7 @@ const getProps = (node: HTMLElement) => {
       const key = [
         keyArr.shift(),
         ...keyArr.map(
-          (k) => k.substring(0, 1).toUpperCase() + k.substring(1).toLowerCase(),
+          (k) => k.substring(0, 1).toUpperCase() + k.substring(1).toLowerCase()
         ),
       ].join('');
       const { value } = node.attributes[i];
@@ -31,12 +31,12 @@ const getProps = (node: HTMLElement) => {
   return props;
 };
 
-export default (root: HTMLElement, customProps: {}) => {
+export function createFileAjax(root: HTMLElement, customProps: object) {
   const form = root.closest('form');
   const { name } = root.dataset;
 
   const files = Array.from(
-    root.querySelectorAll<HTMLInputElement>(`input[name^=${name}]`),
+    root.querySelectorAll<HTMLInputElement>(`input[name^=${name}]`)
   ).map((input) => {
     const data: Record<string, string | number | undefined> = input.dataset;
     const options: Record<string, unknown> & { data: typeof data } = { data };
@@ -82,4 +82,4 @@ export default (root: HTMLElement, customProps: {}) => {
 
   const reactRoot = createRoot(root);
   reactRoot.render(<FileAjaxElement {...(props as any)} />);
-};
+}

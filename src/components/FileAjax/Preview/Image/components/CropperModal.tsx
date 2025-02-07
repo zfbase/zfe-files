@@ -1,11 +1,7 @@
 import { Fragment, useRef, useState } from 'react';
-import Cropper from 'react-cropper';
+import Cropper, { ReactCropperElement } from 'react-cropper';
 import Modal from 'react-modal';
-
-import 'cropperjs/dist/cropper.css';
-
 import { Button } from '../../Button';
-import ReactCropper from 'react-cropper';
 
 function filterData<T extends { x: number; y: number }>(data: T): T {
   return {
@@ -19,8 +15,8 @@ interface CropperModalProps {
   src: string;
   width: number | string;
   height: number | string;
-  data: {};
-  setData: (data: {}) => void;
+  data: object;
+  setData: (data: object) => void;
   setPreview: (url: string) => void;
 }
 
@@ -35,51 +31,55 @@ export const CropperModal: React.FC<CropperModalProps> = ({
   const [modalIsOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
-  const cropperRef = useRef<ReactCropper>(null);
+  const cropperRef = useRef<ReactCropperElement>(null);
 
   Modal.setAppElement('body');
 
   const zoomIn = () => {
     if (cropperRef.current) {
-      cropperRef.current.zoom(0.1);
+      cropperRef.current.cropper.zoom(0.1);
     }
   };
   const zoomOut = () => {
     if (cropperRef.current) {
-      cropperRef.current.zoom(-0.1);
+      cropperRef.current.cropper.zoom(-0.1);
     }
   };
   const rotateLeft = () => {
     if (cropperRef.current) {
-      cropperRef.current.rotate(-90);
+      cropperRef.current.cropper.rotate(-90);
     }
   };
   const rotateRight = () => {
     if (cropperRef.current) {
-      cropperRef.current.rotate(90);
+      cropperRef.current.cropper.rotate(90);
     }
   };
   const flipHorizontal = () => {
     if (cropperRef.current) {
-      cropperRef.current.scaleX(-cropperRef.current.getData().scaleX);
+      cropperRef.current.cropper.scaleX(
+        -cropperRef.current.cropper.getData().scaleX
+      );
     }
   };
   const flipVertical = () => {
     if (cropperRef.current) {
-      cropperRef.current.scaleY(-cropperRef.current.getData().scaleY);
+      cropperRef.current.cropper.scaleY(
+        -cropperRef.current.cropper.getData().scaleY
+      );
     }
   };
   const reset = () => {
     if (cropperRef.current) {
-      cropperRef.current.reset().setData(data);
+      cropperRef.current.cropper.reset().setData(data);
       closeModal();
     }
   };
 
   const saveCrop = () => {
     if (cropperRef.current) {
-      setData(filterData(cropperRef.current.getData()));
-      setPreview(cropperRef.current.getCroppedCanvas().toDataURL());
+      setData(filterData(cropperRef.current.cropper.getData()));
+      setPreview(cropperRef.current.cropper.getCroppedCanvas().toDataURL());
       closeModal();
     }
   };

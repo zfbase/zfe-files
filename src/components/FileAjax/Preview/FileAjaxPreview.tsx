@@ -21,19 +21,18 @@ export const FileAjaxPreview: React.FC<FileAjaxPreviewProps> = ({
   type,
   ...props
 }) => {
-  let Helper;
-  if (typeof previewRender === 'function') {
-    Helper = previewRender;
-  } else {
-    switch (type) {
-      case 'image':
-        return <ImagePreview {...props} />;
-      case 'audio':
-        return <AudioPreview {...props} />;
-      case 'video':
-        return <VideoPreview {...props} />;
-      default:
-        return <SimplePreview {...props} />;
-    }
+  if (previewRender) {
+    const Helper = previewRender;
+    return <Helper {...(props as any)} />;
+  }
+  switch (type) {
+    case 'image':
+      return <ImagePreview {...(props as any)} />;
+    case 'audio':
+      return <AudioPreview {...(props as any)} />;
+    case 'video':
+      return <VideoPreview {...(props as any)} />;
+    default:
+      return <SimplePreview {...props} />;
   }
 };
