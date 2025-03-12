@@ -1,5 +1,9 @@
 @use "sass:math";
 
+$form-group-margin-bottom: 15px;
+$thumbnail-padding: 4px;
+$input-border: #ccc;
+
 .zfe-files-ajax-preview-image-wrap {
   display: flow-root;
 }

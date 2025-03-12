@@ -1,8 +1,8 @@
-@import './components/FileAjax/index';
-@import './components/ProgressCircle/index';
+@use './components/FileAjax/index' as *;
+@use './components/ProgressCircle/index' as *;
 
 @keyframes rotate {
   to {
-    transform: rotate(360deg); 
+    transform: rotate(360deg);
   }
 }

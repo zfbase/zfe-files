@@ -1,4 +1,8 @@
 @use "sass:math";
+@use './Preview/Audio/index' as *;
+@use './Preview/Image/index' as *;
+@use './Preview/Simple/index' as *;
+@use './Preview/Video/index' as *;
 
 .zfe-files-ajax {
   position: relative;
@@ -39,8 +43,3 @@
     width: 100%;
   }
 }
-
-@import './Preview/Audio/index';
-@import './Preview/Image/index';
-@import './Preview/Simple/index';
-@import './Preview/Video/index';

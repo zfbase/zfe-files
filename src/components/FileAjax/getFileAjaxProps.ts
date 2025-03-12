@@ -1,6 +1,3 @@
-import { createRoot } from 'react-dom/client';
-import { FileAjaxElement } from './FileAjaxElement';
-
 const numberProps = ['itemId', 'maxChunkSize', 'maxFileSize'];
 
 const getProps = (node: HTMLElement) => {
@@ -31,7 +28,7 @@ const getProps = (node: HTMLElement) => {
   return props;
 };
 
-export function createFileAjax(root: HTMLElement, customProps: object) {
+export function getFileAjaxProps(root: HTMLElement, customProps: object) {
   const form = root.closest('form');
   const { name } = root.dataset;
 
@@ -80,6 +77,5 @@ export function createFileAjax(root: HTMLElement, customProps: object) {
     ...customProps,
   };
 
-  const reactRoot = createRoot(root);
-  reactRoot.render(<FileAjaxElement {...(props as any)} />);
+  return props;
 }

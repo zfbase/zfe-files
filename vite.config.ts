@@ -14,7 +14,15 @@ export default defineConfig({
     },
     copyPublicDir: false,
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime', 'classnames'],
+      external: [
+        'classnames',
+        'react-cropper',
+        'react-dom',
+        'react-dropzone',
+        'react-modal',
+        'react',
+        'react/jsx-runtime',
+      ],
     },
   },
   plugins: [
