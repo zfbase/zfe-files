@@ -128,7 +128,7 @@ class ZfeFiles_Schema_Default
     {
         if (!is_a($model, ZfeFiles_File_OriginInterface::class, true)) {
             throw new ZfeFiles_Schema_Exception(
-                "Класс ${model} не может быть классом файла – он не реализует ZfeFiles_File_OriginInterface"
+                "Класс {$model} не может быть классом файла – он не реализует ZfeFiles_File_OriginInterface"
             );
         }
 

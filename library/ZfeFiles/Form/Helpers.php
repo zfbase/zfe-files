@@ -16,7 +16,7 @@ trait ZfeFiles_Form_Helpers
      *
      * @return self
      */
-    public function addFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
+    public function addFileAjaxElement(string $id, array $customOptions = [], ?string $elementName = null)
     {
         if (!is_a($this->_modelName, ZfeFiles_Manageable::class, true)) {
             throw new ZfeFiles_Exception("Загрузка файлов невозможна: {$this->_modelName} не реализует интерфейс ZfeFiles_Manageable");
@@ -68,7 +68,7 @@ trait ZfeFiles_Form_Helpers
      *
      * @return self
      */
-    public function addImageFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
+    public function addImageFileAjaxElement(string $id, array $customOptions = [], ?string $elementName = null)
     {
         /** @var ZfeFiles_Schema_Image $schema */
         $schema = ($this->_modelName)::getFileSchemas()->getByCode($id);
@@ -97,7 +97,7 @@ trait ZfeFiles_Form_Helpers
      *
      * @return self
      */
-    public function addAudioFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
+    public function addAudioFileAjaxElement(string $id, array $customOptions = [], ?string $elementName = null)
     {
         return $this->addFileAjaxElement($id, ['type' => 'audio'] + $customOptions, $elementName);
     }
@@ -109,7 +109,7 @@ trait ZfeFiles_Form_Helpers
      *
      * @return self
      */
-    public function addVideoFileAjaxElement(string $id, array $customOptions = [], string $elementName = null)
+    public function addVideoFileAjaxElement(string $id, array $customOptions = [], ?string $elementName = null)
     {
         return $this->addFileAjaxElement($id, ['type' => 'video'] + $customOptions, $elementName);
     }

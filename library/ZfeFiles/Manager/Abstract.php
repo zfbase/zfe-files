@@ -228,7 +228,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
      *
      * @throws ZfeFiles_Exception
      */
-    protected function move($file, string $tempPath = null): void
+    protected function move($file, ?string $tempPath = null): void
     {
         try {
             $newPath = $file->getRealPathHelper()->getPath();

@@ -23,16 +23,16 @@ class ZfeFiles_Helpers
     {
         if (!file_exists($path)) {
             if (!mkdir($path, $mode, true)) {
-                throw new ZfeFiles_Exception("Не удалось создать директорию ${path}");
+                throw new ZfeFiles_Exception("Не удалось создать директорию {$path}");
             }
         }
 
         if (!is_dir($path)) {
-            throw new ZfeFiles_Exception("${path} не является директорией");
+            throw new ZfeFiles_Exception("{$path} не является директорией");
         }
 
         if ($mode !== octdec(mb_substr(decoct(fileperms($path)), -4)) && !chmod($path, $mode)) {
-            throw new ZfeFiles_Exception("Не удалось изменить права доступа к директории ${path}");
+            throw new ZfeFiles_Exception("Не удалось изменить права доступа к директории {$path}");
         }
     }
 

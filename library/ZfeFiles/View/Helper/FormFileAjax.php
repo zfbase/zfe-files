@@ -18,7 +18,7 @@ class ZfeFiles_View_Helper_FormFileAjax extends Zend_View_Helper_FormElement
      *
      * @todo Придумать как всегда на вход получать экземпляр ZfeFiles_Agent_Interface
      */
-    public function formFileAjax(string $name, $value = null, array $attribs = null): string
+    public function formFileAjax(string $name, $value = null, ?array $attribs = null): string
     {
         $info = $this->_getInfo($name, $value, $attribs);
         extract($info);
