@@ -11,7 +11,7 @@
  */
 class ZfeFiles_View_Helper_FormFileAudioAjax extends ZfeFiles_View_Helper_FormFileAjax
 {
-    public function formFileAudioAjax(string $name, $value = null, array $attribs = null): string
+    public function formFileAudioAjax(string $name, $value = null, ?array $attribs = null): string
     {
         return $this->formFileAjax($name, $value, $attribs);
     }

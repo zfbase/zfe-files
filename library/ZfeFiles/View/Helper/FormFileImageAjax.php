@@ -11,7 +11,7 @@
  */
 class ZfeFiles_View_Helper_FormFileImageAjax extends ZfeFiles_View_Helper_FormFileAjax
 {
-    public function formFileImageAjax(string $name, $value = null, array $attribs = null): string
+    public function formFileImageAjax(string $name, $value = null, ?array $attribs = null): string
     {
         return $this->formFileAjax($name, $value, $attribs);
     }
