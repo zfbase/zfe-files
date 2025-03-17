@@ -11,8 +11,6 @@ export const Storage: React.FC<StorageProps> = ({ name, items = [] }) => {
   const filteredItems = items.filter((item) => item.id && !item.deleted);
   return (
     <>
-      <pre>{JSON.stringify(filteredItems, null, 2)}</pre>
-
       {filteredItems.map((item) =>
         item.data ? (
           <ExtendedRender item={item} name={name} key={item.id} />
