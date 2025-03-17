@@ -10,7 +10,7 @@ export interface ImageProps {
   disabled?: boolean;
   onDelete: (key: string) => void;
   onUndelete: (key: string) => void;
-  setData: (data: FileImageData) => void;
+  setData: (key: string, data: Partial<FileImageData>) => void;
   width?: number | string;
   height?: number | string;
 }
@@ -26,14 +26,16 @@ export const Image: React.FC<ImageProps> = ({
 }) => {
   const [preview, setPreview] = useState<string>();
   const data = useMemo(() => {
-    const { scaleX, scaleY, ...other } = item.data ?? {};
-    return other;
+    const d = item.data ? { ...item.data } : {};
+    delete d.scaleX;
+    delete d.scaleY;
+    return d;
   }, [item.data]);
   return (
     <div className="zfe-files-ajax-preview-image thumbnail">
       <div className="btn-toolbar" role="toolbar">
         {typeof data.alt !== 'undefined' && (
-          <AltButton data={data} setData={setData} />
+          <AltButton data={data} setData={(data) => setData(item.key, data)} />
         )}
         {width && height && !disabled ? (
           <CropperModal
@@ -41,7 +43,7 @@ export const Image: React.FC<ImageProps> = ({
             width={width}
             height={height}
             data={data}
-            setData={setData}
+            setData={(data) => setData(item.key, data)}
             setPreview={setPreview}
           />
         ) : null}

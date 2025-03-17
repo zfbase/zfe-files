@@ -86,7 +86,6 @@ export class ChunksUploader extends Uploader {
       .catch((error) => {
         this.chunksQueue.push(chunkNum);
 
-        // eslint-disable-next-line no-console
         console.log(error);
 
         this.countError += 1;
@@ -113,7 +112,7 @@ export class ChunksUploader extends Uploader {
 
   handleProgress(
     chunkNum: number,
-    event: ProgressEvent<XMLHttpRequestEventTarget>,
+    event: ProgressEvent<XMLHttpRequestEventTarget>
   ) {
     if (['progress', 'error', 'abort'].includes(event.type)) {
       this.progressCache[chunkNum] = event.loaded;
@@ -126,11 +125,11 @@ export class ChunksUploader extends Uploader {
 
     const inProgress = Object.keys(this.progressCache).reduce(
       (memo, id) => memo + this.progressCache[id],
-      0,
+      0
     );
     const sendedLength = Math.min(
       this.uploadedSize + inProgress,
-      this.file.size,
+      this.file.size
     );
 
     this.onProgress({
@@ -140,48 +139,48 @@ export class ChunksUploader extends Uploader {
   }
 
   upload(chunk: Blob, chunkNum: number) {
-    return new Promise<{ status: number | string; data: { file?: {} } }>(
-      (resolve, reject) => {
-        // eslint-disable-next-line no-multi-assign
-        const xhr = (this.connections[chunkNum] = new XMLHttpRequest());
+    return new Promise<{
+      status: number | string;
+      data: { file?: Record<string, string | number> };
+    }>((resolve, reject) => {
+      const xhr = (this.connections[chunkNum] = new XMLHttpRequest());
 
-        const progressListener = this.handleProgress.bind(this, chunkNum);
-        xhr.upload.addEventListener('progress', progressListener);
-        xhr.addEventListener('error', progressListener);
-        xhr.addEventListener('abort', progressListener);
-        xhr.addEventListener('loadend', progressListener);
+      const progressListener = this.handleProgress.bind(this, chunkNum);
+      xhr.upload.addEventListener('progress', progressListener);
+      xhr.addEventListener('error', progressListener);
+      xhr.addEventListener('abort', progressListener);
+      xhr.addEventListener('loadend', progressListener);
 
-        xhr.open('post', this.url);
+      xhr.open('post', this.url);
 
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState === 4 && xhr.status === 200) {
-            resolve(JSON.parse(xhr.responseText));
-            delete this.connections[chunkNum];
-          }
-        };
-
-        xhr.onerror = (error) => {
-          reject(error);
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          resolve(JSON.parse(xhr.responseText));
           delete this.connections[chunkNum];
-        };
+        }
+      };
 
-        xhr.onabort = () => {
-          reject(new Error('Загрузка остановлена пользователем.'));
-          delete this.connections[chunkNum];
-        };
+      xhr.onerror = (error) => {
+        reject(error);
+        delete this.connections[chunkNum];
+      };
 
-        xhr.send(
-          createFormData({
-            ...this.params,
-            file: chunk,
-            fileName: this.file.name,
-            fileSize: this.file.size,
-            chunksCount: this.chunksCount,
-            chunkNum,
-            uid: this.uploadId,
-          }),
-        );
-      },
-    );
+      xhr.onabort = () => {
+        reject(new Error('Загрузка остановлена пользователем.'));
+        delete this.connections[chunkNum];
+      };
+
+      xhr.send(
+        createFormData({
+          ...this.params,
+          file: chunk,
+          fileName: this.file.name,
+          fileSize: this.file.size,
+          chunksCount: this.chunksCount,
+          chunkNum,
+          uid: this.uploadId,
+        })
+      );
+    });
   }
 }

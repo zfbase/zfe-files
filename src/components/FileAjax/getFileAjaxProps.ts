@@ -1,32 +1,45 @@
 const numberProps = ['itemId', 'maxChunkSize', 'maxFileSize'];
 
-const getProps = (node: HTMLElement) => {
+export function getRootProps(attributes: { name: string; value: string }[]) {
   const props: Record<string, string | number | boolean> = {};
-  for (let i = 0; i < node.attributes.length; i += 1) {
-    if (/^data-/.test(node.attributes[i].name)) {
-      const keyArr = /^data-(.*)/
-        [Symbol.replace](node.attributes[i].name, '$1')
-        .split('-');
+  attributes.forEach(({ name, value }) => {
+    if (name.startsWith('data-')) {
+      const keyArr = name.split('-').slice(1);
       const key = [
         keyArr.shift(),
         ...keyArr.map(
           (k) => k.substring(0, 1).toUpperCase() + k.substring(1).toLowerCase()
         ),
       ].join('');
-      const { value } = node.attributes[i];
       props[key] = numberProps.includes(key) ? parseInt(value, 10) : value;
-    } else if (node.attributes[i].name === 'disabled') {
-      const { value } = node.attributes[i];
+    } else if (name === 'disabled') {
       if (value === 'disabled' || value === '1') {
         props.disabled = true;
       }
     }
-  }
+  });
   props.multiple =
     typeof props.multiple === 'string' &&
     ['1', 'multiple'].includes(props.multiple);
   return props;
-};
+}
+
+export function getFileProps(data: Record<string, string | undefined>) {
+  const options: Record<string, unknown> & {
+    data: Record<string, string | number | undefined>;
+  } = { data: {} };
+  Object.keys(data).forEach((key) => {
+    const parsed =
+      typeof data[key] === 'string' ? parseInt(data[key] ?? '', 10) : '';
+    const value = parsed.toString() === data[key] ? parsed : data[key];
+    if (key.startsWith('data')) {
+      options.data[key.charAt(4).toLowerCase() + key.substring(5)] = value;
+    } else {
+      options[key] = value;
+    }
+  });
+  return options;
+}
 
 export function getFileAjaxProps(root: HTMLElement, customProps: object) {
   const form = root.closest('form');
@@ -35,21 +48,9 @@ export function getFileAjaxProps(root: HTMLElement, customProps: object) {
   const files = Array.from(
     root.querySelectorAll<HTMLInputElement>(`input[name^=${name}]`)
   ).map((input) => {
-    const data: Record<string, string | number | undefined> = input.dataset;
-    const options: Record<string, unknown> & { data: typeof data } = { data };
-    Object.keys(data).forEach((key) => {
-      const parsed =
-        typeof data[key] === 'string' ? parseInt(data[key] ?? '', 10) : '';
-      const value = parsed.toString() === data[key] ? parsed : data[key];
-      if (/^data/.test(key)) {
-        options.data[key.charAt(4).toLowerCase() + key.substring(5)] = value;
-      } else {
-        options[key] = value;
-      }
-    });
     return {
       id: input.value,
-      ...options,
+      ...getFileProps(input.dataset),
     };
   });
 
@@ -69,11 +70,16 @@ export function getFileAjaxProps(root: HTMLElement, customProps: object) {
     };
   };
 
+  const rootAttributes = Array.from(root.attributes).map((i) => ({
+    name: i.name,
+    value: i.value,
+  }));
+
   const props = {
     files,
     onLoaded: getOnLoadedHandler(),
     form,
-    ...getProps(root),
+    ...getRootProps(rootAttributes),
     ...customProps,
   };
 

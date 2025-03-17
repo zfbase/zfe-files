@@ -2,6 +2,9 @@ export interface FileImageData {
   alt?: string;
   scaleX?: number;
   scaleY?: number;
+  x?: number;
+  y?: number;
+  rotate?: number;
 }
 
 export interface FileImageItem {

@@ -1,28 +1,26 @@
-import { ReactNode } from 'react';
+import { StorageItem } from '../../CommonTypes';
 import { ExtendedRender } from './ExtendedRender';
 import { LiteRender } from './LiteRender';
-import { StorageItem } from '../../CommonTypes';
 
 interface StorageProps {
-  name: string;
   items?: StorageItem[];
-  render?: (item: StorageItem, name: string) => ReactNode;
+  name: string;
 }
 
-export const Storage: React.FC<StorageProps> = ({
-  name,
-  items = [],
-  render = (item, name) =>
-    item.data ? (
-      <ExtendedRender item={item} name={name} key={item.id} />
-    ) : (
-      <LiteRender item={item} name={name} key={item.id} />
-    ),
-}) => {
+export const Storage: React.FC<StorageProps> = ({ name, items = [] }) => {
   const filteredItems = items.filter((item) => item.id && !item.deleted);
   return (
     <>
-      {filteredItems.map((item) => render(item, name))}
+      <pre>{JSON.stringify(filteredItems, null, 2)}</pre>
+
+      {filteredItems.map((item) =>
+        item.data ? (
+          <ExtendedRender item={item} name={name} key={item.id} />
+        ) : (
+          <LiteRender item={item} name={name} key={item.id} />
+        )
+      )}
+
       {filteredItems.length === 0 && (
         <input type="hidden" name={`${name}[]`} key="0" />
       )}

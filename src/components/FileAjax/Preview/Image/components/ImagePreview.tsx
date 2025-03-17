@@ -16,7 +16,7 @@ export const ImagePreview: React.FC<ImagePreviewProps> = ({
         <ImageLoading key={item.key} item={item} {...rest} />
       ) : (
         <Image key={item.key} item={item} {...rest} />
-      ),
+      )
     )}
   </div>
 );
