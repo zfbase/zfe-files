@@ -32,55 +32,56 @@ export const Image: React.FC<ImageProps> = ({
     return d;
   }, [item.data]);
   return (
-    <div className="zfe-files-ajax-preview-image thumbnail">
+    <div className="zfe-files-ajax-preview-image">
       <div className="btn-toolbar" role="toolbar">
-        {typeof data.alt !== 'undefined' && (
-          <AltButton data={data} setData={(data) => setData(item.key, data)} />
-        )}
-        {width && height && !disabled ? (
-          <CropperModal
-            src={item.canvasUrl ?? item.downloadUrl ?? item.previewLocal}
-            width={width}
-            height={height}
-            data={data}
-            setData={(data) => setData(item.key, data)}
-            setPreview={setPreview}
-          />
-        ) : null}
-        {item.downloadUrl ? (
-          <ButtonLink
-            icon="download-alt"
-            title="Скачать оригинал"
-            url={item.downloadUrl}
-          />
-        ) : null}
-        {disabled ? null : item.deleted ? (
-          <Button
-            icon="repeat"
-            title="Восстановить"
-            onClick={() => onUndelete(item.key)}
-            size="xs"
-          />
-        ) : (
-          <Button
-            icon="remove"
-            title="Удалить"
-            onClick={() => onDelete(item.key)}
-            size="xs"
-          />
-        )}
+        <div className="btn-group" role="group">
+          {typeof data.alt !== 'undefined' && (
+            <AltButton
+              data={data}
+              setData={(data) => setData(item.key, data)}
+            />
+          )}
+          {width && height && !disabled ? (
+            <CropperModal
+              src={item.canvasUrl ?? item.downloadUrl ?? item.previewLocal}
+              width={width}
+              height={height}
+              data={data}
+              setData={(data) => setData(item.key, data)}
+              setPreview={setPreview}
+            />
+          ) : null}
+          {item.downloadUrl ? (
+            <ButtonLink
+              icon="download-alt"
+              title="Скачать оригинал"
+              url={item.downloadUrl}
+            />
+          ) : null}
+          {disabled ? null : item.deleted ? (
+            <Button
+              icon="repeat"
+              title="Восстановить"
+              onClick={() => onUndelete(item.key)}
+            />
+          ) : (
+            <Button
+              icon="remove"
+              title="Удалить"
+              onClick={() => onDelete(item.key)}
+            />
+          )}
+        </div>
       </div>
-      <div
+
+      <img
         className="zfe-files-ajax-preview-image-canvas"
-        style={{
-          backgroundImage: `url(${
-            preview ?? item.previewUrl ?? item.previewLocal
-          })`,
-          opacity: item.deleted ? 0.5 : 1,
-          width: `${width ?? 200}px`,
-          height: `${height ?? 200}px`,
-        }}
+        alt=""
+        src={preview ?? item.previewUrl ?? item.previewLocal}
+        style={{ opacity: item.deleted ? 0.5 : 1 }}
       />
+
+      <div className="img-border" />
     </div>
   );
 };

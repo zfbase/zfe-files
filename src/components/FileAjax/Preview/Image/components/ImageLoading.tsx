@@ -18,7 +18,7 @@ export const ImageLoading: React.FC<ImageLoadingProps> = ({
   height,
   onCancelUpload,
 }) => (
-  <div className="zfe-files-ajax-preview-image thumbnail">
+  <div className="zfe-files-ajax-preview-image">
     <div className="btn-toolbar" role="toolbar">
       <Button
         icon="remove"

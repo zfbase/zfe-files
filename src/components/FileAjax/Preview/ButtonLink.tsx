@@ -10,7 +10,6 @@ type ButtonLinkProps = {
   HTMLAnchorElement
 >;
 
-// eslint-disable-next-line object-curly-newline
 export const ButtonLink: React.FC<ButtonLinkProps> = ({
   icon,
   url,
@@ -19,7 +18,7 @@ export const ButtonLink: React.FC<ButtonLinkProps> = ({
 }) => (
   <a
     rel="button"
-    className={classNames('btn btn-xs btn-default', className)}
+    className={classNames('btn btn-default', className)}
     href={url}
     target="_blank"
     {...props}

@@ -16,12 +16,11 @@ export const AltButton: React.FC<AltButtonProps> = ({ data, setData }) => (
     onClick={() => {
       const v = prompt(
         'Описание изображения для версии сайта для слабовидящих',
-        data.alt ?? undefined,
+        data.alt ?? undefined
       );
       if (v !== null) {
         setData({ ...data, alt: v });
       }
     }}
-    size="xs"
   />
 );

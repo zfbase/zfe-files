@@ -86,12 +86,7 @@ export const CropperModal: React.FC<CropperModalProps> = ({
 
   return (
     <Fragment>
-      <Button
-        icon="scissors"
-        title="Кадрировать"
-        onClick={openModal}
-        size="xs"
-      />
+      <Button icon="scissors" title="Кадрировать" onClick={openModal} />
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}

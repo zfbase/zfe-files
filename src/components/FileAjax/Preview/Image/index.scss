@@ -1,7 +1,7 @@
 @use "sass:math";
 
 $form-group-margin-bottom: 15px;
-$thumbnail-padding: 4px;
+$thumbnail-padding: 0px;
 $input-border: #ccc;
 
 .zfe-files-ajax-preview-image-wrap {
@@ -18,9 +18,12 @@ $input-border: #ccc;
   position: relative;
 
   >.btn-toolbar {
-    opacity: 0.5;
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
     position: absolute;
-    right: $thumbnail-padding;
+    right: 8px;
+    top: 6px;
+    // right: $thumbnail-padding;
     z-index: 2;
   }
 
@@ -41,10 +44,19 @@ $input-border: #ccc;
   background-repeat: no-repeat;
   background-size: contain;
   max-width: 100%;
+  width: auto;
 }
 
 .cropper-toolbar {
   display: flex;
   justify-content: center;
   margin-top: 15px;
+}
+
+.img-border {
+  border: 1px solid #999;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: darken;
 }
