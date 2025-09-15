@@ -1,23 +1,41 @@
 import classNames from 'classnames';
-import type { CropperPos } from './CropperControls';
+import type { CropperPos, CropperPos2 } from './CropperControls';
 import { CropperFade } from './CropperFade';
 
 import './CropperRect.css';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
+import { rectCoords } from './rectCoords';
 
 interface CropperRectProps {
   active?: boolean;
-  pos: CropperPos;
+  image: CropperPos;
+  onChange: Dispatch<SetStateAction<CropperPos2>>;
   rect: DOMRect;
+  value: CropperPos2;
 }
 
 export const CropperRect: React.FC<CropperRectProps> = ({
   active,
-  pos,
+  image,
+  onChange,
   rect,
+  value,
 }) => {
   const [activeDelayed, setActiveDelayed] = useState(active);
   const activeRef = useRef<NodeJS.Timeout>(null);
+  const [dragging, setDragging] = useState<{
+    x: number;
+    y: number;
+    value: CropperPos2;
+  }>();
+  const pos = rectCoords(value, image);
 
   const toggleDelayed = useMemo(
     () => (value: boolean) => {
@@ -37,6 +55,55 @@ export const CropperRect: React.FC<CropperRectProps> = ({
     toggleDelayed(!!active);
   }, [active, toggleDelayed]);
 
+  useEffect(() => {
+    if (!dragging) {
+      return;
+    }
+
+    function onPointerMove(e: PointerEvent) {
+      if (!dragging) {
+        return;
+      }
+
+      let x = (e.clientX - (dragging.x ?? 0)) / image.width;
+      let y = (e.clientY - (dragging.y ?? 0)) / image.width;
+
+      const next = { ...dragging.value };
+
+      if (x > 0) {
+        x = Math.min(x, next.right);
+      } else {
+        x = Math.max(x, -next.left);
+      }
+      next.left += x;
+      next.right -= x;
+
+      if (y > 0) {
+        y = Math.min(y, next.bottom);
+      } else {
+        y = Math.max(y, -next.top);
+      }
+
+      next.top += y;
+      next.bottom -= y;
+
+      onChange(next);
+    }
+
+    function onPointerUp() {
+      setDragging(undefined);
+      toggleDelayed(false);
+    }
+
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+
+    return () => {
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+    };
+  }, [dragging, image.width, onChange, toggleDelayed]);
+
   return (
     <>
       <CropperFade
@@ -55,7 +122,7 @@ export const CropperRect: React.FC<CropperRectProps> = ({
         onPointerDown={(e) => {
           if (e.button === 0) {
             toggleDelayed(true);
-            setTimeout(() => toggleDelayed(false));
+            setDragging({ x: e.clientX, y: e.clientY, value });
           }
         }}
       >

@@ -8,18 +8,10 @@ import {
 import type { CropperPos, CropperPos2 } from './CropperControls';
 import { CropperRect } from './CropperRect';
 import { restrictCrop } from './restrictCrop';
+import { rectCoords } from './rectCoords';
 
 const corners = ['nw', 'ne', 'sw', 'se'] as const;
 export type Corner = (typeof corners)[number];
-
-function rectCoords(pos: CropperPos2, image: CropperPos): CropperPos {
-  return {
-    top: image.top + pos.top * image.height,
-    left: image.left + pos.left * image.width,
-    width: image.width * (1 - (pos.right + pos.left)),
-    height: image.height * (1 - (pos.bottom + pos.top)),
-  };
-}
 
 function cornerCoords(
   corner: Corner,
@@ -58,7 +50,7 @@ export const CropperCorners: React.FC<CropperCornersProps> = ({
   const draggingRef = useRef<Corner>(null);
 
   useEffect(() => {
-    function onPointerMove(e: MouseEvent) {
+    function onPointerMove(e: PointerEvent) {
       if (draggingRef.current) {
         const left = (e.clientX - rect.left - image.left) / image.width;
         const top = (e.clientY - rect.top - image.top) / image.height;
@@ -97,7 +89,13 @@ export const CropperCorners: React.FC<CropperCornersProps> = ({
 
   return (
     <>
-      <CropperRect pos={rectCoords(value, image)} rect={rect} active={active} />
+      <CropperRect
+        rect={rect}
+        image={image}
+        active={active}
+        onChange={onChange}
+        value={value}
+      />
 
       {corners.map((corner) => (
         <div
