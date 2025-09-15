@@ -1,0 +1,60 @@
+.zf-cc {
+  display: flex;
+  position: relative;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  margin: 24px;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.zf-cc__main {
+  position: absolute;
+  inset: 0;
+}
+
+.zf-cc__rect {
+  z-index: 20;
+  border: 1px solid white;
+  position: absolute;
+
+  color: white;
+  font-size: 24px;
+  padding: 8px;
+  white-space: pre-wrap;
+}
+
+.zf-cc__corner {
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  border: 0px solid #fff;
+  z-index: 30;
+}
+
+.zf-cc__corner_nw {
+  cursor: nwse-resize;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+
+.zf-cc__corner_ne {
+  cursor: nesw-resize;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+
+.zf-cc__corner_se {
+  cursor: nwse-resize;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+.zf-cc__corner_sw {
+  cursor: nesw-resize;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}

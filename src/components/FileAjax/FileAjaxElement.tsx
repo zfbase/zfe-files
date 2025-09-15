@@ -362,7 +362,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
 
       {(multiple || !items.filter((item) => !item.deleted).length) && (
         <button
-          className="btn btn-default"
+          className="btn btn-default btn-upload"
           type="button"
           disabled={disabled}
           onClick={openUploadWindow}

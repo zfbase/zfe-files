@@ -5,13 +5,18 @@ $thumbnail-padding: 0px;
 $input-border: #ccc;
 
 .zfe-files-ajax-preview-image-wrap {
-  display: flow-root;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn-upload {
+  margin-bottom: 4px !important;
 }
 
 .zfe-files-ajax-preview-image {
   box-sizing: content-box;
-  float: left;
-  margin: (math.ceil(math.div($form-group-margin-bottom, 2))) (math.ceil(math.div($form-group-margin-bottom, 2))) 0 0;
   max-width: 100%;
   min-height: 22px;
   min-width: 100px;
@@ -27,6 +32,7 @@ $input-border: #ccc;
     z-index: 2;
   }
 
+  &:focus-within>.btn-toolbar,
   &:hover>.btn-toolbar {
     opacity: 1;
   }
