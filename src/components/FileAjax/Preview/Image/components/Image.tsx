@@ -3,7 +3,7 @@ import { Button } from '../../Button';
 import { ButtonLink } from '../../ButtonLink';
 import { FileImageData, FileImageItem } from '../ImageTypes';
 import { AltButton } from './AltButton';
-import { Cropper } from './Cropper';
+import { Cropper } from './cropper/Cropper';
 
 export interface ImageProps {
   item: FileImageItem;

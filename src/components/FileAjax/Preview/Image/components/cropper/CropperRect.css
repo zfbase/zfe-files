@@ -1,0 +1,86 @@
+.zf-cc__rect {
+  z-index: 20;
+  border: 1px solid white;
+  position: absolute;
+
+  color: white;
+  font-size: 24px;
+  padding: 8px;
+  white-space: pre-wrap;
+}
+
+/* Thirds */
+
+.zf-cc__third {
+  background: #ccc;
+  position: absolute;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  opacity: 0;
+}
+
+.zf-cc__rect_active .zf-cc__third {
+  opacity: 1;
+}
+
+.zf-cc__third_w,
+.zf-cc__third_e {
+  width: 1px;
+  top: 0;
+  bottom: 0;
+}
+
+.zf-cc__third_n,
+.zf-cc__third_s {
+  height: 1px;
+  left: 0;
+  right: 0;
+}
+
+.zf-cc__third_n {
+  top: 33.33%;
+}
+
+.zf-cc__third_s {
+  bottom: 33.33%;
+}
+
+.zf-cc__third_w {
+  left: 33.33%;
+}
+
+.zf-cc__third_e {
+  right: 33.33%;
+}
+
+/* Fade */
+
+.zf-cc__fade {
+  background: #333;
+  opacity: 0.8;
+  position: absolute;
+}
+
+.zf-cc__fade_w {
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.zf-cc__fade_e {
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.zf-cc__fade_n {
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+.zf-cc__fade_s {
+  left: 0;
+  bottom: 0;
+  right: 0;
+}

@@ -10,6 +10,13 @@ export interface CropperPos {
   height: number;
 }
 
+export interface CropperPos2 {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+}
+
 interface CropperControlsProps {
   imageAspectRatio: number;
   src: string;
@@ -52,11 +59,11 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
     };
   }, [imageAspectRatio, rect]);
 
-  const [cr, setCr] = useState<CropperPos>({
+  const [cr, setCr] = useState<CropperPos2>({
     left: 0,
     top: 0,
-    width: 1,
-    height: 1,
+    bottom: 0,
+    right: 0,
   });
 
   return (

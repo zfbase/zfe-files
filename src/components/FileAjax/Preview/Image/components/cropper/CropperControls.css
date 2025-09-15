@@ -16,17 +16,6 @@
   inset: 0;
 }
 
-.zf-cc__rect {
-  z-index: 20;
-  border: 1px solid white;
-  position: absolute;
-
-  color: white;
-  font-size: 24px;
-  padding: 8px;
-  white-space: pre-wrap;
-}
-
 .zf-cc__corner {
   width: 22px;
   height: 22px;

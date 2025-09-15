@@ -5,23 +5,25 @@ import {
   type Dispatch,
   type SetStateAction,
 } from 'react';
-import type { CropperPos } from './CropperControls';
+import type { CropperPos, CropperPos2 } from './CropperControls';
+import { CropperRect } from './CropperRect';
+import { restrictCrop } from './restrictCrop';
 
 const corners = ['nw', 'ne', 'sw', 'se'] as const;
-type Corner = (typeof corners)[number];
+export type Corner = (typeof corners)[number];
 
-function rectCoords(pos: CropperPos, image: CropperPos) {
+function rectCoords(pos: CropperPos2, image: CropperPos): CropperPos {
   return {
     top: image.top + pos.top * image.height,
     left: image.left + pos.left * image.width,
-    width: pos.width * image.width,
-    height: pos.height * image.height,
+    width: image.width * (1 - (pos.right + pos.left)),
+    height: image.height * (1 - (pos.bottom + pos.top)),
   };
 }
 
 function cornerCoords(
   corner: Corner,
-  pos: CropperPos,
+  pos: CropperPos2,
   image: CropperPos
 ): { left: number; top: number } {
   const { top, left, width, height } = rectCoords(pos, image);
@@ -41,9 +43,9 @@ function cornerCoords(
 
 interface CropperCornersProps {
   image: CropperPos;
-  onChange: Dispatch<SetStateAction<CropperPos>>;
+  onChange: Dispatch<SetStateAction<CropperPos2>>;
   rect: DOMRect;
-  value: CropperPos;
+  value: CropperPos2;
 }
 
 export const CropperCorners: React.FC<CropperCornersProps> = ({
@@ -52,56 +54,36 @@ export const CropperCorners: React.FC<CropperCornersProps> = ({
   rect,
   value,
 }) => {
-  const [dragging, setDragging] = useState<{ corner: Corner }>();
-  const draggingRef = useRef(dragging);
-  useEffect(() => {
-    draggingRef.current = dragging;
-  }, [dragging]);
+  const [active, setActive] = useState(false);
+  const draggingRef = useRef<Corner>(null);
 
   useEffect(() => {
     function onPointerMove(e: MouseEvent) {
       if (draggingRef.current) {
-        const x = (e.clientX - rect.left - image.left) / image.width;
-        const y = (e.clientY - rect.top - image.top) / image.height;
-        const corner = draggingRef.current.corner;
+        const left = (e.clientX - rect.left - image.left) / image.width;
+        const top = (e.clientY - rect.top - image.top) / image.height;
+        const right = (rect.right - e.clientX - image.left) / image.width;
+        const bottom = (rect.bottom - e.clientY + image.top) / image.height;
+        const corner = draggingRef.current;
 
         onChange((v) => {
           switch (corner) {
             case 'nw':
-              return {
-                left: x,
-                top: y,
-                width: v.width + v.left - x,
-                height: v.height + v.top - y,
-              };
+              return restrictCrop({ ...v, left, top }, corner);
             case 'ne':
-              return {
-                left: v.left,
-                top: y,
-                width: x - v.left,
-                height: v.height + v.top - y,
-              };
+              return restrictCrop({ ...v, top, right }, corner);
             case 'sw':
-              return {
-                left: x,
-                top: v.top,
-                width: v.width + v.left - x,
-                height: y - v.top,
-              };
+              return restrictCrop({ ...v, left, bottom }, corner);
             case 'se':
-              return {
-                left: v.left,
-                top: v.top,
-                width: x - v.left,
-                height: y - v.top,
-              };
+              return restrictCrop({ ...v, right, bottom }, corner);
           }
         });
       }
     }
 
     function onPointerUp() {
-      setDragging(undefined);
+      draggingRef.current = null;
+      setActive(false);
     }
 
     window.addEventListener('pointermove', onPointerMove);
@@ -115,17 +97,18 @@ export const CropperCorners: React.FC<CropperCornersProps> = ({
 
   return (
     <>
-      <div className="zf-cc__rect" style={rectCoords(value, image)} />
+      <CropperRect pos={rectCoords(value, image)} rect={rect} active={active} />
 
       {corners.map((corner) => (
         <div
           className={`zf-cc__corner zf-cc__corner_${corner}`}
+          key={corner}
           style={cornerCoords(corner, value, image)}
           onPointerDown={(e) => {
-            console.log(e.button);
             if (e.button === 0) {
               e.preventDefault();
-              setDragging({ corner });
+              draggingRef.current = corner;
+              setActive(true);
             }
           }}
         />

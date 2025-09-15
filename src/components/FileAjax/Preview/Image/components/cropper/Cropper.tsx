@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { CropperControls } from './CropperControls';
 
-import './Cropper2.css';
+import './Cropper.css';
 
 interface CropperProps {
   src: string;
@@ -46,8 +46,16 @@ export const Cropper: React.FC<CropperProps> = ({ onClose, src }) => {
         open && 'zf-cropper_open',
         closing && 'zf-cropper_closing'
       )}
-      onTransitionStart={() => setStopped(false)}
-      onTransitionEnd={() => {
+      onTransitionStart={(e) => {
+        if (e.target !== e.currentTarget) {
+          return;
+        }
+        setStopped(false);
+      }}
+      onTransitionEnd={(e) => {
+        if (e.target !== e.currentTarget) {
+          return;
+        }
         if (closing) {
           onClose();
         } else {
