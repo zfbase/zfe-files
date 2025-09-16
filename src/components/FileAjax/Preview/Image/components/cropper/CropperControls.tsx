@@ -73,7 +73,14 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
       style={{ backgroundImage: `url(${src})` }}
     >
       {rect && pos && cr && (
-        <CropperCorners rect={rect} image={pos} onChange={setCr} value={cr} />
+        <CropperCorners
+          cropAspectRatio={pos.width / pos.height}
+          imageAspectRatio={pos.width / pos.height}
+          rect={rect}
+          image={pos}
+          onChange={setCr}
+          value={cr}
+        />
       )}
     </div>
   );

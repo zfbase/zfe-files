@@ -66,7 +66,7 @@ export const CropperRect: React.FC<CropperRectProps> = ({
       }
 
       let x = (e.clientX - (dragging.x ?? 0)) / image.width;
-      let y = (e.clientY - (dragging.y ?? 0)) / image.width;
+      let y = (e.clientY - (dragging.y ?? 0)) / image.height;
 
       const next = { ...dragging.value };
 
@@ -102,7 +102,7 @@ export const CropperRect: React.FC<CropperRectProps> = ({
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
     };
-  }, [dragging, image.width, onChange, toggleDelayed]);
+  }, [dragging, image, onChange, toggleDelayed]);
 
   return (
     <>

@@ -12,7 +12,7 @@ interface AltButtonProps {
 export const AltButton: React.FC<AltButtonProps> = ({ data, setData }) => (
   <Button
     icon="eye-open"
-    title="Кадрировать"
+    title="Описание для слабовидящих"
     onClick={() => {
       const v = prompt(
         'Описание изображения для версии сайта для слабовидящих',

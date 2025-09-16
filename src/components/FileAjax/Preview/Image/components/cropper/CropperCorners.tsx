@@ -34,6 +34,8 @@ function cornerCoords(
 }
 
 interface CropperCornersProps {
+  cropAspectRatio?: number;
+  imageAspectRatio: number;
   image: CropperPos;
   onChange: Dispatch<SetStateAction<CropperPos2>>;
   rect: DOMRect;
@@ -41,6 +43,8 @@ interface CropperCornersProps {
 }
 
 export const CropperCorners: React.FC<CropperCornersProps> = ({
+  cropAspectRatio,
+  imageAspectRatio,
   image,
   onChange,
   rect,
@@ -61,13 +65,29 @@ export const CropperCorners: React.FC<CropperCornersProps> = ({
         onChange((v) => {
           switch (corner) {
             case 'nw':
-              return restrictCrop({ ...v, left, top }, corner);
+              return restrictCrop(
+                { ...v, left, top },
+                corner,
+                imageAspectRatio
+              );
             case 'ne':
-              return restrictCrop({ ...v, top, right }, corner);
+              return restrictCrop(
+                { ...v, top, right },
+                corner,
+                imageAspectRatio
+              );
             case 'sw':
-              return restrictCrop({ ...v, left, bottom }, corner);
+              return restrictCrop(
+                { ...v, left, bottom },
+                corner,
+                imageAspectRatio
+              );
             case 'se':
-              return restrictCrop({ ...v, right, bottom }, corner);
+              return restrictCrop(
+                { ...v, right, bottom },
+                corner,
+                imageAspectRatio
+              );
           }
         });
       }
@@ -85,7 +105,7 @@ export const CropperCorners: React.FC<CropperCornersProps> = ({
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
     };
-  }, [image, onChange, rect]);
+  }, [image, imageAspectRatio, onChange, rect]);
 
   return (
     <>
