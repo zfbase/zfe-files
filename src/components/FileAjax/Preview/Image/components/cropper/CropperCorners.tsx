@@ -2,7 +2,7 @@ import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { cornerStyle } from './cornerStyle';
 import { CropperRect } from './CropperRect';
 import { corners, isLeft, isTop, type RectRB, type RectWH } from './CropTypes';
-import { dragRestrictions, type DragRestrictions } from './dragRestrictions';
+import { cropRestrictions, type CropRestrictions } from './cropRestrictions';
 
 interface CropperCornersProps {
   cropAspectRatio?: number;
@@ -20,7 +20,7 @@ export const CropperCorners: React.FC<CropperCornersProps> = ({
   value,
 }) => {
   const [active, setActive] = useState(false);
-  const [drag, setDrag] = useState<DragRestrictions>();
+  const [drag, setDrag] = useState<CropRestrictions>();
 
   useEffect(() => {
     if (!drag) {
@@ -80,7 +80,7 @@ export const CropperCorners: React.FC<CropperCornersProps> = ({
               e.preventDefault();
               setActive(true);
               setDrag(
-                dragRestrictions(corner, value, image, rect, cropAspectRatio)
+                cropRestrictions(corner, value, image, rect, cropAspectRatio)
               );
             }
           }}

@@ -3,13 +3,16 @@ import { CropperCorners } from './CropperCorners';
 
 import './CropperControls.css';
 import type { RectRB, RectWH } from './CropTypes';
+import { defaultCrop } from './defaultCrop';
 
 interface CropperControlsProps {
+  cropAspectRatio?: number;
   imageAspectRatio: number;
   src: string;
 }
 
 export const CropperControls: React.FC<CropperControlsProps> = ({
+  cropAspectRatio,
   imageAspectRatio,
   src,
 }) => {
@@ -46,12 +49,9 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
     };
   }, [imageAspectRatio, rect]);
 
-  const [cr, setCr] = useState<RectRB>({
-    left: 0,
-    top: 0,
-    bottom: 1,
-    right: 1,
-  });
+  const [cr, setCr] = useState<RectRB>(() =>
+    defaultCrop(imageAspectRatio, cropAspectRatio)
+  );
 
   return (
     <div
@@ -61,7 +61,7 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
     >
       {rect && pos && cr && (
         <CropperCorners
-          cropAspectRatio={pos.width / pos.height}
+          cropAspectRatio={cropAspectRatio}
           rect={rect}
           image={pos}
           onChange={setCr}

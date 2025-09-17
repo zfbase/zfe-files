@@ -97,6 +97,7 @@ export const Cropper: React.FC<CropperProps> = ({ onClose, src }) => {
 
       {stopped && dimensions && dimensions.height > 0 && (
         <CropperControls
+          cropAspectRatio={1.778}
           imageAspectRatio={dimensions.width / dimensions.height}
           src={src}
         />

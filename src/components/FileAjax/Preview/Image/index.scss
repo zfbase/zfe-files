@@ -16,6 +16,7 @@ $input-border: #ccc;
 }
 
 .zfe-files-ajax-preview-image {
+  display: inline-block;
   box-sizing: content-box;
   max-width: 100%;
   min-height: 22px;
