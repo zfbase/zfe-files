@@ -42,7 +42,7 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
     }
     window.addEventListener('resize', onResize);
     onResize();
-    setLoaded(true);
+    setTimeout(() => setLoaded(true), 100);
     return () => {
       window.removeEventListener('resize', onResize);
     };

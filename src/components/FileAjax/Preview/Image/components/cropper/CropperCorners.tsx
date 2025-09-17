@@ -80,7 +80,14 @@ export const CropperCorners: React.FC<CropperCornersProps> = ({
               e.preventDefault();
               setActive(true);
               setDrag(
-                cropRestrictions(corner, value, image, rect, cropAspectRatio)
+                cropRestrictions(
+                  e.nativeEvent,
+                  corner,
+                  value,
+                  image,
+                  rect,
+                  cropAspectRatio
+                )
               );
             }
           }}

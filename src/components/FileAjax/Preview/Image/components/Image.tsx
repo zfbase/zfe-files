@@ -4,6 +4,7 @@ import { ButtonLink } from '../../ButtonLink';
 import { FileImageData, FileImageItem } from '../ImageTypes';
 import { AltButton } from './AltButton';
 import { CropperLoader } from './cropper/CropperLoader';
+import { toInt } from '../../../utils/toInt';
 
 export interface ImageProps {
   item: FileImageItem;
@@ -21,8 +22,8 @@ export const Image: React.FC<ImageProps> = ({
   onDelete,
   onUndelete,
   setData,
-  width,
-  height,
+  width: w,
+  height: h,
 }) => {
   const [preview, setPreview] = useState<string>();
   const data = useMemo(() => {
@@ -31,6 +32,9 @@ export const Image: React.FC<ImageProps> = ({
     delete d.scaleY;
     return d;
   }, [item.data]);
+
+  const width = toInt(w);
+  const height = toInt(h);
 
   const [cropperOpen, setCroppperOpen] = useState(false);
 
@@ -91,13 +95,7 @@ export const Image: React.FC<ImageProps> = ({
 
       {width && height && !disabled && cropperOpen ? (
         <CropperLoader
-          aspectRatio={
-            typeof width === 'number' &&
-            typeof height === 'number' &&
-            height > 0
-              ? width / height
-              : undefined
-          }
+          aspectRatio={width && height ? width / height : undefined}
           data={data}
           onClose={() => setCroppperOpen(false)}
           setData={(data) => setData(item.key, data)}

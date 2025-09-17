@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Cropper } from './Cropper';
 import './Cropper.css';
 import type { Size } from './CropTypes';
@@ -15,8 +15,41 @@ interface CropperLoaderProps {
 
 export const CropperLoader: React.FC<CropperLoaderProps> = (props) => {
   const [closing, setClosing] = useState(false);
+  const closingRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [stopped, setStopped] = useState(true);
+  const container = useRef<HTMLDivElement>(null);
+  const { onClose } = props;
+
+  useEffect(() => {
+    const div = container.current;
+    if (!div) {
+      return;
+    }
+
+    function onTransitionStart(e: TransitionEvent) {
+      if (e.target !== e.currentTarget) {
+        return;
+      }
+      setStopped(false);
+    }
+    function onTransitionEnd(e: TransitionEvent) {
+      if (e.target !== e.currentTarget) {
+        return;
+      }
+      if (closing) {
+        onClose();
+      } else {
+        setStopped(true);
+      }
+    }
+    div.addEventListener('transitionstart', onTransitionStart);
+    div.addEventListener('transitionend', onTransitionEnd);
+    return () => {
+      div.removeEventListener('transitionstart', onTransitionStart);
+      div.removeEventListener('transitionend', onTransitionEnd);
+    };
+  }, [closing, onClose]);
 
   useEffect(() => {
     setOpen(true);
@@ -25,6 +58,7 @@ export const CropperLoader: React.FC<CropperLoaderProps> = (props) => {
 
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
+        closingRef.current = true;
         setClosing(true);
       }
     }
@@ -46,22 +80,7 @@ export const CropperLoader: React.FC<CropperLoaderProps> = (props) => {
         open && 'zf-cropper_open',
         closing && 'zf-cropper_closing'
       )}
-      onTransitionStart={(e) => {
-        if (e.target !== e.currentTarget) {
-          return;
-        }
-        setStopped(false);
-      }}
-      onTransitionEnd={(e) => {
-        if (e.target !== e.currentTarget) {
-          return;
-        }
-        if (closing) {
-          props.onClose();
-        } else {
-          setStopped(true);
-        }
-      }}
+      ref={container}
     >
       <img
         className="zf-cropper__image_hidden"
@@ -75,12 +94,40 @@ export const CropperLoader: React.FC<CropperLoaderProps> = (props) => {
         }
       />
 
-      {stopped && imageSize && (
+      {stopped && imageSize ? (
         <Cropper
           imageSize={imageSize}
           {...props}
-          onClose={() => setClosing(true)}
+          onClose={() => {
+            closingRef.current = true;
+            setClosing(true);
+          }}
         />
+      ) : (
+        <div className="zf-cropper__toolbar">
+          <button className="btn btn-default" type="button" disabled>
+            <span
+              className="glyphicon glyphicon-repeat"
+              style={{ transform: 'scale(-1,1)' }}
+            />
+          </button>
+
+          <button className="btn btn-default" type="button" disabled>
+            <span className="glyphicon glyphicon-repeat" />
+          </button>
+
+          <button className="btn btn-primary ml-auto" type="button" disabled>
+            Обрезать
+          </button>
+
+          <button
+            className="btn btn-default"
+            type="button"
+            onClick={props.onClose}
+          >
+            Отмена
+          </button>
+        </div>
       )}
     </div>
   );

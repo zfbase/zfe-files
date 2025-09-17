@@ -49,27 +49,6 @@ export const Cropper: React.FC<CropperProps> = ({
             setState((v) => ({
               crop:
                 aspectRatio === undefined
-                  ? rotateRB(v.crop, true)
-                  : defaultCrop(
-                      v.rotation % 2 === 0
-                        ? 1 / imageAspectRatio
-                        : imageAspectRatio,
-                      aspectRatio
-                    ),
-              rotation: v.rotation + 1,
-            }))
-          }
-        >
-          <span className="glyphicon glyphicon-repeat" />
-        </button>
-
-        <button
-          className="btn btn-default"
-          type="button"
-          onClick={() =>
-            setState((v) => ({
-              crop:
-                aspectRatio === undefined
                   ? rotateRB(v.crop, false)
                   : defaultCrop(
                       v.rotation % 2 === 0
@@ -85,6 +64,27 @@ export const Cropper: React.FC<CropperProps> = ({
             className="glyphicon glyphicon-repeat"
             style={{ transform: 'scale(-1,1)' }}
           />
+        </button>
+
+        <button
+          className="btn btn-default"
+          type="button"
+          onClick={() =>
+            setState((v) => ({
+              crop:
+                aspectRatio === undefined
+                  ? rotateRB(v.crop, true)
+                  : defaultCrop(
+                      v.rotation % 2 === 0
+                        ? 1 / imageAspectRatio
+                        : imageAspectRatio,
+                      aspectRatio
+                    ),
+              rotation: v.rotation + 1,
+            }))
+          }
+        >
+          <span className="glyphicon glyphicon-repeat" />
         </button>
 
         <button

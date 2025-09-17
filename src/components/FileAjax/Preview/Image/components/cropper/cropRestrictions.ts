@@ -10,6 +10,7 @@ import {
 } from './CropTypes';
 
 export function cropRestrictions(
+  e: PointerEvent,
   corner: Corner,
   crop: RectRB,
   imageRect: RectWH,
@@ -61,9 +62,21 @@ export function cropRestrictions(
     aspect = { angle, min, max };
   }
 
+  const offset: Pos = { left: 0, top: 0 };
+  if (e.target instanceof HTMLElement) {
+    const r = e.target.getBoundingClientRect();
+    const x = isLeft(corner) ? r.left + 2 : r.right - 2;
+    const y = isTop(corner) ? r.top + 2 : r.bottom - 2;
+    offset.left = e.clientX - x;
+    offset.top = e.clientY - y;
+  }
+
   function cursorPos(e: Pick<PointerEvent, 'clientX' | 'clientY'>) {
     const pos = normalizePos(
-      { left: e.clientX - rect.left, top: e.clientY - rect.top },
+      {
+        left: e.clientX - offset.left - rect.left,
+        top: e.clientY - offset.top - rect.top,
+      },
       imageRect
     );
 
