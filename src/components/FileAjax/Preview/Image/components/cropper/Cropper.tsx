@@ -20,6 +20,8 @@ export const Cropper: React.FC<CropperProps> = ({ onClose, src }) => {
     { width: number; height: number } | undefined
   >();
 
+  const [rotation, setRotation] = useState(0);
+
   useEffect(() => {
     setOpen(true);
 
@@ -65,6 +67,25 @@ export const Cropper: React.FC<CropperProps> = ({ onClose, src }) => {
     >
       <div className="zf-cropper__toolbar">
         <button
+          className="btn btn-default"
+          type="button"
+          onClick={() => setRotation((v) => v + 1)}
+        >
+          <span className="glyphicon glyphicon-repeat" />
+        </button>
+
+        <button
+          className="btn btn-default"
+          type="button"
+          onClick={() => setRotation((v) => v - 1)}
+        >
+          <span
+            className="glyphicon glyphicon-repeat"
+            style={{ transform: 'scale(-1,1)' }}
+          />
+        </button>
+
+        <button
           className="btn btn-primary ml-auto"
           type="button"
           onClick={() => {
@@ -97,6 +118,7 @@ export const Cropper: React.FC<CropperProps> = ({ onClose, src }) => {
 
       {stopped && dimensions && dimensions.height > 0 && (
         <CropperControls
+          rotation={rotation}
           cropAspectRatio={1.778}
           imageAspectRatio={dimensions.width / dimensions.height}
           src={src}

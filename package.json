@@ -20,12 +20,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "test": "jest"
+    "build-storybook": "storybook build"
   },
   "peerDependencies": {
     "react": "18-19",
-    "react-cropper": "^2.3.3",
     "react-dropzone": "^14.3.5",
     "react-modal": "^3.16.3"
   },
@@ -39,8 +37,6 @@
     "@storybook/react": "^8.6.6",
     "@storybook/react-vite": "^8.6.6",
     "@storybook/test": "^8.6.6",
-    "@types/cropperjs": "^1.1.5",
-    "@types/jest": "^30.0.0",
     "@types/node": "^22.13.1",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
@@ -54,11 +50,9 @@
     "eslint-plugin-react-refresh": "^0.4.18",
     "eslint-plugin-storybook": "^0.11.4",
     "globals": "^15.14.0",
-    "jest": "^30.1.3",
     "rollup-preserve-directives": "^1.1.3",
     "sass": "^1.85.1",
     "storybook": "^8.6.6",
-    "ts-jest": "^29.4.2",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.22.0",
     "vite": "^6.2.2",

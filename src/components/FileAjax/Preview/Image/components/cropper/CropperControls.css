@@ -5,6 +5,17 @@
   align-items: center;
   justify-content: center;
   margin: 24px;
+}
+
+.zf-cc__image-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.zf-cc__image {
+  position: absolute;
+  inset: 0;
 
   background-size: contain;
   background-repeat: no-repeat;
