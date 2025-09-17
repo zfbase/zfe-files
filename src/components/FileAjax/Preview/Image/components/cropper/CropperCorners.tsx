@@ -5,18 +5,18 @@ import {
   type Dispatch,
   type SetStateAction,
 } from 'react';
-import type { CropperPos, CropperPos2 } from './CropperControls';
 import { CropperRect } from './CropperRect';
-import { restrictCrop } from './restrictCrop';
+import type { RectRB, RectWH } from './CropTypes';
 import { rectCoords } from './rectCoords';
+import { restrictCrop } from './restrictCrop';
 
 const corners = ['nw', 'ne', 'sw', 'se'] as const;
 export type Corner = (typeof corners)[number];
 
 function cornerCoords(
   corner: Corner,
-  pos: CropperPos2,
-  image: CropperPos
+  pos: RectRB,
+  image: RectWH
 ): { left: number; top: number } {
   const { top, left, width, height } = rectCoords(pos, image);
   const right = left + width;
@@ -36,10 +36,10 @@ function cornerCoords(
 interface CropperCornersProps {
   cropAspectRatio?: number;
   imageAspectRatio: number;
-  image: CropperPos;
-  onChange: Dispatch<SetStateAction<CropperPos2>>;
+  image: RectWH;
+  onChange: Dispatch<SetStateAction<RectRB>>;
   rect: DOMRect;
-  value: CropperPos2;
+  value: RectRB;
 }
 
 export const CropperCorners: React.FC<CropperCornersProps> = ({
@@ -68,25 +68,29 @@ export const CropperCorners: React.FC<CropperCornersProps> = ({
               return restrictCrop(
                 { ...v, left, top },
                 corner,
-                imageAspectRatio
+                imageAspectRatio,
+                cropAspectRatio
               );
             case 'ne':
               return restrictCrop(
                 { ...v, top, right },
                 corner,
-                imageAspectRatio
+                imageAspectRatio,
+                cropAspectRatio
               );
             case 'sw':
               return restrictCrop(
                 { ...v, left, bottom },
                 corner,
-                imageAspectRatio
+                imageAspectRatio,
+                cropAspectRatio
               );
             case 'se':
               return restrictCrop(
                 { ...v, right, bottom },
                 corner,
-                imageAspectRatio
+                imageAspectRatio,
+                cropAspectRatio
               );
           }
         });

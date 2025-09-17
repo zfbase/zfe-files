@@ -2,20 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { CropperCorners } from './CropperCorners';
 
 import './CropperControls.css';
-
-export interface CropperPos {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-}
-
-export interface CropperPos2 {
-  left: number;
-  top: number;
-  right: number;
-  bottom: number;
-}
+import type { RectRB, RectWH } from './CropTypes';
 
 interface CropperControlsProps {
   imageAspectRatio: number;
@@ -40,7 +27,7 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
     };
   }, []);
 
-  const pos = useMemo<CropperPos | undefined>(() => {
+  const pos = useMemo<RectWH | undefined>(() => {
     if (!rect) {
       return undefined;
     }
@@ -59,7 +46,7 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
     };
   }, [imageAspectRatio, rect]);
 
-  const [cr, setCr] = useState<CropperPos2>({
+  const [cr, setCr] = useState<RectRB>({
     left: 0,
     top: 0,
     bottom: 0,
