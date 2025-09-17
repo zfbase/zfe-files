@@ -1,8 +1,6 @@
 import classNames from 'classnames';
-import type { CropperPos, CropperPos2 } from './CropperControls';
 import { CropperFade } from './CropperFade';
 
-import './CropperRect.css';
 import {
   useEffect,
   useMemo,
@@ -11,14 +9,15 @@ import {
   type Dispatch,
   type SetStateAction,
 } from 'react';
-import { rectCoords } from './rectCoords';
+import './CropperRect.css';
+import { denormalizeRectRB, type RectRB, type RectWH } from './CropTypes';
 
 interface CropperRectProps {
   active?: boolean;
-  image: CropperPos;
-  onChange: Dispatch<SetStateAction<CropperPos2>>;
+  image: RectWH;
+  onChange: Dispatch<SetStateAction<RectRB>>;
   rect: DOMRect;
-  value: CropperPos2;
+  value: RectRB;
 }
 
 export const CropperRect: React.FC<CropperRectProps> = ({
@@ -33,9 +32,9 @@ export const CropperRect: React.FC<CropperRectProps> = ({
   const [dragging, setDragging] = useState<{
     x: number;
     y: number;
-    value: CropperPos2;
+    value: RectRB;
   }>();
-  const pos = rectCoords(value, image);
+  const pos = denormalizeRectRB(value, image);
 
   const toggleDelayed = useMemo(
     () => (value: boolean) => {
@@ -65,27 +64,27 @@ export const CropperRect: React.FC<CropperRectProps> = ({
         return;
       }
 
-      let x = (e.clientX - (dragging.x ?? 0)) / image.width;
-      let y = (e.clientY - (dragging.y ?? 0)) / image.height;
+      let x = (e.clientX - dragging.x) / image.width;
+      let y = (e.clientY - dragging.y) / image.height;
 
       const next = { ...dragging.value };
 
       if (x > 0) {
-        x = Math.min(x, next.right);
+        x = Math.min(x, 1 - next.right);
       } else {
         x = Math.max(x, -next.left);
       }
       next.left += x;
-      next.right -= x;
+      next.right += x;
 
       if (y > 0) {
-        y = Math.min(y, next.bottom);
+        y = Math.min(y, 1 - next.bottom);
       } else {
         y = Math.max(y, -next.top);
       }
 
       next.top += y;
-      next.bottom -= y;
+      next.bottom += y;
 
       onChange(next);
     }

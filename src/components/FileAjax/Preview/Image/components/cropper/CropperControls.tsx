@@ -49,8 +49,8 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
   const [cr, setCr] = useState<RectRB>({
     left: 0,
     top: 0,
-    bottom: 0,
-    right: 0,
+    bottom: 1,
+    right: 1,
   });
 
   return (
@@ -62,7 +62,6 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
       {rect && pos && cr && (
         <CropperCorners
           cropAspectRatio={pos.width / pos.height}
-          imageAspectRatio={pos.width / pos.height}
           rect={rect}
           image={pos}
           onChange={setCr}

@@ -1,6 +1,6 @@
-import type { CropperPos2 } from './CropperControls';
+import type { RectRB } from './CropTypes';
 
-type CropperFadeProps = CropperPos2;
+type CropperFadeProps = RectRB;
 
 export const CropperFade: React.FC<CropperFadeProps> = ({
   left,

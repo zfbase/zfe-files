@@ -17,30 +17,63 @@ export interface Pos {
   top: number;
 }
 
-interface Size {
+export interface Size {
   width: number;
   height: number;
 }
 
-const SquareOne: Size = {
-  width: 1,
-  height: 1,
-};
-
-export function toRectRB(rect: RectWH, container = SquareOne): RectRB {
+export function toRectRB(rect: RectWH): RectRB {
   return {
     left: rect.left,
     top: rect.top,
-    right: container.width - (rect.left + rect.width),
-    bottom: container.height - (rect.top + rect.height),
+    right: rect.left + rect.width,
+    bottom: rect.top + rect.height,
   };
 }
 
-export function toRectWH(rect: RectRB, container = SquareOne): RectWH {
+export function toRectWH(rect: RectRB): RectWH {
   return {
     left: rect.left,
     top: rect.top,
-    width: container.width - (rect.left + rect.right),
-    height: container.height - (rect.top + rect.bottom),
+    width: rect.right - rect.left,
+    height: rect.bottom - rect.top,
   };
+}
+
+export const corners = ['nw', 'ne', 'sw', 'se'] as const;
+export type Corner = (typeof corners)[number];
+
+export function isLeft(corner: Corner): corner is 'nw' | 'sw' {
+  return corner[1] === 'w';
+}
+
+export function isTop(corner: Corner): corner is 'nw' | 'ne' {
+  return corner[0] === 'n';
+}
+
+export function normalizePos(pos: Pos, origin: RectWH): Pos {
+  return {
+    left: (pos.left - origin.left) / origin.width,
+    top: (pos.top - origin.top) / origin.height,
+  };
+}
+
+export function denormalizePos(pos: Pos, origin: RectWH): Pos {
+  return {
+    left: pos.left * origin.width + origin.left,
+    top: pos.top * origin.height + origin.top,
+  };
+}
+
+export function denormalizeRectWH(rect: RectWH, origin: RectWH): RectWH {
+  return {
+    left: rect.left * origin.width + origin.left,
+    top: rect.top * origin.height + origin.top,
+    width: rect.width * origin.width,
+    height: rect.height * origin.height,
+  };
+}
+
+export function denormalizeRectRB(rect: RectRB, origin: RectWH): RectWH {
+  return denormalizeRectWH(toRectWH(rect), origin);
 }
