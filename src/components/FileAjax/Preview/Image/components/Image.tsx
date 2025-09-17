@@ -3,7 +3,7 @@ import { Button } from '../../Button';
 import { ButtonLink } from '../../ButtonLink';
 import { FileImageData, FileImageItem } from '../ImageTypes';
 import { AltButton } from './AltButton';
-import { Cropper } from './cropper/Cropper';
+import { CropperLoader } from './cropper/CropperLoader';
 
 export interface ImageProps {
   item: FileImageItem;
@@ -32,7 +32,7 @@ export const Image: React.FC<ImageProps> = ({
     return d;
   }, [item.data]);
 
-  const [cropperOpen, setCroppperOpen] = useState(true);
+  const [cropperOpen, setCroppperOpen] = useState(false);
 
   return (
     <>
@@ -90,7 +90,14 @@ export const Image: React.FC<ImageProps> = ({
       </div>
 
       {width && height && !disabled && cropperOpen ? (
-        <Cropper
+        <CropperLoader
+          aspectRatio={
+            typeof width === 'number' &&
+            typeof height === 'number' &&
+            height > 0
+              ? width / height
+              : undefined
+          }
           data={data}
           onClose={() => setCroppperOpen(false)}
           setData={(data) => setData(item.key, data)}

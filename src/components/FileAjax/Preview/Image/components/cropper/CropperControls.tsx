@@ -1,33 +1,48 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
 import { CropperCorners } from './CropperCorners';
+import type { RectRB, RectWH } from './CropTypes';
 
 import './CropperControls.css';
-import type { RectRB, RectWH } from './CropTypes';
-import { defaultCrop } from './defaultCrop';
+
+export interface CropperState {
+  crop: RectRB;
+  rotation: number;
+}
 
 interface CropperControlsProps {
   cropAspectRatio?: number;
   imageAspectRatio: number;
-  rotation: number;
+  onChange: Dispatch<SetStateAction<CropperState>>;
   src: string;
+  value: CropperState;
 }
 
 export const CropperControls: React.FC<CropperControlsProps> = ({
   cropAspectRatio,
   imageAspectRatio,
-  rotation,
+  onChange,
   src,
+  value,
 }) => {
   const rectRef = useRef<HTMLDivElement>(null);
   const [rect, setRect] = useState<DOMRect>();
-  const rotated = rotation % 2 !== 0;
+  const rotated = value.rotation % 2 !== 0;
 
+  const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     function onResize() {
       setRect(rectRef.current?.getBoundingClientRect());
     }
     window.addEventListener('resize', onResize);
     onResize();
+    setLoaded(true);
     return () => {
       window.removeEventListener('resize', onResize);
     };
@@ -66,44 +81,6 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
     };
   }, [imageAspectRatio, rect, rotated]);
 
-  const [cr, setCr] = useState<RectRB>(() =>
-    defaultCrop(imageAspectRatio, cropAspectRatio)
-  );
-
-  const prevRotation = useRef(rotation);
-  useEffect(() => {
-    const change = rotation - prevRotation.current;
-    prevRotation.current = rotation;
-
-    setCr((v) => {
-      if (cropAspectRatio) {
-        return defaultCrop(
-          rotation % 2 === 0 ? imageAspectRatio : 1 / imageAspectRatio,
-          cropAspectRatio
-        );
-      }
-
-      let next = { ...v };
-      for (let i = 0; i < change; i++) {
-        next = {
-          left: 1 - next.bottom,
-          top: next.left,
-          right: 1 - next.top,
-          bottom: next.right,
-        };
-      }
-      for (let i = 0; i > change; i--) {
-        next = {
-          left: next.top,
-          top: 1 - next.right,
-          right: next.bottom,
-          bottom: 1 - next.left,
-        };
-      }
-      return next;
-    });
-  }, [cropAspectRatio, imageAspectRatio, rotation]);
-
   return (
     <div className="zf-cc" ref={rectRef}>
       <div className="zf-cc__image-container">
@@ -112,18 +89,23 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
           style={{
             backgroundImage: `url(${src})`,
             backgroundSize: pos?.backgroundSize,
-            transform: `rotate(${rotation * 90}deg)`,
-            transition: 'transform .2s ease, background-size .2s ease',
+            transform: `rotate(${value.rotation * 90}deg)`,
+            transition: loaded ? 'transform .2s ease' : undefined,
           }}
         />
       </div>
-      {rect && pos && cr && (
+      {rect && pos && (
         <CropperCorners
           cropAspectRatio={cropAspectRatio}
           rect={rect}
           image={pos.rect}
-          onChange={setCr}
-          value={cr}
+          onChange={(crop) =>
+            onChange((v) => {
+              const next = typeof crop === 'function' ? crop(v.crop) : crop;
+              return { ...v, crop: next };
+            })
+          }
+          value={value.crop}
         />
       )}
     </div>

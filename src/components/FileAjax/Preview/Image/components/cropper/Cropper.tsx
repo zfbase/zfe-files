@@ -1,75 +1,64 @@
-import classNames from 'classnames';
 import { useEffect, useState } from 'react';
-import { CropperControls } from './CropperControls';
+import { CropperControls, CropperState } from './CropperControls';
 
 import './Cropper.css';
+import { rotateRB, type Size } from './CropTypes';
+import { defaultCrop } from './defaultCrop';
+import { parseState } from './parseState';
 
 interface CropperProps {
-  src: string;
+  aspectRatio?: number;
   data: object;
+  imageSize: Size;
+  onClose: () => void;
   setData: (data: object) => void;
   setPreview: (url: string) => void;
-  onClose: () => void;
+  src: string;
 }
 
-export const Cropper: React.FC<CropperProps> = ({ onClose, src }) => {
-  const [closing, setClosing] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [stopped, setStopped] = useState(true);
-  const [dimensions, setDimensions] = useState<
-    { width: number; height: number } | undefined
-  >();
+export const Cropper: React.FC<CropperProps> = ({
+  aspectRatio,
+  data,
+  imageSize,
+  onClose,
+  src,
+}) => {
+  const imageAspectRatio = imageSize.width / imageSize.height;
 
-  const [rotation, setRotation] = useState(0);
+  const [state, setState] = useState<CropperState>(() => ({
+    crop: defaultCrop(imageAspectRatio, aspectRatio),
+    rotation: 0,
+  }));
 
   useEffect(() => {
-    setOpen(true);
-
-    document.body.style.overflow = 'hidden';
-
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        setClosing(true);
+    setState(
+      parseState(data, imageSize) ?? {
+        crop: defaultCrop(imageAspectRatio, aspectRatio),
+        rotation: 0,
       }
-    }
-
-    window.addEventListener('keydown', onKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', onKeyDown);
-      document.body.style.overflow = '';
-    };
-  }, []);
+    );
+  }, [aspectRatio, data, imageSize, imageAspectRatio]);
 
   return (
-    <div
-      className={classNames(
-        'zf-cropper',
-        open && 'zf-cropper_open',
-        closing && 'zf-cropper_closing'
-      )}
-      onTransitionStart={(e) => {
-        if (e.target !== e.currentTarget) {
-          return;
-        }
-        setStopped(false);
-      }}
-      onTransitionEnd={(e) => {
-        if (e.target !== e.currentTarget) {
-          return;
-        }
-        if (closing) {
-          onClose();
-        } else {
-          setStopped(true);
-        }
-      }}
-    >
+    <>
       <div className="zf-cropper__toolbar">
         <button
           className="btn btn-default"
           type="button"
-          onClick={() => setRotation((v) => v + 1)}
+          onClick={() =>
+            setState((v) => ({
+              crop:
+                aspectRatio === undefined
+                  ? rotateRB(v.crop, true)
+                  : defaultCrop(
+                      v.rotation % 2 === 0
+                        ? 1 / imageAspectRatio
+                        : imageAspectRatio,
+                      aspectRatio
+                    ),
+              rotation: v.rotation + 1,
+            }))
+          }
         >
           <span className="glyphicon glyphicon-repeat" />
         </button>
@@ -77,7 +66,20 @@ export const Cropper: React.FC<CropperProps> = ({ onClose, src }) => {
         <button
           className="btn btn-default"
           type="button"
-          onClick={() => setRotation((v) => v - 1)}
+          onClick={() =>
+            setState((v) => ({
+              crop:
+                aspectRatio === undefined
+                  ? rotateRB(v.crop, false)
+                  : defaultCrop(
+                      v.rotation % 2 === 0
+                        ? 1 / imageAspectRatio
+                        : imageAspectRatio,
+                      aspectRatio
+                    ),
+              rotation: v.rotation - 1,
+            }))
+          }
         >
           <span
             className="glyphicon glyphicon-repeat"
@@ -88,42 +90,22 @@ export const Cropper: React.FC<CropperProps> = ({ onClose, src }) => {
         <button
           className="btn btn-primary ml-auto"
           type="button"
-          onClick={() => {
-            setClosing(true);
-          }}
+          onClick={onClose}
         >
           Обрезать
         </button>
-        <button
-          className="btn btn-default"
-          type="button"
-          onClick={() => {
-            setClosing(true);
-          }}
-        >
+        <button className="btn btn-default" type="button" onClick={onClose}>
           Отмена
         </button>
       </div>
 
-      <img
+      <CropperControls
+        cropAspectRatio={aspectRatio}
+        imageAspectRatio={imageAspectRatio}
+        onChange={setState}
         src={src}
-        alt=""
-        onLoad={(e) =>
-          setDimensions({
-            width: e.currentTarget.naturalWidth,
-            height: e.currentTarget.naturalHeight,
-          })
-        }
+        value={state}
       />
-
-      {stopped && dimensions && dimensions.height > 0 && (
-        <CropperControls
-          rotation={rotation}
-          cropAspectRatio={1.778}
-          imageAspectRatio={dimensions.width / dimensions.height}
-          src={src}
-        />
-      )}
-    </div>
+    </>
   );
 };

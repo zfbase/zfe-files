@@ -77,3 +77,19 @@ export function denormalizeRectWH(rect: RectWH, origin: RectWH): RectWH {
 export function denormalizeRectRB(rect: RectRB, origin: RectWH): RectWH {
   return denormalizeRectWH(toRectWH(rect), origin);
 }
+
+export function rotateRB(rect: RectRB, cw: boolean): RectRB {
+  return cw
+    ? {
+        left: 1 - rect.bottom,
+        top: rect.left,
+        right: 1 - rect.top,
+        bottom: rect.right,
+      }
+    : {
+        left: rect.top,
+        top: 1 - rect.right,
+        right: rect.bottom,
+        bottom: 1 - rect.left,
+      };
+}
