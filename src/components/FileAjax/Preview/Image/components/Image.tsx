@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   FaCropSimple,
   FaDownload,
@@ -32,6 +32,7 @@ export const Image: React.FC<ImageProps> = ({
   height: h,
 }) => {
   const [preview, setPreview] = useState<string>();
+  const [loading, setLoading] = useState(false);
   const data = useMemo(() => {
     const d = item.data ? { ...item.data } : {};
     delete d.scaleX;
@@ -43,6 +44,42 @@ export const Image: React.FC<ImageProps> = ({
   const height = toInt(h);
 
   const [cropperOpen, setCroppperOpen] = useState(false);
+
+  const previewDataUrl = useMemo(() => {
+    if (!item.previewEndpoint) {
+      return '';
+    }
+    const sp = new URLSearchParams(data as Record<string, string>);
+    sp.set('id', `${(item as any).id}`);
+    sp.set('w', `${w}`);
+    sp.set('h', `${h}`);
+    return `${item.previewEndpoint}?${sp.toString()}`;
+  }, [data, h, item, w]);
+
+  useEffect(() => {
+    if (!previewDataUrl) {
+      return;
+    }
+    const ac = new AbortController();
+    setLoading(true);
+    fetch(previewDataUrl, { signal: ac.signal })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (typeof data.url === 'string') {
+          setPreview(data.url);
+        }
+      })
+      .catch((err) => {
+        if (!ac.signal.aborted) {
+          console.error(err);
+        }
+      });
+  }, [previewDataUrl]);
 
   return (
     <>
@@ -89,11 +126,12 @@ export const Image: React.FC<ImageProps> = ({
         </div>
 
         <img
+          onLoad={() => setLoading(false)}
           className="zfe-files-ajax-preview-image-canvas"
           alt=""
           src={preview ?? item.previewUrl ?? item.previewLocal}
           style={{
-            opacity: item.deleted ? 0.5 : 1,
+            opacity: loading || item.deleted ? 0.5 : 1,
             width: `${width}px`,
             aspectRatio: `${width}/${height}`,
           }}

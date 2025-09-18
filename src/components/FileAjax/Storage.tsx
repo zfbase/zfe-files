@@ -8,10 +8,10 @@ interface StorageProps {
 }
 
 export const Storage: React.FC<StorageProps> = ({ name, items = [] }) => {
-  const filteredItems = items.filter((item) => item.id && !item.deleted);
+  const notDeletedItems = items.filter((item) => item.id && !item.deleted);
   return (
     <>
-      {filteredItems.map((item) =>
+      {notDeletedItems.map((item) =>
         item.data ? (
           <ExtendedRender item={item} name={name} key={item.id} />
         ) : (
@@ -19,7 +19,7 @@ export const Storage: React.FC<StorageProps> = ({ name, items = [] }) => {
         )
       )}
 
-      {filteredItems.length === 0 && (
+      {notDeletedItems.length === 0 && (
         <input type="hidden" name={`${name}[]`} key="0" />
       )}
     </>

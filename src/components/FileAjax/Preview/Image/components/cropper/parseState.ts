@@ -57,7 +57,5 @@ export function formatState({ crop, rotation }: CropperState, image: Size) {
     scaleY: 1,
   };
 
-  console.log(data);
-
   return data;
 }

@@ -32,22 +32,10 @@ export const Cropper: React.FC<CropperProps> = ({
     rotation: 0,
   }));
 
-  const setDataRef = useRef(setData);
-  useEffect(() => {
-    setDataRef.current = setData;
-  }, [setData]);
-
   const dataRef = useRef(data);
   useEffect(() => {
     dataRef.current = data;
   }, [data]);
-
-  useEffect(() => {
-    setDataRef.current({
-      ...dataRef.current,
-      ...formatState(state, imageSize),
-    });
-  }, [imageSize, state]);
 
   useEffect(() => {
     setState(
@@ -110,10 +98,14 @@ export const Cropper: React.FC<CropperProps> = ({
         <button
           className="btn btn-primary ml-auto"
           type="button"
-          onClick={onClose}
+          onClick={() => {
+            setData({ ...data, ...formatState(state, imageSize) });
+            onClose();
+          }}
         >
           Обрезать
         </button>
+
         <button className="btn btn-default" type="button" onClick={onClose}>
           Отмена
         </button>

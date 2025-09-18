@@ -12,9 +12,6 @@ export const ExtendedRender: React.FC<ExtendedRenderProps> = ({
   <input
     type="hidden"
     name={`${name}[]`}
-    value={JSON.stringify({
-      id: item.id,
-      ...item.data,
-    })}
+    value={JSON.stringify({ id: item.id, ...item.data })}
   />
 );
