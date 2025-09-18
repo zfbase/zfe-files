@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   FaCropSimple,
   FaDownload,
@@ -45,8 +45,9 @@ export const Image: React.FC<ImageProps> = ({
 
   const [cropperOpen, setCroppperOpen] = useState(false);
 
+  const previewPristine = useRef(true);
   const previewDataUrl = useMemo(() => {
-    if (!item.previewEndpoint) {
+    if (!item.previewEndpoint || previewPristine.current) {
       return '';
     }
     const sp = new URLSearchParams(data as Record<string, string>);
@@ -145,7 +146,10 @@ export const Image: React.FC<ImageProps> = ({
           aspectRatio={width && height ? width / height : undefined}
           data={data}
           onClose={() => setCroppperOpen(false)}
-          setData={(data) => setData(item.key, data)}
+          setData={(data) => {
+            setData(item.key, data);
+            previewPristine.current = false;
+          }}
           setPreview={setPreview}
           src={item.canvasUrl ?? item.downloadUrl ?? item.previewLocal}
         />
