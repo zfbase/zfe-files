@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CropperControls, CropperState } from './CropperControls';
 
 import './Cropper.css';
 import { rotateRB, type Size } from './CropTypes';
 import { defaultCrop } from './defaultCrop';
-import { parseState } from './parseState';
+import { formatState, parseState } from './parseState';
+import { FaRotateLeft, FaRotateRight } from 'react-icons/fa6';
 
 interface CropperProps {
   aspectRatio?: number;
@@ -21,6 +22,7 @@ export const Cropper: React.FC<CropperProps> = ({
   data,
   imageSize,
   onClose,
+  setData,
   src,
 }) => {
   const imageAspectRatio = imageSize.width / imageSize.height;
@@ -30,62 +32,80 @@ export const Cropper: React.FC<CropperProps> = ({
     rotation: 0,
   }));
 
+  const setDataRef = useRef(setData);
+  useEffect(() => {
+    setDataRef.current = setData;
+  }, [setData]);
+
+  const dataRef = useRef(data);
+  useEffect(() => {
+    dataRef.current = data;
+  }, [data]);
+
+  useEffect(() => {
+    setDataRef.current({
+      ...dataRef.current,
+      ...formatState(state, imageSize),
+    });
+  }, [imageSize, state]);
+
   useEffect(() => {
     setState(
-      parseState(data, imageSize) ?? {
+      parseState(dataRef.current, imageSize) ?? {
         crop: defaultCrop(imageAspectRatio, aspectRatio),
         rotation: 0,
       }
     );
-  }, [aspectRatio, data, imageSize, imageAspectRatio]);
+  }, [aspectRatio, imageSize, imageAspectRatio]);
 
   return (
     <>
       <div className="zf-cropper__toolbar">
-        <button
-          className="btn btn-default"
-          type="button"
-          onClick={() =>
-            setState((v) => ({
-              crop:
-                aspectRatio === undefined
-                  ? rotateRB(v.crop, false)
-                  : defaultCrop(
-                      v.rotation % 2 === 0
-                        ? 1 / imageAspectRatio
-                        : imageAspectRatio,
-                      aspectRatio
-                    ),
-              rotation: v.rotation - 1,
-            }))
-          }
-        >
-          <span
-            className="glyphicon glyphicon-repeat"
-            style={{ transform: 'scale(-1,1)' }}
-          />
-        </button>
+        <div className="btn-toolbar" role="toolbar">
+          <div className="btn-group" role="group">
+            <button
+              className="btn btn-default"
+              type="button"
+              onClick={() =>
+                setState((v) => ({
+                  crop:
+                    aspectRatio === undefined
+                      ? rotateRB(v.crop, false)
+                      : defaultCrop(
+                          v.rotation % 2 === 0
+                            ? 1 / imageAspectRatio
+                            : imageAspectRatio,
+                          aspectRatio
+                        ),
+                  rotation: v.rotation - 1,
+                }))
+              }
+            >
+              <FaRotateLeft />
+            </button>
 
-        <button
-          className="btn btn-default"
-          type="button"
-          onClick={() =>
-            setState((v) => ({
-              crop:
-                aspectRatio === undefined
-                  ? rotateRB(v.crop, true)
-                  : defaultCrop(
-                      v.rotation % 2 === 0
-                        ? 1 / imageAspectRatio
-                        : imageAspectRatio,
-                      aspectRatio
-                    ),
-              rotation: v.rotation + 1,
-            }))
-          }
-        >
-          <span className="glyphicon glyphicon-repeat" />
-        </button>
+            <button
+              className="btn btn-default"
+              type="button"
+              onClick={() =>
+                setState((v) => ({
+                  crop:
+                    aspectRatio === undefined
+                      ? rotateRB(v.crop, true)
+                      : defaultCrop(
+                          v.rotation % 2 === 0
+                            ? 1 / imageAspectRatio
+                            : imageAspectRatio,
+                          aspectRatio
+                        ),
+                  rotation: v.rotation + 1,
+                }))
+              }
+            >
+              <FaRotateRight />
+            </button>
+          </div>
+        </div>
 
         <button
           className="btn btn-primary ml-auto"

@@ -1,10 +1,10 @@
 import classNames from 'classnames';
-import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
+import { ButtonHTMLAttributes, DetailedHTMLProps, type ReactNode } from 'react';
 import { ButtonSize, GlyphIconName } from '../../../CommonTypes';
 
 type ButtonProps = {
   icon?: GlyphIconName;
-  label?: string;
+  label?: ReactNode;
   size?: ButtonSize;
 } & DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -25,9 +25,9 @@ export const Button: React.FC<ButtonProps> = ({
       'btn',
       'btn-default',
       size ? `btn-${size}` : undefined,
-      className,
+      className
     )}
-    title={title || label}
+    title={title || (typeof label === 'string' ? label : undefined)}
     {...props}
   >
     {icon ? <span className={`glyphicon glyphicon-${icon}`} /> : null}

@@ -1,10 +1,16 @@
 import { useMemo, useState } from 'react';
+import {
+  FaCropSimple,
+  FaDownload,
+  FaRotateLeft,
+  FaXmark,
+} from 'react-icons/fa6';
+import { toInt } from '../../../utils/toInt';
 import { Button } from '../../Button';
 import { ButtonLink } from '../../ButtonLink';
 import { FileImageData, FileImageItem } from '../ImageTypes';
 import { AltButton } from './AltButton';
 import { CropperLoader } from './cropper/CropperLoader';
-import { toInt } from '../../../utils/toInt';
 
 export interface ImageProps {
   item: FileImageItem;
@@ -45,33 +51,36 @@ export const Image: React.FC<ImageProps> = ({
           <div className="btn-group" role="group">
             {typeof data.alt !== 'undefined' && (
               <AltButton
+                disabled={item.deleted}
                 data={data}
                 setData={(data) => setData(item.key, data)}
               />
             )}
             {width && height && !disabled ? (
               <Button
-                icon="scissors"
+                disabled={item.deleted}
                 title="Кадрировать"
+                label={<FaCropSimple />}
                 onClick={() => setCroppperOpen(true)}
               />
             ) : null}
             {item.downloadUrl ? (
               <ButtonLink
-                icon="download-alt"
+                disabled={item.deleted}
+                label={<FaDownload />}
                 title="Скачать оригинал"
                 url={item.downloadUrl}
               />
             ) : null}
             {disabled ? null : item.deleted ? (
               <Button
-                icon="repeat"
+                label={<FaRotateLeft />}
                 title="Восстановить"
                 onClick={() => onUndelete(item.key)}
               />
             ) : (
               <Button
-                icon="remove"
+                label={<FaXmark />}
                 title="Удалить"
                 onClick={() => onDelete(item.key)}
               />

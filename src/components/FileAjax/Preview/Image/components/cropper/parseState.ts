@@ -17,16 +17,47 @@ export function parseState(
     typeof state.height === 'number' &&
     typeof state.rotate === 'number'
   ) {
+    const rotation = Math.round(state.rotate / 90);
+    const rotated = rotation % 2 === 1;
+
+    const width = rotated ? image.height : image.width;
+    const height = rotated ? image.width : image.height;
+
     return {
       crop: {
-        left: state.x / image.width,
-        top: state.y / image.height,
-        right: (state.x + state.width) / image.width,
-        bottom: (state.y + state.height) / image.height,
+        left: state.x / width,
+        top: state.y / height,
+        right: (state.x + state.width) / width,
+        bottom: (state.y + state.height) / height,
       },
-      rotation: Math.round(state.rotate / 90),
+      rotation,
     };
   }
 
   return undefined;
+}
+
+export function formatState({ crop, rotation }: CropperState, image: Size) {
+  let r = rotation;
+  if (r < 0) {
+    r -= Math.floor(r / 4) * 4;
+  }
+
+  const rotated = r % 2 === 1;
+  const width = rotated ? image.height : image.width;
+  const height = rotated ? image.width : image.height;
+
+  const data = {
+    x: Math.round(crop.left * width),
+    y: Math.round(crop.top * height),
+    width: Math.round((crop.right - crop.left) * width),
+    height: Math.round((crop.bottom - crop.top) * height),
+    rotate: (r % 4) * 90,
+    scaleX: 1,
+    scaleY: 1,
+  };
+
+  console.log(data);
+
+  return data;
 }

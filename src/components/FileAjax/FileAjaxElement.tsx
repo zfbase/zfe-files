@@ -16,12 +16,13 @@ import { FileAjaxPreview } from './Preview/FileAjaxPreview';
 import { Storage } from './Storage';
 import { getAcceptForType } from './utils/getAcceptorForType';
 import { getImageBox } from './utils/getImageBox';
+import { FaUpload } from 'react-icons/fa6';
 
 type FileAjaxElementProps = {
   accept?: string;
   disabled?: boolean;
   files?: FileItem[];
-  uploadBtnLabel?: string;
+  uploadBtnLabel?: ReactNode;
   maxChunkSize?: number;
   maxFileSize?: number;
   modelName?: string;
@@ -42,7 +43,11 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
   accept,
   disabled = false,
   files = [],
-  uploadBtnLabel = 'Загрузить',
+  uploadBtnLabel = (
+    <>
+      <FaUpload /> Загрузить
+    </>
+  ),
   maxChunkSize = 1024 ** 2,
   // maxFileSize = 0,
   modelName,

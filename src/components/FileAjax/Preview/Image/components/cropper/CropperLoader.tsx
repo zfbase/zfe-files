@@ -3,6 +3,7 @@ import { Cropper } from './Cropper';
 import './Cropper.css';
 import type { Size } from './CropTypes';
 import classNames from 'classnames';
+import { FaRotateLeft, FaRotateRight } from 'react-icons/fa6';
 
 interface CropperLoaderProps {
   aspectRatio?: number;
@@ -105,16 +106,16 @@ export const CropperLoader: React.FC<CropperLoaderProps> = (props) => {
         />
       ) : (
         <div className="zf-cropper__toolbar">
-          <button className="btn btn-default" type="button" disabled>
-            <span
-              className="glyphicon glyphicon-repeat"
-              style={{ transform: 'scale(-1,1)' }}
-            />
-          </button>
-
-          <button className="btn btn-default" type="button" disabled>
-            <span className="glyphicon glyphicon-repeat" />
-          </button>
+          <div className="btn-toolbar" role="toolbar">
+            <div className="btn-group" role="group">
+              <button className="btn btn-default" type="button" disabled>
+                <FaRotateLeft />
+              </button>
+              <button className="btn btn-default" type="button" disabled>
+                <FaRotateRight />
+              </button>
+            </div>
+          </div>
 
           <button className="btn btn-primary ml-auto" type="button" disabled>
             Обрезать

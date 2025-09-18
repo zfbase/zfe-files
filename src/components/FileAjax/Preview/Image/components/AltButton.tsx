@@ -1,3 +1,4 @@
+import { FaRegComment } from 'react-icons/fa6';
 import { Button } from '../../Button';
 
 interface AltData {
@@ -6,12 +7,18 @@ interface AltData {
 
 interface AltButtonProps {
   data: AltData;
+  disabled?: boolean;
   setData: (data: AltData) => void;
 }
 
-export const AltButton: React.FC<AltButtonProps> = ({ data, setData }) => (
+export const AltButton: React.FC<AltButtonProps> = ({
+  data,
+  disabled,
+  setData,
+}) => (
   <Button
-    icon="eye-open"
+    disabled={disabled}
+    label={<FaRegComment />}
     title="Описание для слабовидящих"
     onClick={() => {
       const v = prompt(
