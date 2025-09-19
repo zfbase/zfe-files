@@ -1,9 +1,10 @@
 import type { CropperState } from './CropperControls';
-import type { Size } from './CropTypes';
+import type { Pos, Size } from './CropTypes';
 
 export function parseState(
   state: object,
-  image: Size
+  image: Size,
+  hasAspectRatio: boolean
 ): CropperState | undefined {
   if (
     'x' in state &&
@@ -23,6 +24,20 @@ export function parseState(
     const width = rotated ? image.height : image.width;
     const height = rotated ? image.width : image.height;
 
+    const gravity: Pos = { left: 0.5, top: 0.5 };
+
+    if (!hasAspectRatio) {
+      if (
+        'scaleX' in state &&
+        'scaleY' in state &&
+        typeof state.scaleX === 'number' &&
+        typeof state.scaleY === 'number'
+      ) {
+        gravity.left = state.scaleX / 100;
+        gravity.top = state.scaleY / 100;
+      }
+    }
+
     return {
       crop: {
         left: state.x / width,
@@ -30,6 +45,7 @@ export function parseState(
         right: (state.x + state.width) / width,
         bottom: (state.y + state.height) / height,
       },
+      gravity,
       rotation,
     };
   }
@@ -37,7 +53,11 @@ export function parseState(
   return undefined;
 }
 
-export function formatState({ crop, rotation }: CropperState, image: Size) {
+export function formatState(
+  { crop, gravity, rotation }: CropperState,
+  image: Size,
+  hasAspectRatio: boolean
+) {
   let r = rotation;
   if (r < 0) {
     r -= Math.floor(r / 4) * 4;
@@ -53,8 +73,8 @@ export function formatState({ crop, rotation }: CropperState, image: Size) {
     width: Math.round((crop.right - crop.left) * width),
     height: Math.round((crop.bottom - crop.top) * height),
     rotate: (r % 4) * 90,
-    scaleX: 1,
-    scaleY: 1,
+    scaleX: hasAspectRatio ? 1 : Math.round(gravity.left * 100),
+    scaleY: hasAspectRatio ? 1 : Math.round(gravity.top * 100),
   };
 
   return data;

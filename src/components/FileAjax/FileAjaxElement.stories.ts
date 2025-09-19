@@ -11,8 +11,8 @@ export default meta;
 type Story = StoryObj<typeof FileAjaxElement>;
 
 const rootAttributes: { name: string; value: string }[] = [
-  { name: 'data-width', value: '480' },
-  { name: 'data-height', value: '270' },
+  // { name: 'data-width', value: '480' },
+  // { name: 'data-height', value: '270' },
   { name: '0', value: 'Минимальный размер (ш×в): 960×540px' },
   { name: 'dimensionLabel', value: 'sm-2 col-md-12 md-left' },
   { name: 'dimensionControls', value: 'sm-10 col-md-12' },

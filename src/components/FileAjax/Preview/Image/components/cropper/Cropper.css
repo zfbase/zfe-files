@@ -39,3 +39,51 @@
   height: 1px;
   pointer-events: none;
 }
+
+.zf-cropper__center {
+  cursor: move;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  margin-top: -20px;
+  z-index: 20;
+}
+
+.zf-cropper__center__crosshair_n,
+.zf-cropper__center__crosshair_e,
+.zf-cropper__center__crosshair_s,
+.zf-cropper__center__crosshair_w {
+  position: absolute;
+  background-color: white;
+}
+
+.zf-cropper__center__crosshair_n,
+.zf-cropper__center__crosshair_s {
+  width: 1px;
+  height: 10px;
+  left: 20px;
+}
+
+.zf-cropper__center__crosshair_e,
+.zf-cropper__center__crosshair_w {
+  height: 1px;
+  width: 10px;
+  top: 20px;
+}
+
+.zf-cropper__center__crosshair_n {
+  top: 0;
+}
+
+.zf-cropper__center__crosshair_s {
+  bottom: 0;
+}
+
+.zf-cropper__center__crosshair_e {
+  right: 0;
+}
+
+.zf-cropper__center__crosshair_w {
+  left: 0;
+}

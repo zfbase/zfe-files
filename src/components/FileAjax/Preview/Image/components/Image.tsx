@@ -33,12 +33,7 @@ export const Image: React.FC<ImageProps> = ({
 }) => {
   const [preview, setPreview] = useState<string>();
   const [loading, setLoading] = useState(false);
-  const data = useMemo(() => {
-    const d = item.data ? { ...item.data } : {};
-    delete d.scaleX;
-    delete d.scaleY;
-    return d;
-  }, [item.data]);
+  const data = useMemo(() => (item.data ? { ...item.data } : {}), [item.data]);
 
   const width = toInt(w);
   const height = toInt(h);
@@ -52,8 +47,14 @@ export const Image: React.FC<ImageProps> = ({
     }
     const sp = new URLSearchParams(data as Record<string, string>);
     sp.set('id', `${(item as any).id}`);
-    sp.set('w', `${w}`);
-    sp.set('h', `${h}`);
+    console.log(data);
+    if (w && h) {
+      sp.set('w', `${w}`);
+      sp.set('h', `${h}`);
+    } else if (data.scaleX !== undefined && data.scaleY !== undefined) {
+      sp.set('gx', `${data.scaleX}`);
+      sp.set('gy', `${data.scaleY}`);
+    }
     return `${item.previewEndpoint}?${sp.toString()}`;
   }, [data, h, item, previewPristine, w]);
 
@@ -100,7 +101,7 @@ export const Image: React.FC<ImageProps> = ({
                 setData={(data) => setData(item.key, data)}
               />
             )}
-            {width && height && !disabled ? (
+            {!disabled ? (
               <Button
                 disabled={item.deleted}
                 title="Кадрировать"
@@ -147,7 +148,7 @@ export const Image: React.FC<ImageProps> = ({
         <div className="img-border" />
       </div>
 
-      {width && height && !disabled && cropperOpen ? (
+      {!disabled && cropperOpen ? (
         <CropperLoader
           aspectRatio={width && height ? width / height : undefined}
           data={data}

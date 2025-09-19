@@ -7,12 +7,14 @@ import {
   type SetStateAction,
 } from 'react';
 import { CropperCorners } from './CropperCorners';
-import type { RectRB, RectWH } from './CropTypes';
+import type { Pos, RectRB, RectWH } from './CropTypes';
 
+import { CropCenter } from './CropCenter';
 import './CropperControls.css';
 
 export interface CropperState {
   crop: RectRB;
+  gravity: Pos;
   rotation: number;
 }
 
@@ -94,6 +96,7 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
           }}
         />
       </div>
+
       {rect && pos && (
         <CropperCorners
           cropAspectRatio={cropAspectRatio}
@@ -106,6 +109,19 @@ export const CropperControls: React.FC<CropperControlsProps> = ({
             })
           }
           value={value.crop}
+        />
+      )}
+
+      {rect && pos && cropAspectRatio === undefined && (
+        <CropCenter
+          image={pos.rect}
+          onChange={(v) =>
+            onChange((s) => ({
+              ...s,
+              gravity: typeof v === 'function' ? v(value.gravity) : v,
+            }))
+          }
+          value={value.gravity}
         />
       )}
     </div>

@@ -13,10 +13,12 @@ test('parseState', () => {
       {
         width: 1000,
         height: 500,
-      }
+      },
+      true
     )
   ).toEqual({
     crop: { left: 0.2, top: 0.2, bottom: 0.8, right: 1 },
+    gravity: { left: 0.5, top: 0.5 },
     rotation: 2,
   });
 });
@@ -26,12 +28,14 @@ test('formatState', () => {
     formatState(
       {
         crop: { left: 0.2, top: 0.2, bottom: 0.8, right: 1 },
+        gravity: { left: 0.5, top: 0.5 },
         rotation: 1,
       },
       {
         width: 1000,
         height: 500,
-      }
+      },
+      true
     )
   ).toEqual({
     x: 100,

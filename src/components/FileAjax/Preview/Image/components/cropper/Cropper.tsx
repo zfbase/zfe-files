@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CropperControls, CropperState } from './CropperControls';
 
 import './Cropper.css';
-import { rotateRB, type Size } from './CropTypes';
+import { rotatePos, rotateRB, type Size } from './CropTypes';
 import { defaultCrop } from './defaultCrop';
 import { formatState, parseState } from './parseState';
 import { FaRotateLeft, FaRotateRight } from 'react-icons/fa6';
@@ -29,6 +29,7 @@ export const Cropper: React.FC<CropperProps> = ({
 
   const [state, setState] = useState<CropperState>(() => ({
     crop: defaultCrop(imageAspectRatio, aspectRatio),
+    gravity: { left: 0.5, top: 0.5 },
     rotation: 0,
   }));
 
@@ -39,8 +40,9 @@ export const Cropper: React.FC<CropperProps> = ({
 
   useEffect(() => {
     setState(
-      parseState(dataRef.current, imageSize) ?? {
+      parseState(dataRef.current, imageSize, aspectRatio !== undefined) ?? {
         crop: defaultCrop(imageAspectRatio, aspectRatio),
+        gravity: { left: 0.5, top: 0.5 },
         rotation: 0,
       }
     );
@@ -65,6 +67,7 @@ export const Cropper: React.FC<CropperProps> = ({
                             : imageAspectRatio,
                           aspectRatio
                         ),
+                  gravity: rotatePos(v.gravity, false),
                   rotation: v.rotation - 1,
                 }))
               }
@@ -86,6 +89,7 @@ export const Cropper: React.FC<CropperProps> = ({
                             : imageAspectRatio,
                           aspectRatio
                         ),
+                  gravity: rotatePos(v.gravity, true),
                   rotation: v.rotation + 1,
                 }))
               }
@@ -99,7 +103,10 @@ export const Cropper: React.FC<CropperProps> = ({
           className="btn btn-primary ml-auto"
           type="button"
           onClick={() => {
-            setData({ ...data, ...formatState(state, imageSize) });
+            setData({
+              ...data,
+              ...formatState(state, imageSize, aspectRatio !== undefined),
+            });
             onClose();
           }}
         >

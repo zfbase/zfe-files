@@ -93,3 +93,15 @@ export function rotateRB(rect: RectRB, cw: boolean): RectRB {
         bottom: 1 - rect.left,
       };
 }
+
+export function rotatePos(rect: Pos, cw: boolean): Pos {
+  return cw
+    ? {
+        left: 1 - rect.top,
+        top: rect.left,
+      }
+    : {
+        left: rect.top,
+        top: 1 - rect.left,
+      };
+}
