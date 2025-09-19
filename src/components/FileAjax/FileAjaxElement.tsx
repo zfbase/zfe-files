@@ -17,6 +17,7 @@ import { Storage } from './Storage';
 import { getAcceptForType } from './utils/getAcceptorForType';
 import { getImageBox } from './utils/getImageBox';
 import { FaUpload } from 'react-icons/fa6';
+import { parseUploadResult } from './utils/parseUploadResult';
 
 type FileAjaxElementProps = {
   accept?: string;
@@ -177,33 +178,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
                   })
                 )
                 .onComplete((raw) => {
-                  const data: Record<
-                    string,
-                    string | number | Record<string, string | number>
-                  > = {
-                    data: {},
-                  };
-                  Object.keys(raw).forEach((key) => {
-                    if (/^data/.test(key)) {
-                      const keyArr = /^data-(.*)/
-                        [Symbol.replace](key, '$1')
-                        .split('-');
-                      const newKey = [
-                        keyArr.shift(),
-                        ...keyArr.map(
-                          (k) =>
-                            k.substring(0, 1).toUpperCase() +
-                            k.substring(1).toLowerCase()
-                        ),
-                      ].join('');
-                      if (!data.data) {
-                        data.data = {};
-                        data.data[newKey] = raw[key];
-                      }
-                    } else {
-                      data[key] = raw[key];
-                    }
-                  });
+                  const data = parseUploadResult(raw);
                   updateItem(item.key, { loading: false, ...data });
                   if (form) {
                     pageUnload.enable(form);
