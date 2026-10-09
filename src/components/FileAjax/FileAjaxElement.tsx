@@ -321,18 +321,16 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
   return (
     <div {...getRootProps()} className="zfe-files-ajax-dropzone">
       {error && (
-        <div className="alert alert-danger">
+        <div className="alert alert-danger alert-dismissible">
+          <strong>Ошибка:</strong> {error}
           <button
             type="button"
-            className="close"
+            className="btn-close"
             aria-label="Закрыть"
             onClick={() => {
               setError(undefined);
             }}
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <strong>Ошибка:</strong> {error}
+          />
         </div>
       )}
 
