@@ -12,6 +12,7 @@ export interface FileImageItem {
   canvasUrl: string;
   downloadUrl: string;
   previewUrl: string;
+  previewEndpoint?: string;
   previewLocal: string;
   deleted: boolean;
   data: FileImageData;

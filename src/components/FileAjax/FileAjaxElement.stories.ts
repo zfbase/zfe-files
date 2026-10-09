@@ -11,8 +11,8 @@ export default meta;
 type Story = StoryObj<typeof FileAjaxElement>;
 
 const rootAttributes: { name: string; value: string }[] = [
-  { name: 'data-width', value: '480' },
-  { name: 'data-height', value: '270' },
+  // { name: 'data-width', value: '480' },
+  // { name: 'data-height', value: '270' },
   { name: '0', value: 'Минимальный размер (ш×в): 960×540px' },
   { name: 'dimensionLabel', value: 'sm-2 col-md-12 md-left' },
   { name: 'dimensionControls', value: 'sm-10 col-md-12' },
@@ -26,6 +26,7 @@ const rootAttributes: { name: string; value: string }[] = [
 ];
 
 const fileDataset: Record<string, string> = {
+  dataId: '163044',
   name: 'photo-1465847899084-d164df4dedc6.jpeg',
   downloadUrl: '/files-image/download/id/56500',
   hash: '6aeb5c43',
@@ -39,6 +40,7 @@ const fileDataset: Record<string, string> = {
     'http://orpheus.archive.systems:8080/YPkAqEONGAR5AFhtp4wf6XjwUE3pzFu0FwRF_KkhW5c/resize:fill:960:540:1:0/bG9jYWw6LzU2NS8wMC82YWViNWM0My5qcGVn.jpg',
   canvasUrl:
     'https://img.orpheus.ru/OdjR_CdLsPn0-6lBHCZps4ebQBmCzAhh3gIy_IEBovY//bG9jYWw6L2kvNTY1LzAwLzZhZWI1YzQzLmpwZWc.jpg',
+  previewEndpoint: 'http://localhost:3011/files-image/preview',
 };
 
 const props = getRootProps(rootAttributes);

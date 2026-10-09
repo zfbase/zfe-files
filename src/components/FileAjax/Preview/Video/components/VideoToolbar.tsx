@@ -23,6 +23,7 @@ export const VideoToolbar: React.FC<VideoToolbarProps> = ({
     <VideoQualityCheck />
     {item.downloadUrl ? (
       <ButtonLink
+        className="btn-xs"
         icon="download-alt"
         title="Скачать оригинал"
         url={item.downloadUrl}

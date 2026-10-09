@@ -1,29 +1,39 @@
 @use "sass:math";
 
 $form-group-margin-bottom: 15px;
-$thumbnail-padding: 4px;
+$thumbnail-padding: 0px;
 $input-border: #ccc;
 
 .zfe-files-ajax-preview-image-wrap {
-  display: flow-root;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn-upload {
+  margin-bottom: 4px !important;
 }
 
 .zfe-files-ajax-preview-image {
+  display: inline-block;
   box-sizing: content-box;
-  float: left;
-  margin: (math.ceil(math.div($form-group-margin-bottom, 2))) (math.ceil(math.div($form-group-margin-bottom, 2))) 0 0;
   max-width: 100%;
   min-height: 22px;
   min-width: 100px;
   position: relative;
 
   >.btn-toolbar {
-    opacity: 0.5;
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
     position: absolute;
-    right: $thumbnail-padding;
+    right: 8px;
+    top: 6px;
+    // right: $thumbnail-padding;
     z-index: 2;
   }
 
+  &:focus-within>.btn-toolbar,
   &:hover>.btn-toolbar {
     opacity: 1;
   }
@@ -41,10 +51,19 @@ $input-border: #ccc;
   background-repeat: no-repeat;
   background-size: contain;
   max-width: 100%;
+  width: auto;
 }
 
 .cropper-toolbar {
   display: flex;
   justify-content: center;
   margin-top: 15px;
+}
+
+.img-border {
+  border: 1px solid #ccc;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: darken;
 }

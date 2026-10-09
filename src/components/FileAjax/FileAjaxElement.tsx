@@ -16,12 +16,14 @@ import { FileAjaxPreview } from './Preview/FileAjaxPreview';
 import { Storage } from './Storage';
 import { getAcceptForType } from './utils/getAcceptorForType';
 import { getImageBox } from './utils/getImageBox';
+import { FaUpload } from 'react-icons/fa6';
+import { parseUploadResult } from './utils/parseUploadResult';
 
 type FileAjaxElementProps = {
   accept?: string;
   disabled?: boolean;
   files?: FileItem[];
-  uploadBtnLabel?: string;
+  uploadBtnLabel?: ReactNode;
   maxChunkSize?: number;
   maxFileSize?: number;
   modelName?: string;
@@ -42,7 +44,11 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
   accept,
   disabled = false,
   files = [],
-  uploadBtnLabel = 'Загрузить',
+  uploadBtnLabel = (
+    <>
+      <FaUpload /> Загрузить
+    </>
+  ),
   maxChunkSize = 1024 ** 2,
   // maxFileSize = 0,
   modelName,
@@ -172,33 +178,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
                   })
                 )
                 .onComplete((raw) => {
-                  const data: Record<
-                    string,
-                    string | number | Record<string, string | number>
-                  > = {
-                    data: {},
-                  };
-                  Object.keys(raw).forEach((key) => {
-                    if (/^data/.test(key)) {
-                      const keyArr = /^data-(.*)/
-                        [Symbol.replace](key, '$1')
-                        .split('-');
-                      const newKey = [
-                        keyArr.shift(),
-                        ...keyArr.map(
-                          (k) =>
-                            k.substring(0, 1).toUpperCase() +
-                            k.substring(1).toLowerCase()
-                        ),
-                      ].join('');
-                      if (!data.data) {
-                        data.data = {};
-                        data.data[newKey] = raw[key];
-                      }
-                    } else {
-                      data[key] = raw[key];
-                    }
-                  });
+                  const data = parseUploadResult(raw);
                   updateItem(item.key, { loading: false, ...data });
                   if (form) {
                     pageUnload.enable(form);
@@ -341,18 +321,16 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
   return (
     <div {...getRootProps()} className="zfe-files-ajax-dropzone">
       {error && (
-        <div className="alert alert-danger">
+        <div className="alert alert-danger alert-dismissible">
+          <strong>Ошибка:</strong> {error}
           <button
             type="button"
-            className="close"
+            className="btn-close"
             aria-label="Закрыть"
             onClick={() => {
               setError(undefined);
             }}
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <strong>Ошибка:</strong> {error}
+          />
         </div>
       )}
 
@@ -362,7 +340,7 @@ export const FileAjaxElement: React.FC<FileAjaxElementProps> = ({
 
       {(multiple || !items.filter((item) => !item.deleted).length) && (
         <button
-          className="btn btn-default"
+          className="btn btn-default btn-upload"
           type="button"
           disabled={disabled}
           onClick={openUploadWindow}
