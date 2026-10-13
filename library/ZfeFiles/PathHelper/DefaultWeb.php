@@ -20,7 +20,7 @@ class ZfeFiles_PathHelper_DefaultWeb extends ZfeFiles_PathHelper_Default
     public function getFileName(): string
     {
         if (!$this->file->id) {
-            throw new ZfeFiles_Exception('Не возможно получить имя файла: не определен ID');
+            throw new ZfeFiles_Exception('Невозможно получить имя файла: не определен ID');
         }
 
         return $this->file->id;

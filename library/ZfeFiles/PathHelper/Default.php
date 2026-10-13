@@ -38,7 +38,7 @@ class ZfeFiles_PathHelper_Default
     public function getFileName(): string
     {
         if (!$this->file->hash) {
-            throw new ZfeFiles_Exception('Не возможно получить имя файла: не определена хеш-сумма');
+            throw new ZfeFiles_Exception('Невозможно получить имя файла: не определена хеш-сумма');
         }
 
         return $this->file->hash . ($this->file->extension ? ".{$this->file->extension}" : '');
@@ -52,7 +52,7 @@ class ZfeFiles_PathHelper_Default
     public function getDirectory(): ?string
     {
         if (!$this->file->id) {
-            throw new ZfeFiles_Exception('Не возможно получить имя файла: не определен ID');
+            throw new ZfeFiles_Exception('Невозможно получить имя файла: не определен ID');
         }
 
         $subPathParts = mb_str_split($this->file->id, ZfeFiles_Helpers::DIVIDE);
