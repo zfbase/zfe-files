@@ -233,6 +233,7 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
         try {
             $newPath = $file->getRealPathHelper()->getPath();
             ZfeFiles_Helpers::prepareDirectory(dirname($newPath));
+            error_clear_last();
             if (rename($tempPath, $newPath)) {
                 if ($file->contains('path')) {
                     $file->path = $newPath;
@@ -240,7 +241,9 @@ abstract class ZfeFiles_Manager_Abstract implements ZfeFiles_Manager_Interface
                     $file->save();
                 }
             } else {
-                throw new ZfeFiles_Uploader_Exception('Не удалось переложить загруженный файл из временной директории');
+                // Причину (права, место на диске, сетевая ФС) PHP сообщает только предупреждением от rename().
+                $reason = error_get_last()['message'] ?? 'причина неизвестна';
+                throw new ZfeFiles_Uploader_Exception("Не удалось переложить загруженный файл из временной директории: {$reason}");
             }
         } catch (Exception $ex) {
             ZFE_Utilities::logException($ex);
